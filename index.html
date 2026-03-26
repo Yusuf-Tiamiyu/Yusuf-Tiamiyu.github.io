@@ -24,9 +24,9 @@
     --text-faint: #3d5068;
     --border: rgba(255,255,255,0.07);
     --border-bright: rgba(0,212,170,0.3);
-    --sans: 'DM Sans', sans-serif;
-    --display: 'Syne', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
+    --sans: "DM Sans", sans-serif;
+    --display: "Syne", sans-serif;
+    --mono: "IBM Plex Mono", monospace;
   }
 
   html { scroll-behavior: smooth; }
@@ -40,20 +40,8 @@
     overflow-x: hidden;
   }
 
-  /* ─── NOISE OVERLAY ─── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
-
-  /* ─── GRID LINES ─── */
   body::after {
-    content: '';
+    content: "";
     position: fixed;
     inset: 0;
     background-image:
@@ -66,7 +54,6 @@
 
   section, nav, footer { position: relative; z-index: 1; }
 
-  /* ─── NAV ─── */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -92,11 +79,7 @@
     text-transform: uppercase;
   }
 
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
 
   .nav-links a {
     font-family: var(--mono);
@@ -121,7 +104,6 @@
   }
   .nav-cta:hover { background: var(--teal); color: var(--bg); }
 
-  /* ─── HERO ─── */
   #hero {
     min-height: 100vh;
     display: flex;
@@ -143,13 +125,7 @@
     align-items: center;
     gap: 12px;
   }
-  .hero-tag::before {
-    content: '';
-    display: block;
-    width: 32px;
-    height: 1px;
-    background: var(--teal);
-  }
+  .hero-tag::before { content: ""; display: block; width: 32px; height: 1px; background: var(--teal); }
 
   .hero-name {
     font-family: var(--display);
@@ -160,10 +136,7 @@
     color: var(--text);
     margin-bottom: 0.5rem;
   }
-
-  .hero-name span {
-    color: var(--teal);
-  }
+  .hero-name span { color: var(--teal); }
 
   .hero-title {
     font-family: var(--display);
@@ -181,12 +154,7 @@
     margin-bottom: 3rem;
     min-height: 1.5em;
   }
-
-  .hero-typewriter::after {
-    content: '|';
-    animation: blink 1s step-end infinite;
-  }
-
+  .hero-typewriter::after { content: "|"; animation: blink 1s step-end infinite; }
   @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
 
   .hero-desc {
@@ -197,11 +165,7 @@
     margin-bottom: 3rem;
   }
 
-  .hero-ctas {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
 
   .btn-primary {
     display: inline-flex;
@@ -248,28 +212,10 @@
     border-top: 1px solid var(--border);
     flex-wrap: wrap;
   }
+  .stat-num { font-family: var(--display); font-size: 2rem; font-weight: 800; color: var(--teal); }
+  .stat-label { font-size: 0.8rem; color: var(--text-faint); letter-spacing: 0.05em; text-transform: uppercase; font-family: var(--mono); }
 
-  .stat-num {
-    font-family: var(--display);
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--teal);
-  }
-
-  .stat-label {
-    font-size: 0.8rem;
-    color: var(--text-faint);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    font-family: var(--mono);
-  }
-
-  /* ─── SECTION COMMONS ─── */
-  .section-wrap {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 100px 2rem;
-  }
+  .section-wrap { max-width: 1100px; margin: 0 auto; padding: 100px 2rem; }
 
   .section-label {
     font-family: var(--mono);
@@ -282,13 +228,7 @@
     align-items: center;
     gap: 12px;
   }
-  .section-label::before {
-    content: '';
-    display: block;
-    width: 24px;
-    height: 1px;
-    background: var(--teal);
-  }
+  .section-label::before { content: ""; display: block; width: 24px; height: 1px; background: var(--teal); }
 
   .section-title {
     font-family: var(--display);
@@ -299,73 +239,22 @@
     margin-bottom: 1rem;
   }
 
-  .section-sub {
-    font-size: 1rem;
-    color: var(--text-muted);
-    max-width: 520px;
-    margin-bottom: 4rem;
-  }
+  .section-sub { font-size: 1rem; color: var(--text-muted); max-width: 520px; margin-bottom: 4rem; }
 
-  /* ─── ABOUT ─── */
   #about { background: var(--bg2); }
 
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: center;
-  }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
 
-  .about-photo-wrap {
-    position: relative;
-  }
+  .about-photo-wrap { position: relative; }
 
-  .about-photo-placeholder {
-    width: 100%;
-    aspect-ratio: 3/4;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--text-faint);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .about-photo-placeholder::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 4px;
-    background: var(--teal);
-  }
-
-  .photo-corner {
-    position: absolute;
-    width: 20px; height: 20px;
-    border-color: var(--teal);
-    border-style: solid;
-  }
+  .photo-corner { position: absolute; width: 20px; height: 20px; border-color: var(--teal); border-style: solid; }
   .photo-corner.tl { top: -4px; left: -4px; border-width: 2px 0 0 2px; }
   .photo-corner.tr { top: -4px; right: -4px; border-width: 2px 2px 0 0; }
   .photo-corner.bl { bottom: -4px; left: -4px; border-width: 0 0 2px 2px; }
   .photo-corner.br { bottom: -4px; right: -4px; border-width: 0 2px 2px 0; }
 
-  .about-text p {
-    color: var(--text-muted);
-    line-height: 1.9;
-    margin-bottom: 1.25rem;
-    font-size: 1rem;
-  }
-
-  .about-text p strong {
-    color: var(--text);
-    font-weight: 500;
-  }
+  .about-text p { color: var(--text-muted); line-height: 1.9; margin-bottom: 1.25rem; font-size: 1rem; }
+  .about-text p strong { color: var(--text); font-weight: 500; }
 
   .about-highlight {
     margin-top: 2rem;
@@ -378,128 +267,49 @@
     border-radius: 0 4px 4px 0;
   }
 
-  /* ─── SKILLS ─── */
   #skills { background: var(--bg); }
 
-  .skills-categories {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
+  .skills-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 
   .skill-card {
     background: var(--bg2);
     border: 1px solid var(--border);
     border-radius: 4px;
     padding: 1.75rem;
-    transition: border-color 0.3s, transform 0.3s;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.5s, transform 0.5s, border-color 0.3s;
   }
-
-  .skill-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
+  .skill-card.visible { opacity: 1; transform: translateY(0); }
   .skill-card:hover { border-color: var(--border-bright); }
 
-  .skill-card-icon {
-    font-size: 22px;
-    margin-bottom: 1rem;
-  }
-
-  .skill-card-title {
-    font-family: var(--display);
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-    color: var(--text);
-  }
-
-  .skill-card-sub {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--teal);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 1.25rem;
-  }
-
+  .skill-card-icon { font-size: 22px; margin-bottom: 1rem; }
+  .skill-card-title { font-family: var(--display); font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text); }
+  .skill-card-sub { font-family: var(--mono); font-size: 11px; color: var(--teal); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.25rem; }
   .skill-items { display: flex; flex-direction: column; gap: 10px; }
 
-  .skill-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-  }
-
+  .skill-row { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--text-muted); }
   .skill-row-name { min-width: 120px; }
-
-  .skill-bar-bg {
-    flex: 1;
-    height: 3px;
-    background: var(--bg3);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .skill-bar-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: var(--teal);
-    width: 0;
-    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
+  .skill-bar-bg { flex: 1; height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .skill-bar-fill { height: 100%; border-radius: 2px; background: var(--teal); width: 0; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
   .skill-bar-fill.amber { background: var(--amber); }
+  .skill-pct { font-family: var(--mono); font-size: 10px; color: var(--text-faint); min-width: 28px; text-align: right; }
 
-  .skill-pct {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-faint);
-    min-width: 28px;
-    text-align: right;
-  }
-
-  /* ─── PROJECTS ─── */
   #projects { background: var(--bg2); }
 
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-  }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
 
   .project-card {
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s;
     opacity: 0;
     transform: translateY(24px);
   }
-
-  .project-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.5s, transform 0.5s, border-color 0.3s;
-  }
-
-  .project-card:hover {
-    border-color: var(--border-bright);
-    transform: translateY(-4px);
-  }
-
-  .project-card.featured {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
+  .project-card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.5s, transform 0.5s, border-color 0.3s; }
+  .project-card:hover { border-color: var(--border-bright); transform: translateY(-4px); }
+  .project-card.featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; }
 
   .project-visual {
     background: var(--bg3);
@@ -512,13 +322,7 @@
     position: relative;
     overflow: hidden;
   }
-
-  .project-card.featured .project-visual {
-    border-bottom: none;
-    border-right: 1px solid var(--border);
-    min-height: 280px;
-    font-size: 4rem;
-  }
+  .project-card.featured .project-visual { border-bottom: none; border-right: 1px solid var(--border); min-height: 280px; }
 
   .project-visual-dots {
     position: absolute;
@@ -526,73 +330,22 @@
     background-image: radial-gradient(circle, rgba(0,212,170,0.15) 1px, transparent 1px);
     background-size: 24px 24px;
   }
+  .project-visual-label { position: relative; z-index: 1; font-family: var(--mono); font-size: 11px; color: var(--teal); letter-spacing: 0.1em; text-align: center; }
 
-  .project-visual-label {
-    position: relative;
-    z-index: 1;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--teal);
-    letter-spacing: 0.1em;
-    text-align: center;
-  }
+  .project-body { padding: 1.5rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.8rem; }
 
-  .project-body {
-    padding: 1.5rem;
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 0.8rem;
-  }
-
-  .tag {
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 3px 10px;
-    border-radius: 2px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
+  .tag { font-family: var(--mono); font-size: 10px; padding: 3px 10px; border-radius: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
   .tag-teal { background: var(--teal-dim); color: var(--teal); }
   .tag-amber { background: var(--amber-dim); color: var(--amber); }
   .tag-blue { background: rgba(59,130,246,0.1); color: #60a5fa; }
   .tag-purple { background: rgba(139,92,246,0.1); color: #a78bfa; }
 
-  .project-title {
-    font-family: var(--display);
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: var(--text);
-  }
+  .project-title { font-family: var(--display); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+  .project-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; }
+  .project-links { display: flex; gap: 1rem; }
 
-  .project-desc {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    line-height: 1.7;
-    margin-bottom: 1.25rem;
-  }
-
-  .project-links {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .proj-link {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--teal);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: opacity 0.2s;
-  }
+  .proj-link { font-family: var(--mono); font-size: 11px; color: var(--teal); text-decoration: none; letter-spacing: 0.06em; display: flex; align-items: center; gap: 5px; transition: opacity 0.2s; }
   .proj-link:hover { opacity: 0.7; }
   .proj-link.disabled { color: var(--text-faint); pointer-events: none; }
 
@@ -610,7 +363,6 @@
     margin-bottom: 0.75rem;
   }
 
-  /* ─── CONTACT ─── */
   #contact { background: var(--bg); }
 
   .contact-box {
@@ -622,27 +374,10 @@
     position: relative;
     overflow: hidden;
   }
+  .contact-box::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--teal), transparent); }
+  .contact-box p { color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem; line-height: 1.8; }
 
-  .contact-box::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--teal), transparent);
-  }
-
-  .contact-box p {
-    color: var(--text-muted);
-    margin-bottom: 2rem;
-    font-size: 1rem;
-    line-height: 1.8;
-  }
-
-  .contact-links {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
 
   .contact-link {
     display: flex;
@@ -657,40 +392,13 @@
     font-size: 0.9rem;
     transition: border-color 0.2s, transform 0.2s;
   }
-
   .contact-link:hover { border-color: var(--border-bright); transform: translateX(4px); }
 
-  .contact-link-icon {
-    width: 36px; height: 36px;
-    background: var(--teal-dim);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-  }
+  .contact-link-icon { width: 36px; height: 36px; background: var(--teal-dim); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .contact-link-label { font-family: var(--mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 2px; }
+  .contact-link-val { font-size: 0.9rem; color: var(--text); }
+  .contact-link-arrow { margin-left: auto; color: var(--text-faint); font-size: 14px; }
 
-  .contact-link-label {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-faint);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-  }
-
-  .contact-link-val {
-    font-size: 0.9rem;
-    color: var(--text);
-  }
-
-  .contact-link-arrow {
-    margin-left: auto;
-    color: var(--text-faint);
-    font-size: 14px;
-  }
-
-  /* ─── FOOTER ─── */
   footer {
     background: var(--bg);
     border-top: 1px solid var(--border);
@@ -703,21 +411,11 @@
     position: relative;
     z-index: 1;
   }
-
   footer span { color: var(--teal); }
 
-  /* ─── SCROLL REVEAL ─── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ─── RESPONSIVE ─── */
   @media (max-width: 768px) {
     .about-grid { grid-template-columns: 1fr; }
     .about-photo-wrap { display: none; }
@@ -727,18 +425,14 @@
     .hero-stats { gap: 1.5rem; }
   }
 
-  /* ─── SCROLLBAR ─── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--text-faint); border-radius: 2px; }
-
-  /* ─── SELECTION ─── */
   ::selection { background: var(--teal-dim); color: var(--teal); }
 </style>
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
 <nav>
   <a href="#hero" class="nav-logo">YUSUF.T</a>
   <ul class="nav-links">
@@ -747,20 +441,19 @@
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="/cdn-cgi/l/email-protection#522b3d2720373f333b3e12353f333b3e7c313d3f" class="nav-cta">Hire Me →</a>
+  <a href="#contact" class="nav-cta">Hire Me &rarr;</a>
 </nav>
 
-<!-- ═══ HERO ═══ -->
 <section id="hero">
   <div class="hero-tag">Available for opportunities</div>
   <h1 class="hero-name">Yusuf<br><span>Tiamiyu.</span></h1>
   <p class="hero-title">Data Analyst</p>
   <div class="hero-typewriter" id="typewriter"></div>
   <p class="hero-desc">
-    I transform raw data into clear, actionable insights. Specialising in healthcare analytics, operations dashboards, and end-to-end data pipelines — from SQL to deployment.
+    I transform raw data into clear, actionable insights. Specialising in healthcare analytics, operations dashboards, and end-to-end data pipelines &mdash; from SQL to deployment.
   </p>
   <div class="hero-ctas">
-    <a href="#projects" class="btn-primary">View My Work →</a>
+    <a href="#projects" class="btn-primary">View My Work &rarr;</a>
     <a href="#contact" class="btn-outline">Get In Touch</a>
   </div>
   <div class="hero-stats">
@@ -777,13 +470,12 @@
       <div class="stat-label">Industry (Healthcare)</div>
     </div>
     <div>
-      <div class="stat-num">∞</div>
+      <div class="stat-num">&infin;</div>
       <div class="stat-label">Curiosity</div>
     </div>
   </div>
 </section>
 
-<!-- ═══ ABOUT ═══ -->
 <section id="about">
   <div class="section-wrap">
     <div class="about-grid">
@@ -801,167 +493,92 @@
         <div class="section-label">About Me</div>
         <h2 class="section-title">Turning Data Into <span style="color:var(--teal)">Decisions</span></h2>
         <p>
-          I'm a data analyst based in <strong>Lagos, Nigeria</strong>, with strong expertise in Excel, Power BI, Tableau, and SQL. I specialise in building dashboards and analytical tools that don't just look good — they <strong>drive real operational decisions</strong>.
+          I am a data analyst based in <strong>Lagos, Nigeria</strong>, with strong expertise in Excel, Power BI, Tableau, and SQL. I specialise in building dashboards and analytical tools that do not just look good &mdash; they <strong>drive real operational decisions</strong>.
         </p>
         <p>
-          My background includes healthcare analytics, where I've built live TAT (Turnaround Time) monitoring dashboards used across multiple laboratory sites. I enjoy the full pipeline — from data modelling and SQL queries all the way to Flask web apps deployed in the cloud.
+          My background includes healthcare analytics, where I have built live TAT (Turnaround Time) monitoring dashboards used across multiple laboratory sites. I enjoy the full pipeline &mdash; from data modelling and SQL queries all the way to Flask web apps deployed in the cloud.
         </p>
         <p>
-          Currently deepening my Python & Pandas skills and building toward machine learning. I'm <strong>AI-savvy</strong> and know how to leverage the best tools to work smarter and faster.
+          Currently deepening my Python and Pandas skills and building toward machine learning. I am <strong>AI-savvy</strong> and know how to leverage the best tools to work smarter and faster.
         </p>
         <div class="about-highlight">
-          "I don't just analyse data — I build systems that make the analysis continuous, automated, and visible to the people who need it."
+          "I don't just analyse data &mdash; I build systems that make the analysis continuous, automated, and visible to the people who need it."
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ SKILLS ═══ -->
 <section id="skills">
   <div class="section-wrap">
     <div class="section-label">What I Work With</div>
-    <h2 class="section-title">Skills & <span style="color:var(--teal)">Tools</span></h2>
-    <p class="section-sub">A full-stack data analyst toolkit — from raw data wrangling to polished dashboards and deployed web apps.</p>
-
+    <h2 class="section-title">Skills &amp; <span style="color:var(--teal)">Tools</span></h2>
+    <p class="section-sub">A full-stack data analyst toolkit &mdash; from raw data wrangling to polished dashboards and deployed web apps.</p>
     <div class="skills-categories">
-
       <div class="skill-card" data-delay="0">
-        <div class="skill-card-icon">📊</div>
+        <div class="skill-card-icon">&#128202;</div>
         <div class="skill-card-title">Business Intelligence</div>
-        <div class="skill-card-sub">Visualisation & Dashboards</div>
+        <div class="skill-card-sub">Visualisation &amp; Dashboards</div>
         <div class="skill-items">
-          <div class="skill-row">
-            <span class="skill-row-name">Power BI</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="82"></div></div>
-            <span class="skill-pct">82%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Tableau</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80"></div></div>
-            <span class="skill-pct">80%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Excel / Pivot</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90"></div></div>
-            <span class="skill-pct">90%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">DAX</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill amber" data-width="60"></div></div>
-            <span class="skill-pct">60%</span>
-          </div>
+          <div class="skill-row"><span class="skill-row-name">Power BI</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="82"></div></div><span class="skill-pct">82%</span></div>
+          <div class="skill-row"><span class="skill-row-name">Tableau</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80"></div></div><span class="skill-pct">80%</span></div>
+          <div class="skill-row"><span class="skill-row-name">Excel / Pivot</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90"></div></div><span class="skill-pct">90%</span></div>
+          <div class="skill-row"><span class="skill-row-name">DAX</span><div class="skill-bar-bg"><div class="skill-bar-fill amber" data-width="60"></div></div><span class="skill-pct">60%</span></div>
         </div>
       </div>
-
       <div class="skill-card" data-delay="100">
-        <div class="skill-card-icon">🗄️</div>
-        <div class="skill-card-title">Data & Databases</div>
-        <div class="skill-card-sub">SQL & Data Engineering</div>
+        <div class="skill-card-icon">&#128452;</div>
+        <div class="skill-card-title">Data &amp; Databases</div>
+        <div class="skill-card-sub">SQL &amp; Data Engineering</div>
         <div class="skill-items">
-          <div class="skill-row">
-            <span class="skill-row-name">MySQL</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85"></div></div>
-            <span class="skill-pct">85%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">SQL Workbench</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85"></div></div>
-            <span class="skill-pct">85%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Data Modelling</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="78"></div></div>
-            <span class="skill-pct">78%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Pandas</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill amber" data-width="45"></div></div>
-            <span class="skill-pct">45%</span>
-          </div>
+          <div class="skill-row"><span class="skill-row-name">MySQL</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85"></div></div><span class="skill-pct">85%</span></div>
+          <div class="skill-row"><span class="skill-row-name">SQL Workbench</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85"></div></div><span class="skill-pct">85%</span></div>
+          <div class="skill-row"><span class="skill-row-name">Data Modelling</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="78"></div></div><span class="skill-pct">78%</span></div>
+          <div class="skill-row"><span class="skill-row-name">Pandas</span><div class="skill-bar-bg"><div class="skill-bar-fill amber" data-width="45"></div></div><span class="skill-pct">45%</span></div>
         </div>
       </div>
-
       <div class="skill-card" data-delay="200">
-        <div class="skill-card-icon">🌐</div>
+        <div class="skill-card-icon">&#127760;</div>
         <div class="skill-card-title">Development</div>
-        <div class="skill-card-sub">Apps & Deployment</div>
+        <div class="skill-card-sub">Apps &amp; Deployment</div>
         <div class="skill-items">
-          <div class="skill-row">
-            <span class="skill-row-name">Flask</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="72"></div></div>
-            <span class="skill-pct">72%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">HTML / CSS / JS</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75"></div></div>
-            <span class="skill-pct">75%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Git & GitHub</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div>
-            <span class="skill-pct">70%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Railway / Cloud</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="68"></div></div>
-            <span class="skill-pct">68%</span>
-          </div>
+          <div class="skill-row"><span class="skill-row-name">Flask</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="72"></div></div><span class="skill-pct">72%</span></div>
+          <div class="skill-row"><span class="skill-row-name">HTML / CSS / JS</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75"></div></div><span class="skill-pct">75%</span></div>
+          <div class="skill-row"><span class="skill-row-name">Git &amp; GitHub</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div><span class="skill-pct">70%</span></div>
+          <div class="skill-row"><span class="skill-row-name">Railway / Cloud</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="68"></div></div><span class="skill-pct">68%</span></div>
         </div>
       </div>
-
       <div class="skill-card" data-delay="300">
-        <div class="skill-card-icon">🤖</div>
-        <div class="skill-card-title">AI & Analytics</div>
+        <div class="skill-card-icon">&#129302;</div>
+        <div class="skill-card-title">AI &amp; Analytics</div>
         <div class="skill-card-sub">Emerging Skills</div>
         <div class="skill-items">
-          <div class="skill-row">
-            <span class="skill-row-name">AI Tools</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88"></div></div>
-            <span class="skill-pct">88%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Python</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill amber" data-width="40"></div></div>
-            <span class="skill-pct">40%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Statistics</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div>
-            <span class="skill-pct">70%</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">ML (Learning)</span>
-            <div class="skill-bar-bg"><div class="skill-bar-fill amber" data-width="20"></div></div>
-            <span class="skill-pct">20%</span>
-          </div>
+          <div class="skill-row"><span class="skill-row-name">AI Tools</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88"></div></div><span class="skill-pct">88%</span></div>
+          <div class="skill-row"><span class="skill-row-name">Python</span><div class="skill-bar-bg"><div class="skill-bar-fill amber" data-width="40"></div></div><span class="skill-pct">40%</span></div>
+          <div class="skill-row"><span class="skill-row-name">Statistics</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div><span class="skill-pct">70%</span></div>
+          <div class="skill-row"><span class="skill-row-name">ML (Learning)</span><div class="skill-bar-bg"><div class="skill-bar-fill amber" data-width="20"></div></div><span class="skill-pct">20%</span></div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ═══ PROJECTS ═══ -->
 <section id="projects">
   <div class="section-wrap">
     <div class="section-label">Work</div>
     <h2 class="section-title">Featured <span style="color:var(--teal)">Projects</span></h2>
     <p class="section-sub">Real projects built with real data, deployed and in use. More coming soon.</p>
-
     <div class="projects-grid">
-
-      <!-- FEATURED PROJECT -->
       <div class="project-card featured">
         <div class="project-visual">
           <div class="project-visual-dots"></div>
           <div class="project-visual-label">
-            <div style="font-size:3.5rem;margin-bottom:0.5rem;">🏥</div>
+            <div style="font-size:3.5rem;margin-bottom:0.5rem;">&#127973;</div>
             <div>Live Production App</div>
           </div>
         </div>
         <div class="project-body">
-          <div class="featured-badge">★ Featured Project</div>
+          <div class="featured-badge">&#9733; Featured Project</div>
           <div class="project-tags">
             <span class="tag tag-teal">Flask</span>
             <span class="tag tag-blue">MySQL</span>
@@ -970,27 +587,25 @@
           </div>
           <h3 class="project-title">Laboratory TAT Monitoring Dashboard</h3>
           <p class="project-desc">
-            A full-stack web application built for Cerba Lancet Nigeria to monitor laboratory Turnaround Time (TAT) performance across multiple sites and departments. Features real-time data upload via Excel, dynamic filtering, pass/fail trend analysis, and role-based access — all deployed on Railway with a MySQL backend.
+            A full-stack web application built for Cerba Lancet Nigeria to monitor laboratory Turnaround Time (TAT) performance across multiple sites and departments. Features real-time data upload via Excel, dynamic filtering, pass/fail trend analysis, and role-based access &mdash; all deployed on Railway with a MySQL backend.
           </p>
           <ul style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem;padding-left:1.2rem;line-height:2;">
             <li>Multi-site, multi-department TAT tracking</li>
-            <li>Excel upload → auto-parsed into MySQL database</li>
+            <li>Excel upload &rarr; auto-parsed into MySQL database</li>
             <li>Interactive charts with weekly trend analysis</li>
             <li>Deployed live on Railway cloud platform</li>
           </ul>
           <div class="project-links">
-            <a href="#" class="proj-link">↗ Live App</a>
-            <a href="#" class="proj-link">⌥ GitHub Repo</a>
+            <a href="#" class="proj-link">&#8599; Live App</a>
+            <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="proj-link">&#8984; GitHub Repo</a>
           </div>
         </div>
       </div>
-
-      <!-- PROJECT 2 -->
       <div class="project-card">
         <div class="project-visual">
           <div class="project-visual-dots"></div>
           <div class="project-visual-label">
-            <div style="font-size:2.5rem;margin-bottom:0.5rem;">📈</div>
+            <div style="font-size:2.5rem;margin-bottom:0.5rem;">&#128200;</div>
             <div>Coming Soon</div>
           </div>
         </div>
@@ -1001,21 +616,15 @@
             <span class="tag tag-blue">Excel</span>
           </div>
           <h3 class="project-title">Sales Performance Dashboard</h3>
-          <p class="project-desc">
-            An interactive Power BI dashboard analysing sales trends, regional performance, and product KPIs with advanced DAX measures and drill-through capabilities.
-          </p>
-          <div class="project-links">
-            <a href="#" class="proj-link disabled">⏳ In Progress</a>
-          </div>
+          <p class="project-desc">An interactive Power BI dashboard analysing sales trends, regional performance, and product KPIs with advanced DAX measures and drill-through capabilities.</p>
+          <div class="project-links"><a href="#" class="proj-link disabled">&#8987; In Progress</a></div>
         </div>
       </div>
-
-      <!-- PROJECT 3 -->
       <div class="project-card">
         <div class="project-visual">
           <div class="project-visual-dots"></div>
           <div class="project-visual-label">
-            <div style="font-size:2.5rem;margin-bottom:0.5rem;">🐍</div>
+            <div style="font-size:2.5rem;margin-bottom:0.5rem;">&#128013;</div>
             <div>Coming Soon</div>
           </div>
         </div>
@@ -1025,22 +634,16 @@
             <span class="tag tag-teal">Pandas</span>
             <span class="tag tag-blue">Matplotlib</span>
           </div>
-          <h3 class="project-title">Healthcare Data Analysis — Python</h3>
-          <p class="project-desc">
-            Exploratory data analysis and visualisation of a healthcare dataset using Python, Pandas, and Matplotlib — uncovering patterns and statistical insights.
-          </p>
-          <div class="project-links">
-            <a href="#" class="proj-link disabled">⏳ In Progress</a>
-          </div>
+          <h3 class="project-title">Healthcare Data Analysis &mdash; Python</h3>
+          <p class="project-desc">Exploratory data analysis and visualisation of a healthcare dataset using Python, Pandas, and Matplotlib &mdash; uncovering patterns and statistical insights.</p>
+          <div class="project-links"><a href="#" class="proj-link disabled">&#8987; In Progress</a></div>
         </div>
       </div>
-
-      <!-- PROJECT 4 -->
       <div class="project-card">
         <div class="project-visual">
           <div class="project-visual-dots"></div>
           <div class="project-visual-label">
-            <div style="font-size:2.5rem;margin-bottom:0.5rem;">🗄️</div>
+            <div style="font-size:2.5rem;margin-bottom:0.5rem;">&#128452;</div>
             <div>Coming Soon</div>
           </div>
         </div>
@@ -1051,129 +654,95 @@
             <span class="tag tag-amber">Analysis</span>
           </div>
           <h3 class="project-title">SQL Business Analysis Case Study</h3>
-          <p class="project-desc">
-            Deep SQL analysis of a real-world business dataset — window functions, CTEs, subqueries, and actionable business recommendations from raw data.
-          </p>
-          <div class="project-links">
-            <a href="#" class="proj-link disabled">⏳ In Progress</a>
-          </div>
+          <p class="project-desc">Deep SQL analysis of a real-world business dataset &mdash; window functions, CTEs, subqueries, and actionable business recommendations from raw data.</p>
+          <div class="project-links"><a href="#" class="proj-link disabled">&#8987; In Progress</a></div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ═══ CONTACT ═══ -->
 <section id="contact">
   <div class="section-wrap">
     <div class="section-label reveal">Contact</div>
-    <h2 class="section-title reveal">Let's <span style="color:var(--teal)">Connect</span></h2>
-    <p class="section-sub reveal">Open to data analyst roles, freelance projects, and collaborations. Drop me a message.</p>
-
+    <h2 class="section-title reveal">Let us <span style="color:var(--teal)">Connect</span></h2>
+    <p class="section-sub reveal">Open to data analyst roles, freelance projects, and collaborations.</p>
     <div class="contact-box reveal">
-      <p>
-        Whether you have a dataset that needs making sense of, a dashboard that needs building, or a full-time opportunity — I'd love to hear from you. I'm based in Lagos, Nigeria and available remotely.
-      </p>
+      <p>Whether you have a dataset that needs making sense of, a dashboard that needs building, or a full-time opportunity &mdash; I would love to hear from you. I am based in Lagos, Nigeria and available remotely.</p>
       <div class="contact-links">
-        <a href="/cdn-cgi/l/email-protection#bcc5d3c9ced9d1ddd5d0fcdbd1ddd5d092dfd3d1" class="contact-link">
-          <div class="contact-link-icon">✉️</div>
+        <a href="#" class="contact-link" onclick="navigator.clipboard.writeText('tiamiyuyusufademola@gmail.com');this.querySelector('.contact-link-val').textContent='Copied!';setTimeout(()=>this.querySelector('.contact-link-val').textContent='tiamiyuyusufademola@gmail.com',2000);return false;">
+          <div class="contact-link-icon">&#9993;</div>
           <div>
             <div class="contact-link-label">Email</div>
-            <div class="contact-link-val"><span class="__cf_email__" data-cfemail="3d4452484f58505c54517d5a505c5451135e5250">[email&#160;protected]</span></div>
+            <div class="contact-link-val"><span class="__cf_email__" data-cfemail="bdc9d4dcd0d4c4c8c4c8cec8dbdcd9d8d0d2d1dcfddad0dcd4d193ded2d0">[email&#160;protected]</span></div>
           </div>
-          <div class="contact-link-arrow">→</div>
+          <div class="contact-link-arrow">&rarr;</div>
         </a>
         <a href="https://www.linkedin.com/in/yusuf-tiamiyu-demola" target="_blank" class="contact-link">
-          <div class="contact-link-icon">💼</div>
+          <div class="contact-link-icon">&#128188;</div>
           <div>
             <div class="contact-link-label">LinkedIn</div>
             <div class="contact-link-val">linkedin.com/in/yusuf-tiamiyu-demola</div>
           </div>
-          <div class="contact-link-arrow">→</div>
+          <div class="contact-link-arrow">&rarr;</div>
         </a>
         <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="contact-link">
-          <div class="contact-link-icon">⌥</div>
+          <div class="contact-link-icon">&#9997;</div>
           <div>
             <div class="contact-link-label">GitHub</div>
             <div class="contact-link-val">github.com/Yusuf-Tiamiyu</div>
           </div>
-          <div class="contact-link-arrow">→</div>
+          <div class="contact-link-arrow">&rarr;</div>
         </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
 <footer>
-  <span>YUSUF.T</span> — Data Analyst · Lagos, Nigeria · Built with purpose, deployed with pride
+  <span>YUSUF.T</span> &mdash; Data Analyst &middot; Lagos, Nigeria &middot; Built with purpose, deployed with pride
 </footer>
 
-<!-- ═══ SCRIPTS ═══ -->
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// Typewriter
-const phrases = [
-  'Excel & Power Query Expert',
-  'Power BI Dashboard Builder',
-  'Tableau Visualisation Analyst',
-  'MySQL & SQL Workbench',
-  'Flask Web App Developer',
-  'AI-Savvy Data Analyst'
-];
-let pi = 0, ci = 0, deleting = false;
-const el = document.getElementById('typewriter');
-
+var phrases = ["Excel & Power Query Expert","Power BI Dashboard Builder","Tableau Visualisation Analyst","MySQL & SQL Workbench","Flask Web App Developer","AI-Savvy Data Analyst"];
+var pi = 0, ci = 0, deleting = false;
+var tw = document.getElementById("typewriter");
 function typeLoop() {
-  const word = phrases[pi];
+  var word = phrases[pi];
   if (!deleting) {
-    el.textContent = word.slice(0, ci + 1);
+    tw.textContent = word.slice(0, ci + 1);
     ci++;
-    if (ci === word.length) {
-      deleting = true;
-      setTimeout(typeLoop, 2000);
-      return;
-    }
+    if (ci === word.length) { deleting = true; setTimeout(typeLoop, 2000); return; }
     setTimeout(typeLoop, 80);
   } else {
-    el.textContent = word.slice(0, ci - 1);
+    tw.textContent = word.slice(0, ci - 1);
     ci--;
-    if (ci === 0) {
-      deleting = false;
-      pi = (pi + 1) % phrases.length;
-      setTimeout(typeLoop, 400);
-      return;
-    }
+    if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; setTimeout(typeLoop, 400); return; }
     setTimeout(typeLoop, 40);
   }
 }
 typeLoop();
 
-// Scroll reveal (general)
-const revealEls = document.querySelectorAll('.reveal');
-const revealObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+var obs1 = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add("visible"); obs1.unobserve(e.target); } });
 }, { threshold: 0.15 });
-revealEls.forEach(el => revealObs.observe(el));
+document.querySelectorAll(".reveal").forEach(function(el) { obs1.observe(el); });
 
-// Skill cards + bars
-const skillCards = document.querySelectorAll('.skill-card');
-const cardObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
+var obs2 = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
     if (e.isIntersecting) {
-      const delay = parseInt(e.target.dataset.delay || 0);
-      setTimeout(() => {
-        e.target.classList.add('visible');
-        e.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
-          bar.style.width = bar.dataset.width + '%';
-        });
+      var delay = parseInt(e.target.dataset.delay || 0);
+      setTimeout(function() {
+        e.target.classList.add("visible");
+        e.target.querySelectorAll(".skill-bar-fill").forEach(function(bar) { bar.style.width = bar.dataset.width + "%"; });
       }, delay);
-      cardObs.unobserve(e.target);
+      obs2.unobserve(e.target);
     }
   });
 }, { threshold: 0.2 });
-skillCards.forEach(c => cardObs.observe(c));
+document.querySelectorAll(".skill-card").forEach(function(c) { obs2.observe(c); });
 
-// Project cards
-const projCards = document.querySelectorAll('.project-card');
-const projObs = new IntersectionObserv
+var obs3 = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e, i) {
+    if (e.isIntersecting) {
+      setTimeout(function() { e.target.classLi
