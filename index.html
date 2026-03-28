@@ -120,6 +120,29 @@
   footer span { color: var(--teal); }
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── LAYOFFS CARD VIZ ── */
+  .layoffs-viz {
+    width: 100%; height: 100%; padding: 18px 20px 14px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative; z-index: 1;
+  }
+  .viz-title {
+    font-family: var(--mono); font-size: 9px; color: var(--teal);
+    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .viz-bars { display: flex; flex-direction: column; gap: 7px; flex: 1; justify-content: center; }
+  .viz-row { display: flex; align-items: center; gap: 8px; }
+  .viz-company { font-family: var(--mono); font-size: 9px; color: var(--text-faint); min-width: 68px; text-align: right; }
+  .viz-track { flex: 1; height: 14px; background: rgba(255,255,255,0.04); border-radius: 2px; overflow: hidden; position: relative; }
+  .viz-bar { height: 100%; border-radius: 2px; width: 0; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; transition: width 1.6s cubic-bezier(0.16,1,0.3,1); }
+  .viz-bar span { font-family: var(--mono); font-size: 8px; color: rgba(6,13,27,0.85); font-weight: 600; white-space: nowrap; }
+  .viz-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .viz-total { font-family: var(--display); font-size: 1.4rem; font-weight: 800; color: var(--teal); line-height: 1; }
+  .viz-total-label { font-family: var(--mono); font-size: 8px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3px; }
+  .viz-pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(1.6); } }
+
   @media (max-width: 768px) {
     .about-grid { grid-template-columns: 1fr; }
     .about-photo-wrap { display: none; }
@@ -251,6 +274,7 @@
     <p class="section-sub">Real projects built with real data, deployed and in use. Click any project to read the full breakdown.</p>
     <div class="projects-grid">
 
+      <!-- FEATURED: TAT DASHBOARD -->
       <div class="project-card featured">
         <div class="project-visual">
           <div class="project-visual-dots"></div>
@@ -282,12 +306,44 @@
         </div>
       </div>
 
-      <div class="project-card" onclick="window.location.href='sql-layoffs-project.html'" style="cursor:pointer;">
-        <div class="project-visual">
+      <!-- SQL LAYOFFS PROJECT -->
+      <div class="project-card" id="layoffs-card" onclick="window.location.href='sql-layoffs-project.html'" style="cursor:pointer;">
+        <div class="project-visual" style="padding:0; align-items:stretch;">
           <div class="project-visual-dots"></div>
-          <div class="project-visual-label">
-            <div style="font-size:2.5rem;margin-bottom:0.5rem;">&#128202;</div>
-            <div>2,361 records &bull; 386K+ jobs</div>
+          <div class="layoffs-viz" id="layoffs-viz">
+            <div class="viz-title">Top layoffs by company &mdash; 2020 to 2023</div>
+            <div class="viz-bars">
+              <div class="viz-row">
+                <span class="viz-company">Amazon</span>
+                <div class="viz-track"><div class="viz-bar" data-w="100" style="background:linear-gradient(90deg,#00d4aa,#00b894);"><span>18,150</span></div></div>
+              </div>
+              <div class="viz-row">
+                <span class="viz-company">Google</span>
+                <div class="viz-track"><div class="viz-bar" data-w="66" style="background:linear-gradient(90deg,#3b82f6,#2563eb);"><span>12,000</span></div></div>
+              </div>
+              <div class="viz-row">
+                <span class="viz-company">Meta</span>
+                <div class="viz-track"><div class="viz-bar" data-w="61" style="background:linear-gradient(90deg,#8b5cf6,#7c3aed);"><span>11,000</span></div></div>
+              </div>
+              <div class="viz-row">
+                <span class="viz-company">Salesforce</span>
+                <div class="viz-track"><div class="viz-bar" data-w="56" style="background:linear-gradient(90deg,#f59e0b,#d97706);"><span>10,090</span></div></div>
+              </div>
+              <div class="viz-row">
+                <span class="viz-company">Microsoft</span>
+                <div class="viz-track"><div class="viz-bar" data-w="55" style="background:linear-gradient(90deg,#06b6d4,#0891b2);"><span>10,000</span></div></div>
+              </div>
+            </div>
+            <div class="viz-footer">
+              <div>
+                <div class="viz-total" id="viz-counter">0</div>
+                <div class="viz-total-label">total jobs lost</div>
+              </div>
+              <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+                <div class="viz-pulse"></div>
+                <div style="font-family:var(--mono);font-size:8px;color:var(--text-faint);">2,361 companies</div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="project-body">
@@ -297,15 +353,16 @@
             <span class="tag tag-purple">EDA</span>
             <span class="tag tag-amber">Kaggle</span>
           </div>
-          <h3 class="project-title">World Layoffs &mdash; SQL Data Cleaning &amp; EDA</h3>
-          <p class="project-desc">End-to-end SQL project on 2,361 global layoff records (2020&ndash;2023). Full data cleaning pipeline, then free-form exploration using CTEs, window functions, rolling totals, and DENSE_RANK ranking to uncover what really happened during the tech layoff wave.</p>
+          <h3 class="project-title">World Layoffs &mdash; SQL Cleaning &amp; EDA</h3>
+          <p class="project-desc">End-to-end SQL project on 2,361 global layoff records from 2020&ndash;2023. Full 4-step data cleaning pipeline, then free-form exploration using CTEs, window functions, rolling totals, and DENSE_RANK to uncover what really happened during the tech layoff wave.</p>
           <div class="project-links">
-            <a href="sql-layoffs-project.html" class="proj-link">&#8599; Full Case Study</a>
-            <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="proj-link">&#8984; GitHub</a>
+            <a href="sql-layoffs-project.html" class="proj-link" onclick="event.stopPropagation();">&#8599; Full Case Study</a>
+            <a href="https://github.com/Yusuf-Tiamiyu/world-layoffs-sql-analysis" target="_blank" class="proj-link" onclick="event.stopPropagation();">&#8984; GitHub</a>
           </div>
         </div>
       </div>
 
+      <!-- COMING SOON: POWER BI -->
       <div class="project-card">
         <div class="project-visual">
           <div class="project-visual-dots"></div>
@@ -326,6 +383,7 @@
         </div>
       </div>
 
+      <!-- COMING SOON: PYTHON -->
       <div class="project-card">
         <div class="project-visual">
           <div class="project-visual-dots"></div>
@@ -435,6 +493,35 @@ var obs3 = new IntersectionObserver(function(entries) {
   });
 }, { threshold: 0.1 });
 document.querySelectorAll(".project-card").forEach(function(c) { obs3.observe(c); });
+
+/* Layoffs card viz animation */
+var vizAnimated = false;
+var vizObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting && !vizAnimated) {
+      vizAnimated = true;
+      setTimeout(function() {
+        document.querySelectorAll(".viz-bar").forEach(function(bar) {
+          bar.style.width = bar.dataset.w + "%";
+        });
+        var counter = document.getElementById("viz-counter");
+        var target = 386379;
+        var duration = 1800;
+        var start = null;
+        function step(ts) {
+          if (!start) start = ts;
+          var progress = Math.min((ts - start) / duration, 1);
+          var ease = 1 - Math.pow(1 - progress, 3);
+          counter.textContent = Math.round(target * ease).toLocaleString();
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }, 300);
+    }
+  });
+}, { threshold: 0.4 });
+var layoffsCard = document.getElementById("layoffs-card");
+if (layoffsCard) vizObs.observe(layoffsCard);
 </script>
 </body>
 </html>
