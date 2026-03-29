@@ -19,11 +19,7 @@
   }
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
-  body::after {
-    content: ""; position: fixed; inset: 0;
-    background-image: linear-gradient(rgba(0,212,170,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,170,0.025) 1px, transparent 1px);
-    background-size: 60px 60px; pointer-events: none; z-index: 0;
-  }
+  body::after { content: ""; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,170,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,170,0.025) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
   section, nav, footer { position: relative; z-index: 1; }
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(6,13,27,0.85); backdrop-filter: blur(16px); }
   .nav-logo { font-family: var(--display); font-size: 15px; font-weight: 700; letter-spacing: 0.08em; color: var(--teal); text-decoration: none; text-transform: uppercase; }
@@ -98,6 +94,7 @@
   .tag-amber { background: var(--amber-dim); color: var(--amber); }
   .tag-blue { background: rgba(59,130,246,0.1); color: #60a5fa; }
   .tag-purple { background: rgba(139,92,246,0.1); color: #a78bfa; }
+  .tag-green { background: rgba(16,185,129,0.1); color: #34d399; }
   .project-title { font-family: var(--display); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
   .project-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; }
   .project-links { display: flex; gap: 1rem; }
@@ -121,20 +118,13 @@
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ── LAYOFFS CARD VIZ ── */
-  .layoffs-viz {
-    width: 100%; height: 100%; padding: 18px 20px 14px;
-    display: flex; flex-direction: column; justify-content: space-between;
-    position: relative; z-index: 1;
-  }
-  .viz-title {
-    font-family: var(--mono); font-size: 9px; color: var(--teal);
-    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px;
-  }
+  /* LAYOFFS CARD VIZ */
+  .layoffs-viz { width: 100%; height: 100%; padding: 18px 20px 14px; display: flex; flex-direction: column; justify-content: space-between; position: relative; z-index: 1; }
+  .viz-title { font-family: var(--mono); font-size: 9px; color: var(--teal); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; }
   .viz-bars { display: flex; flex-direction: column; gap: 7px; flex: 1; justify-content: center; }
   .viz-row { display: flex; align-items: center; gap: 8px; }
   .viz-company { font-family: var(--mono); font-size: 9px; color: var(--text-faint); min-width: 68px; text-align: right; }
-  .viz-track { flex: 1; height: 14px; background: rgba(255,255,255,0.04); border-radius: 2px; overflow: hidden; position: relative; }
+  .viz-track { flex: 1; height: 14px; background: rgba(255,255,255,0.04); border-radius: 2px; overflow: hidden; }
   .viz-bar { height: 100%; border-radius: 2px; width: 0; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; transition: width 1.6s cubic-bezier(0.16,1,0.3,1); }
   .viz-bar span { font-family: var(--mono); font-size: 8px; color: rgba(6,13,27,0.85); font-weight: 600; white-space: nowrap; }
   .viz-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
@@ -142,6 +132,21 @@
   .viz-total-label { font-family: var(--mono); font-size: 8px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3px; }
   .viz-pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(1.6); } }
+
+  /* SALES ESTIMATES CARD VIZ */
+  .sales-viz { width: 100%; height: 100%; padding: 16px 18px 12px; display: flex; flex-direction: column; position: relative; z-index: 1; }
+  .sales-viz-title { font-family: var(--mono); font-size: 9px; color: var(--amber); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; }
+  .sales-viz-legend { display: flex; gap: 12px; margin-bottom: 12px; }
+  .sales-legend-item { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 8px; color: var(--text-faint); }
+  .sales-legend-dot { width: 8px; height: 8px; border-radius: 1px; }
+  .sales-chart { display: flex; align-items: flex-end; gap: 5px; flex: 1; min-height: 90px; }
+  .sales-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .sales-bar-wrap { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; height: 80px; }
+  .sales-bar { width: 100%; border-radius: 2px 2px 0 0; height: 0; transition: height 1.2s cubic-bezier(0.16,1,0.3,1); }
+  .sales-bar.actual { background: var(--teal); }
+  .sales-bar.estimated { background: var(--amber); border: 1px dashed rgba(245,158,11,0.6); }
+  .sales-date { font-family: var(--mono); font-size: 8px; color: var(--text-faint); }
+  .sales-viz-footer { font-family: var(--mono); font-size: 8px; color: var(--text-faint); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); text-align: center; }
 
   @media (max-width: 768px) {
     .about-grid { grid-template-columns: 1fr; }
@@ -175,16 +180,14 @@
   <h1 class="hero-name">Yusuf<br><span>Tiamiyu.</span></h1>
   <p class="hero-title">Data Analyst</p>
   <div class="hero-typewriter" id="typewriter"></div>
-  <p class="hero-desc">
-    Hi, I&rsquo;m Yusuf Tiamiyu &mdash; I take raw, messy data and turn it into something useful. From cleaning and EDA, to storing it properly in a database, to automating the whole thing so it just works. I specialise in healthcare analytics and operations dashboards, but honestly? Anything that helps an organisation stop guessing and start making better decisions &mdash; that&rsquo;s my thing.
-  </p>
+  <p class="hero-desc">Hi, I&rsquo;m Yusuf Tiamiyu &mdash; I take raw, messy data and turn it into something useful. From cleaning and EDA, to storing it properly in a database, to automating the whole thing so it just works. I specialise in healthcare analytics and operations dashboards, but honestly? Anything that helps an organisation stop guessing and start making better decisions &mdash; that&rsquo;s my thing.</p>
   <div class="hero-ctas">
     <a href="#projects" class="btn-primary">View My Work &rarr;</a>
     <a href="#contact" class="btn-outline">Get In Touch</a>
   </div>
   <div class="hero-stats">
     <div><div class="stat-num">6+</div><div class="stat-label">Tools Mastered</div></div>
-    <div><div class="stat-num">3+</div><div class="stat-label">Live Projects</div></div>
+    <div><div class="stat-num">4+</div><div class="stat-label">Live Projects</div></div>
     <div><div class="stat-num">Lagos</div><div class="stat-label">Nigeria &mdash; Remote Ready</div></div>
     <div><div class="stat-num">&infin;</div><div class="stat-label">Problems Solved</div></div>
   </div>
@@ -271,7 +274,7 @@
   <div class="section-wrap">
     <div class="section-label">Work</div>
     <h2 class="section-title">Featured <span style="color:var(--teal)">Projects</span></h2>
-    <p class="section-sub">Real projects built with real data, deployed and in use. Click any project to read the full breakdown.</p>
+    <p class="section-sub">Real projects built with real data. Click any card to read the full breakdown.</p>
     <div class="projects-grid">
 
       <!-- FEATURED: TAT DASHBOARD -->
@@ -292,7 +295,7 @@
             <span class="tag tag-purple">Healthcare</span>
           </div>
           <h3 class="project-title">Laboratory TAT Monitoring Dashboard</h3>
-          <p class="project-desc">A full-stack web application built for Cerba Lancet Nigeria to monitor laboratory Turnaround Time (TAT) performance across multiple sites and departments. Features real-time data upload via Excel, dynamic filtering, pass/fail trend analysis, and role-based access &mdash; all deployed on Railway with a MySQL backend.</p>
+          <p class="project-desc">A full-stack web application built for Cerba Lancet Nigeria to monitor laboratory Turnaround Time (TAT) performance across multiple sites and departments. Features real-time data upload via Excel, dynamic filtering, pass/fail trend analysis, and role-based access &mdash; deployed on Railway with a MySQL backend.</p>
           <ul style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem;padding-left:1.2rem;line-height:2;">
             <li>Multi-site, multi-department TAT tracking</li>
             <li>Excel upload &rarr; auto-parsed into MySQL database</li>
@@ -308,38 +311,23 @@
 
       <!-- SQL LAYOFFS PROJECT -->
       <div class="project-card" id="layoffs-card" onclick="window.location.href='sql-layoffs-project.html'" style="cursor:pointer;">
-        <div class="project-visual" style="padding:0; align-items:stretch;">
+        <div class="project-visual" style="padding:0;align-items:stretch;">
           <div class="project-visual-dots"></div>
           <div class="layoffs-viz" id="layoffs-viz">
             <div class="viz-title">Top layoffs by company &mdash; 2020 to 2023</div>
             <div class="viz-bars">
-              <div class="viz-row">
-                <span class="viz-company">Amazon</span>
-                <div class="viz-track"><div class="viz-bar" data-w="100" style="background:linear-gradient(90deg,#00d4aa,#00b894);"><span>18,150</span></div></div>
-              </div>
-              <div class="viz-row">
-                <span class="viz-company">Google</span>
-                <div class="viz-track"><div class="viz-bar" data-w="66" style="background:linear-gradient(90deg,#3b82f6,#2563eb);"><span>12,000</span></div></div>
-              </div>
-              <div class="viz-row">
-                <span class="viz-company">Meta</span>
-                <div class="viz-track"><div class="viz-bar" data-w="61" style="background:linear-gradient(90deg,#8b5cf6,#7c3aed);"><span>11,000</span></div></div>
-              </div>
-              <div class="viz-row">
-                <span class="viz-company">Salesforce</span>
-                <div class="viz-track"><div class="viz-bar" data-w="56" style="background:linear-gradient(90deg,#f59e0b,#d97706);"><span>10,090</span></div></div>
-              </div>
-              <div class="viz-row">
-                <span class="viz-company">Microsoft</span>
-                <div class="viz-track"><div class="viz-bar" data-w="55" style="background:linear-gradient(90deg,#06b6d4,#0891b2);"><span>10,000</span></div></div>
-              </div>
+              <div class="viz-row"><span class="viz-company">Amazon</span><div class="viz-track"><div class="viz-bar" data-w="100" style="background:linear-gradient(90deg,#00d4aa,#00b894);"><span>18,150</span></div></div></div>
+              <div class="viz-row"><span class="viz-company">Google</span><div class="viz-track"><div class="viz-bar" data-w="66" style="background:linear-gradient(90deg,#3b82f6,#2563eb);"><span>12,000</span></div></div></div>
+              <div class="viz-row"><span class="viz-company">Meta</span><div class="viz-track"><div class="viz-bar" data-w="61" style="background:linear-gradient(90deg,#8b5cf6,#7c3aed);"><span>11,000</span></div></div></div>
+              <div class="viz-row"><span class="viz-company">Salesforce</span><div class="viz-track"><div class="viz-bar" data-w="56" style="background:linear-gradient(90deg,#f59e0b,#d97706);"><span>10,090</span></div></div></div>
+              <div class="viz-row"><span class="viz-company">Microsoft</span><div class="viz-track"><div class="viz-bar" data-w="55" style="background:linear-gradient(90deg,#06b6d4,#0891b2);"><span>10,000</span></div></div></div>
             </div>
             <div class="viz-footer">
               <div>
                 <div class="viz-total" id="viz-counter">0</div>
                 <div class="viz-total-label">total jobs lost</div>
               </div>
-              <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+              <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
                 <div class="viz-pulse"></div>
                 <div style="font-family:var(--mono);font-size:8px;color:var(--text-faint);">2,361 companies</div>
               </div>
@@ -354,10 +342,48 @@
             <span class="tag tag-amber">Kaggle</span>
           </div>
           <h3 class="project-title">World Layoffs &mdash; SQL Cleaning &amp; EDA</h3>
-          <p class="project-desc">End-to-end SQL project on 2,361 global layoff records from 2020&ndash;2023. Full 4-step data cleaning pipeline, then free-form exploration using CTEs, window functions, rolling totals, and DENSE_RANK to uncover what really happened during the tech layoff wave.</p>
+          <p class="project-desc">End-to-end SQL project on 2,361 global layoff records (2020&ndash;2023). Full 4-step data cleaning pipeline, then free-form exploration using CTEs, window functions, rolling totals, and DENSE_RANK to uncover what really happened during the tech layoff wave.</p>
           <div class="project-links">
             <a href="sql-layoffs-project.html" class="proj-link" onclick="event.stopPropagation();">&#8599; Full Case Study</a>
             <a href="https://github.com/Yusuf-Tiamiyu/world-layoffs-sql-analysis" target="_blank" class="proj-link" onclick="event.stopPropagation();">&#8984; GitHub</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SQL SALES ESTIMATES PROJECT -->
+      <div class="project-card" id="sales-card" onclick="window.location.href='sql-sales-estimates.html'" style="cursor:pointer;">
+        <div class="project-visual" style="padding:0;align-items:stretch;">
+          <div class="project-visual-dots"></div>
+          <div class="sales-viz" id="sales-viz">
+            <div class="sales-viz-title">Sales gap estimation &mdash; actual vs estimated</div>
+            <div class="sales-viz-legend">
+              <div class="sales-legend-item"><div class="sales-legend-dot" style="background:var(--teal);"></div>Actual</div>
+              <div class="sales-legend-item"><div class="sales-legend-dot" style="background:var(--amber);border:1px dashed rgba(245,158,11,0.6);"></div>Estimated (LAG/LEAD)</div>
+            </div>
+            <div class="sales-chart">
+              <div class="sales-col"><div class="sales-bar-wrap"><div class="sales-bar actual" data-h="61" style="height:0;"></div></div><div class="sales-date">Jan 1</div></div>
+              <div class="sales-col"><div class="sales-bar-wrap"><div class="sales-bar actual" data-h="72" style="height:0;"></div></div><div class="sales-date">Jan 2</div></div>
+              <div class="sales-col"><div class="sales-bar-wrap"><div class="sales-bar estimated" data-h="78" data-delay="600" style="height:0;"></div></div><div class="sales-date" style="color:var(--amber);">Jan 3</div></div>
+              <div class="sales-col"><div class="sales-bar-wrap"><div class="sales-bar actual" data-h="84" style="height:0;"></div></div><div class="sales-date">Jan 4</div></div>
+              <div class="sales-col"><div class="sales-bar-wrap"><div class="sales-bar actual" data-h="95" style="height:0;"></div></div><div class="sales-date">Jan 5</div></div>
+              <div class="sales-col"><div class="sales-bar-wrap"><div class="sales-bar estimated" data-h="86" data-delay="800" style="height:0;"></div></div><div class="sales-date" style="color:var(--amber);">Jan 6</div></div>
+              <div class="sales-col"><div class="sales-bar-wrap"><div class="sales-bar actual" data-h="77" style="height:0;"></div></div><div class="sales-date">Jan 7</div></div>
+            </div>
+            <div class="sales-viz-footer">12 SQL concepts &bull; Recursive CTE &bull; LAG &amp; LEAD interpolation</div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag tag-blue">MySQL</span>
+            <span class="tag tag-green">Window Functions</span>
+            <span class="tag tag-purple">Recursive CTE</span>
+            <span class="tag tag-amber">Skills Showcase</span>
+          </div>
+          <h3 class="project-title">SQL Sales Estimation Engine</h3>
+          <p class="project-desc">A structured SQL skills showcase built around one real problem: sparse data with missing dates. Progressively builds from basic SELECT to recursive CTEs and LAG/LEAD interpolation &mdash; demonstrating 12 advanced SQL concepts in one clean script.</p>
+          <div class="project-links">
+            <a href="sql-sales-estimates.html" class="proj-link" onclick="event.stopPropagation();">&#8599; Full Breakdown</a>
+            <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="proj-link" onclick="event.stopPropagation();">&#8984; GitHub</a>
           </div>
         </div>
       </div>
@@ -379,27 +405,6 @@
           </div>
           <h3 class="project-title">Sales Performance Dashboard</h3>
           <p class="project-desc">An interactive Power BI dashboard analysing sales trends, regional performance, and product KPIs with advanced DAX measures and drill-through capabilities.</p>
-          <div class="project-links"><a class="proj-link disabled">&#8987; In Progress</a></div>
-        </div>
-      </div>
-
-      <!-- COMING SOON: PYTHON -->
-      <div class="project-card">
-        <div class="project-visual">
-          <div class="project-visual-dots"></div>
-          <div class="project-visual-label">
-            <div style="font-size:2.5rem;margin-bottom:0.5rem;">&#128013;</div>
-            <div>Coming Soon</div>
-          </div>
-        </div>
-        <div class="project-body">
-          <div class="project-tags">
-            <span class="tag tag-purple">Python</span>
-            <span class="tag tag-teal">Pandas</span>
-            <span class="tag tag-blue">Matplotlib</span>
-          </div>
-          <h3 class="project-title">Healthcare Data Analysis &mdash; Python</h3>
-          <p class="project-desc">Exploratory data analysis and visualisation of a healthcare dataset using Python, Pandas, and Matplotlib &mdash; uncovering patterns and statistical insights.</p>
           <div class="project-links"><a class="proj-link disabled">&#8987; In Progress</a></div>
         </div>
       </div>
@@ -441,14 +446,7 @@
 </footer>
 
 <script>
-var phrases = [
-  "Excel, Power Query & Pivot Tables",
-  "BI Tools: Power BI & Tableau",
-  "SQL & MySQL Database Analysis",
-  "Python for Automation & Web Apps",
-  "End-to-End Data Pipelines",
-  "AI-Powered Workflow Automation"
-];
+var phrases = ["Excel, Power Query & Pivot Tables","BI Tools: Power BI & Tableau","SQL & MySQL Database Analysis","Python for Automation & Web Apps","End-to-End Data Pipelines","AI-Powered Workflow Automation"];
 var pi = 0, ci = 0, deleting = false;
 var tw = document.getElementById("typewriter");
 function typeLoop() {
@@ -494,34 +492,50 @@ var obs3 = new IntersectionObserver(function(entries) {
 }, { threshold: 0.1 });
 document.querySelectorAll(".project-card").forEach(function(c) { obs3.observe(c); });
 
-/* Layoffs card viz animation */
-var vizAnimated = false;
-var vizObs = new IntersectionObserver(function(entries) {
+/* Layoffs card viz */
+var layoffsDone = false;
+var layoffsObs = new IntersectionObserver(function(entries) {
   entries.forEach(function(e) {
-    if (e.isIntersecting && !vizAnimated) {
-      vizAnimated = true;
+    if (e.isIntersecting && !layoffsDone) {
+      layoffsDone = true;
       setTimeout(function() {
-        document.querySelectorAll(".viz-bar").forEach(function(bar) {
-          bar.style.width = bar.dataset.w + "%";
-        });
+        document.querySelectorAll(".viz-bar").forEach(function(bar) { bar.style.width = bar.dataset.w + "%"; });
         var counter = document.getElementById("viz-counter");
-        var target = 386379;
-        var duration = 1800;
-        var start = null;
+        var target = 386379; var duration = 1800; var start = null;
         function step(ts) {
           if (!start) start = ts;
-          var progress = Math.min((ts - start) / duration, 1);
-          var ease = 1 - Math.pow(1 - progress, 3);
+          var p = Math.min((ts - start) / duration, 1);
+          var ease = 1 - Math.pow(1 - p, 3);
           counter.textContent = Math.round(target * ease).toLocaleString();
-          if (progress < 1) requestAnimationFrame(step);
+          if (p < 1) requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
       }, 300);
     }
   });
 }, { threshold: 0.4 });
-var layoffsCard = document.getElementById("layoffs-card");
-if (layoffsCard) vizObs.observe(layoffsCard);
+var lCard = document.getElementById("layoffs-card");
+if (lCard) layoffsObs.observe(lCard);
+
+/* Sales estimates card viz */
+var salesDone = false;
+var salesObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting && !salesDone) {
+      salesDone = true;
+      var maxH = 95;
+      var bars = document.querySelectorAll("#sales-viz .sales-bar");
+      bars.forEach(function(bar) {
+        var delay = parseInt(bar.dataset.delay || 0);
+        setTimeout(function() {
+          bar.style.height = ((parseInt(bar.dataset.h) / maxH) * 72) + "px";
+        }, delay);
+      });
+    }
+  });
+}, { threshold: 0.4 });
+var sCard = document.getElementById("sales-card");
+if (sCard) salesObs.observe(sCard);
 </script>
 </body>
 </html>
