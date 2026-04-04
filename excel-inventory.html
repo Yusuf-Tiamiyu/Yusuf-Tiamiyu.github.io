@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Reorder Tracker — Yusuf Tiamiyu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#060d1b;--bg2:#0b1627;--bg3:#0f1e35;--bg4:#091220;
+  --teal:#00d4aa;--teal-dim:rgba(0,212,170,0.12);--teal-glow:rgba(0,212,170,0.06);
+  --amber:#f59e0b;--amber-dim:rgba(245,158,11,0.1);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,0.1);
+  --green:#10b981;--green-dim:rgba(16,185,129,0.1);
+  --text:#e8edf5;--text-muted:#7a8ea8;--text-faint:#3d5068;
+  --border:rgba(255,255,255,0.07);--border-bright:rgba(0,212,170,0.3);
+  --sans:"DM Sans",sans-serif;--display:"Syne",sans-serif;--mono:"IBM Plex Mono",monospace;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;overflow-x:hidden;}
+body::after{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,170,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,170,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(6,13,27,0.9);backdrop-filter:blur(16px);}
+.nav-logo{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:0.08em;color:var(--teal);text-decoration:none;text-transform:uppercase;}
+.nav-back{font-family:var(--mono);font-size:12px;color:var(--text-muted);text-decoration:none;letter-spacing:0.05em;transition:color 0.2s;}
+.nav-back:hover{color:var(--teal);}
+.page{max-width:1000px;margin:0 auto;padding:100px 2rem 80px;position:relative;z-index:1;}
+.breadcrumb{font-family:var(--mono);font-size:11px;color:var(--text-faint);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;}
+.breadcrumb span{color:var(--teal);}
+.proj-title{font-family:var(--display);font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1rem;}
+.proj-title span{color:var(--teal);}
+.proj-sub{font-size:1.05rem;color:var(--text-muted);max-width:700px;line-height:1.8;margin-bottom:2rem;}
+.meta-row{display:flex;flex-wrap:wrap;gap:0.75rem;margin-bottom:3rem;}
+.pill{font-family:var(--mono);font-size:11px;padding:5px 14px;border-radius:2px;letter-spacing:0.06em;text-transform:uppercase;}
+.pill-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(0,212,170,0.2);}
+.pill-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.pill-red{background:var(--red-dim);color:#f87171;border:1px solid rgba(239,68,68,0.2);}
+.pill-blue{background:var(--blue-dim);color:#60a5fa;border:1px solid rgba(59,130,246,0.2);}
+.pill-green{background:var(--green-dim);color:#34d399;border:1px solid rgba(16,185,129,0.2);}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;margin-bottom:4rem;overflow:hidden;}
+.stat{background:var(--bg2);padding:1.5rem;text-align:center;}
+.stat-big{font-family:var(--display);font-size:1.8rem;font-weight:800;color:var(--teal);display:block;}
+.stat-big.warn{color:var(--red);}
+.stat-big.ok{color:var(--green);}
+.stat-desc{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;display:block;}
+.tab-nav{display:flex;border-bottom:1px solid var(--border);margin-bottom:3rem;overflow-x:auto;}
+.tab-btn{font-family:var(--mono);font-size:12px;padding:14px 22px;color:var(--text-faint);background:none;border:none;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text-muted);}
+.tab-btn.active{color:var(--teal);border-bottom-color:var(--teal);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.story p{color:var(--text-muted);line-height:1.9;margin-bottom:1.25rem;}
+.story p strong{color:var(--text);font-weight:500;}
+.story h3{font-family:var(--display);font-size:1.2rem;font-weight:700;margin:2rem 0 0.75rem;color:var(--text);}
+.callout{padding:1.25rem 1.5rem;border-left:2px solid var(--teal);background:var(--teal-glow);border-radius:0 4px 4px 0;margin:1.5rem 0;font-family:var(--mono);font-size:0.83rem;color:var(--text-muted);line-height:1.7;}
+.callout.amber{border-color:var(--amber);background:var(--amber-dim);}
+.callout.red{border-color:var(--red);background:var(--red-dim);}
+
+/* STATUS VIZ */
+.status-viz{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:2rem;margin-bottom:2.5rem;display:grid;grid-template-columns:200px 1fr;gap:2.5rem;align-items:center;}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:1rem;}
+.donut-canvas-wrap{position:relative;width:160px;height:160px;}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.donut-center-num{font-family:var(--display);font-size:1.6rem;font-weight:800;color:var(--text);}
+.donut-center-label{font-family:var(--mono);font-size:9px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;}
+.donut-legend{display:flex;flex-direction:column;gap:8px;}
+.legend-row{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--text-muted);}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
+.status-details{display:flex;flex-direction:column;gap:1rem;}
+.status-bar-row{display:flex;flex-direction:column;gap:4px;}
+.status-bar-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;}
+.status-bar-label span:first-child{color:var(--text-muted);}
+.status-bar-label span:last-child{color:var(--text-faint);}
+.status-track{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.status-fill{height:100%;border-radius:4px;width:0;transition:width 1.4s cubic-bezier(0.16,1,0.3,1);}
+
+/* SAMPLE ITEMS */
+.items-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:2rem;}
+.items-table th{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.items-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text-muted);}
+.items-table tr:hover td{background:var(--bg3);}
+.status-ok{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;background:var(--green-dim);color:#34d399;border:1px solid rgba(16,185,129,0.2);}
+.status-reo{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;background:var(--red-dim);color:#f87171;border:1px solid rgba(239,68,68,0.2);}
+.months-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:4px;}
+.months-fill{height:100%;border-radius:3px;}
+
+/* HOW IT WORKS */
+.rule-card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1.75rem;margin-bottom:1.5rem;}
+.rule-card-num{font-family:var(--display);font-size:2rem;font-weight:800;color:var(--teal);margin-bottom:0.5rem;}
+.rule-card h4{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;}
+.rule-card p{font-size:0.88rem;color:var(--text-muted);line-height:1.8;}
+.formula-box{background:var(--bg4);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin:1rem 0 1.5rem;}
+.formula-header{background:var(--bg3);padding:7px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.formula-label{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;}
+.formula-body{padding:1rem 1.25rem;overflow-x:auto;}
+.formula-body pre{font-family:var(--mono);font-size:0.8rem;line-height:1.85;color:var(--text-muted);white-space:pre;}
+.fx{color:var(--amber);}.ref{color:#60a5fa;}.str{color:#34d399;}.cm2{color:var(--text-faint);font-style:italic;}.nm{color:var(--amber);}
+.skill-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:2rem;}
+.skill-tag{font-family:var(--mono);font-size:10px;padding:4px 12px;border-radius:2px;background:var(--bg3);color:var(--text-muted);border:1px solid var(--border);letter-spacing:0.05em;}
+.findings-list{display:flex;flex-direction:column;gap:12px;}
+.finding{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:var(--text-muted);line-height:1.7;}
+.finding-icon{font-size:1.25rem;flex-shrink:0;margin-top:2px;}
+.finding strong{color:var(--text);}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr);}.status-viz{grid-template-columns:1fr;}.donut-wrap{flex-direction:row;}}
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--text-faint);border-radius:2px;}
+::selection{background:var(--teal-dim);color:var(--teal);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">YUSUF.T</a>
+  <a href="index.html#projects" class="nav-back">&larr; Back to Portfolio</a>
+</nav>
+<div class="page">
+
+  <div class="breadcrumb">Projects <span>/</span> Excel &mdash; Inventory Management</div>
+  <h1 class="proj-title">Laboratory Inventory<br><span>Reorder Tracker</span></h1>
+  <p class="proj-sub">A smart Excel system that automatically monitors 1,578 laboratory items across every category &mdash; from gloves and reagents to analyser consumables &mdash; flagging anything that hits the 2-month stock threshold before it becomes a crisis.</p>
+  <div class="meta-row">
+    <span class="pill pill-teal">Excel</span>
+    <span class="pill pill-amber">IF / IFERROR</span>
+    <span class="pill pill-blue">SUMIFS</span>
+    <span class="pill pill-red">Stock Management</span>
+    <span class="pill pill-green">Automation</span>
+    <span class="pill pill-teal">Healthcare</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="stat-big" id="cnt-items">0</span><span class="stat-desc">Items tracked</span></div>
+    <div class="stat"><span class="stat-big warn" id="cnt-reo">0</span><span class="stat-desc">Need reorder now</span></div>
+    <div class="stat"><span class="stat-big ok" id="cnt-ok">0</span><span class="stat-desc">Stock OK</span></div>
+    <div class="stat"><span class="stat-big">2mo</span><span class="stat-desc">Reorder safety buffer</span></div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">Overview</button>
+    <button class="tab-btn" onclick="switchTab('status',this)">Stock Status</button>
+    <button class="tab-btn" onclick="switchTab('howitworks',this)">How It Works</button>
+    <button class="tab-btn" onclick="switchTab('findings',this)">Key Findings</button>
+  </div>
+
+  <div class="tab-panel active" id="panel-overview">
+    <div class="story">
+      <p>Laboratory stockouts are dangerous &mdash; a missing reagent can delay diagnoses and affect patient care. But managing 1,578 items manually is impossible. This tracker was built to make it automatic: set up each item once, and the system tells you every day whether you&rsquo;re safe or need to act.</p>
+      <p>The core logic is simple but powerful. Every item has a <strong>Reorder Level</strong> set to 2 months of average usage. When Current Qty drops to or below that level, the Status column instantly flips from green &ldquo;OK&rdquo; to red &ldquo;REORDER NOW&rdquo; &mdash; no manual checking, no formulas you have to recalculate. It just works.</p>
+      <p>The file also tracks <strong>issuances</strong> (every item going out gets logged in Sheet 2), and Sheet 3 auto-generates a monthly summary for any month you specify &mdash; showing total consumption per item, number of transactions, and who items were issued to most.</p>
+      <div class="callout">The tracker was intentionally built so any team member can use it &mdash; no Excel expertise required. Update the quantity, and everything else is automatic.
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-status">
+    <div class="status-viz" id="status-viz">
+      <div class="donut-wrap">
+        <div class="donut-canvas-wrap">
+          <canvas id="donut" width="160" height="160"></canvas>
+          <div class="donut-center">
+            <div class="donut-center-num">1,578</div>
+            <div class="donut-center-label">Total items</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-row"><div class="legend-dot" style="background:var(--red);"></div>Reorder Now: 1,413</div>
+          <div class="legend-row"><div class="legend-dot" style="background:var(--teal);"></div>Stock OK: 165</div>
+        </div>
+      </div>
+      <div class="status-details">
+        <div class="status-bar-row">
+          <div class="status-bar-label"><span>REORDER NOW</span><span>1,413 items &mdash; 89.5%</span></div>
+          <div class="status-track"><div class="status-fill" data-w="89.5" style="background:var(--red);"></div></div>
+        </div>
+        <div class="status-bar-row">
+          <div class="status-bar-label"><span>Stock OK</span><span>165 items &mdash; 10.5%</span></div>
+          <div class="status-track"><div class="status-fill" data-w="10.5" style="background:var(--teal);"></div></div>
+        </div>
+        <div class="status-bar-row" style="margin-top:0.5rem;">
+          <div class="status-bar-label"><span>Zero stock (Qty = 0)</span><span>~870 items &mdash; 55%</span></div>
+          <div class="status-track"><div class="status-fill" data-w="55" style="background:rgba(239,68,68,0.5);"></div></div>
+        </div>
+        <div class="callout red" style="margin-top:1rem;font-size:0.8rem;">89.5% of tracked items were flagged for reorder when the tracker was first deployed. This revealed a major procurement gap that had been invisible without a system in place.</div>
+      </div>
+    </div>
+
+    <table class="items-table">
+      <thead>
+        <tr><th>Item ID</th><th>Description</th><th>Qty</th><th>Reorder Level</th><th>Status</th><th>Months Left</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LAB-00005</td><td>Nitrile Gloves Powder-Free Medium</td><td>280</td><td>100</td><td><span class="status-ok">OK</span></td><td><div style="color:var(--teal);font-family:var(--mono);font-size:11px;">5.6 mo</div><div class="months-bar"><div class="months-fill" style="width:100%;background:var(--teal);"></div></div></td></tr>
+        <tr><td>LAB-00006</td><td>Nitrile Gloves Powder-Free Large</td><td>770</td><td>200</td><td><span class="status-ok">OK</span></td><td><div style="color:var(--teal);font-family:var(--mono);font-size:11px;">7.7 mo</div><div class="months-bar"><div class="months-fill" style="width:100%;background:var(--teal);"></div></div></td></tr>
+        <tr><td>LAB-00002</td><td>Forceps Plain 13cm</td><td>0</td><td>6</td><td><span class="status-reo">REORDER NOW</span></td><td><div style="color:var(--red);font-family:var(--mono);font-size:11px;">0 mo</div><div class="months-bar"><div class="months-fill" style="width:0%;background:var(--red);"></div></div></td></tr>
+        <tr><td>LAB-00004</td><td>Infrared Thermometer Digital</td><td>0</td><td>6</td><td><span class="status-reo">REORDER NOW</span></td><td><div style="color:var(--red);font-family:var(--mono);font-size:11px;">0 mo</div><div class="months-bar"><div class="months-fill" style="width:0%;background:var(--red);"></div></div></td></tr>
+        <tr><td>LAB-00012</td><td>Bag Specimen Lancet Red</td><td>1200</td><td>200</td><td><span class="status-ok">OK</span></td><td><div style="color:var(--teal);font-family:var(--mono);font-size:11px;">12.0 mo</div><div class="months-bar"><div class="months-fill" style="width:100%;background:var(--teal);"></div></div></td></tr>
+        <tr><td>LAB-00017</td><td>Vacutainer Needles 21G</td><td>0</td><td>6</td><td><span class="status-reo">REORDER NOW</span></td><td><div style="color:var(--red);font-family:var(--mono);font-size:11px;">0 mo</div><div class="months-bar"><div class="months-fill" style="width:0%;background:var(--red);"></div></div></td></tr>
+        <tr><td>LAB-00940</td><td>Stool Containers</td><td>3,850</td><td>200</td><td><span class="status-ok">OK</span></td><td><div style="color:var(--teal);font-family:var(--mono);font-size:11px;">38.5 mo</div><div class="months-bar"><div class="months-fill" style="width:100%;background:var(--teal);"></div></div></td></tr>
+        <tr><td>LAB-00084</td><td>Analyser Halogen Lamp 12V/100W</td><td>10</td><td>10</td><td><span class="status-reo">REORDER NOW</span></td><td><div style="color:var(--amber);font-family:var(--mono);font-size:11px;">2.0 mo</div><div class="months-bar"><div class="months-fill" style="width:33%;background:var(--amber);"></div></div></td></tr>
+      </tbody>
+    </table>
+    <p style="font-family:var(--mono);font-size:10px;color:var(--text-faint);text-align:center;margin-bottom:2rem;">Showing 8 of 1,578 items. Status, months, and all calculations are fully automated.</p>
+  </div>
+
+  <div class="tab-panel" id="panel-howitworks">
+    <div class="rule-card">
+      <div class="rule-card-num">01</div>
+      <h4>The 2-Month Rule</h4>
+      <p>Every item&rsquo;s Reorder Level is set to exactly 2 months of average monthly usage. So when the tracker flags REORDER NOW, you still have 2 full months of stock to place an order, wait for delivery, and receive the goods. This prevents stockouts even with slow procurement cycles.</p>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card-num">02</div>
+      <h4>Automatic Status</h4>
+      <p>The Status column runs a simple IF formula. You never type OK or REORDER NOW &mdash; it calculates itself every time the spreadsheet opens or a quantity changes. Green = safe. Red = act now.</p>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card-num">03</div>
+      <h4>Months of Stock</h4>
+      <p>A calculated column shows exactly how many months of stock remain based on current quantity and average usage. This is more useful than just OK/REORDER &mdash; it tells you if you have 0.5 months or 12 months, so you can prioritise your orders.</p>
+    </div>
+    <div class="formula-box">
+      <div class="formula-header"><span class="formula-label">Status column &mdash; auto-calculates</span></div>
+      <div class="formula-body"><pre><span class="cm2">-- Status: compares current qty against reorder level</span>
+=<span class="fx">IF</span>(<span class="ref">C2</span> &lt;= <span class="ref">D2</span>, <span class="str">"REORDER NOW"</span>, <span class="str">"OK"</span>)</pre></div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-header"><span class="formula-label">Avg monthly usage &mdash; auto-derived from reorder level</span></div>
+      <div class="formula-body"><pre><span class="cm2">-- Avg monthly usage = Reorder Level / 2 (since level = 2 months of usage)</span>
+=<span class="ref">D2</span> / <span class="nm">2</span></pre></div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-header"><span class="formula-label">Months of stock remaining &mdash; auto-calculates</span></div>
+      <div class="formula-body"><pre><span class="cm2">-- Months of stock = Current Qty / Avg Monthly Usage</span>
+=<span class="fx">IFERROR</span>(<span class="ref">C2</span> / <span class="ref">H2</span>, <span class="nm">0</span>)
+<span class="cm2">-- IFERROR handles items with 0 monthly usage (no divide-by-zero errors)</span></pre></div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-header"><span class="formula-label">Monthly summary &mdash; dynamic by month selection</span></div>
+      <div class="formula-body"><pre><span class="cm2">-- Total issued for an item in the selected month</span>
+=<span class="fx">SUMIFS</span>(<span class="ref">IssuanceLog[Qty Issued]</span>,
+         <span class="ref">IssuanceLog[Item ID]</span>, <span class="ref">A7</span>,
+         <span class="ref">IssuanceLog[Month]</span>,   <span class="str">$B$4</span>)
+<span class="cm2">-- Change B4 (the month selector) and the whole summary updates instantly</span></pre></div>
+    </div>
+    <div class="skill-strip">
+      <span class="skill-tag">IF / IFERROR</span>
+      <span class="skill-tag">SUMIFS</span>
+      <span class="skill-tag">COUNTIFS</span>
+      <span class="skill-tag">Dynamic month selector</span>
+      <span class="skill-tag">Conditional formatting (auto red/green)</span>
+      <span class="skill-tag">Data validation</span>
+      <span class="skill-tag">Audit trail design</span>
+      <span class="skill-tag">Multi-sheet formula linking</span>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-findings">
+    <div class="callout red" style="margin-bottom:2rem;">When this tracker was first deployed and populated, the findings were stark. Here&rsquo;s what the data revealed.</div>
+    <div class="findings-list">
+      <div class="finding"><div class="finding-icon">&#128680;</div><div><strong>89.5% of items were below reorder level.</strong> Of 1,578 tracked items, 1,413 were flagged REORDER NOW on day one. This was invisible without the tracker &mdash; nothing was being automatically monitored before it was built.</div></div>
+      <div class="finding"><div class="finding-icon">&#9888;</div><div><strong>~55% had zero stock.</strong> Approximately 870 items had a Current Qty of 0 &mdash; meaning they were completely out of stock with no buffer whatsoever. For critical lab consumables like collection tubes and reagents, this is a patient safety risk.</div></div>
+      <div class="finding"><div class="finding-icon">&#128200;</div><div><strong>A handful of items had excessive stock.</strong> Items like Stool Containers (3,850 units, 38.5 months), Urine Containers (5,025 units), and Barcode Labels (18,000 units) had far more stock than needed &mdash; capital tied up that could be better used elsewhere.</div></div>
+      <div class="finding"><div class="finding-icon">&#10004;</div><div><strong>Only 165 items were genuinely healthy.</strong> These included PPE (gloves, waste bags, lab coats), some collection tubes, and a few key reagents. Even these needed ongoing monitoring to stay above threshold.</div></div>
+      <div class="finding"><div class="finding-icon">&#127775;</div><div><strong>The biggest value: the tracker made the invisible visible.</strong> Before this tool, the only way to know stock levels was to physically check or ask someone. Now, anyone can open the file and see the full picture in seconds &mdash; and the system tells you exactly what to order and when.</div></div>
+    </div>
+  </div>
+
+</div>
+<script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='status') setTimeout(animateStatus,100);
+}
+
+function animateStatus(){
+  document.querySelectorAll('.status-fill').forEach(function(bar){bar.style.width=bar.dataset.w+'%';});
+  drawDonut();
+}
+
+function drawDonut(){
+  var canvas=document.getElementById('donut');
+  if(!canvas) return;
+  var ctx=canvas.getContext('2d');
+  var cx=80,cy=80,r=65,iw=18;
+  ctx.clearRect(0,0,160,160);
+  var total=1578,ok=165,reo=1413;
+  var startAngle=-Math.PI/2;
+  var reoAngle=(reo/total)*Math.PI*2;
+  var okAngle=(ok/total)*Math.PI*2;
+  ctx.beginPath();ctx.arc(cx,cy,r,startAngle,startAngle+reoAngle);
+  ctx.lineWidth=iw;ctx.strokeStyle='#ef4444';ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,r,startAngle+reoAngle,startAngle+reoAngle+okAngle);
+  ctx.lineWidth=iw;ctx.strokeStyle='#00d4aa';ctx.stroke();
+}
+
+// Count-up
+function countUp(el,target,duration,fmt){
+  var start=null;
+  function step(ts){
+    if(!start) start=ts;
+    var p=Math.min((ts-start)/duration,1);
+    var ease=1-Math.pow(1-p,3);
+    var val=Math.round(target*ease);
+    el.textContent = fmt ? val.toLocaleString() : val.toLocaleString();
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+var counted=false;
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting&&!counted){
+      counted=true;
+      countUp(document.getElementById('cnt-items'),1578,1600);
+      countUp(document.getElementById('cnt-reo'),1413,1800);
+      countUp(document.getElementById('cnt-ok'),165,1400);
+    }
+  });
+},{threshold:0.5});
+var strip=document.querySelector('.stats');
+if(strip) obs.observe(strip);
+drawDonut();
+</script>
+</body>
+</html>

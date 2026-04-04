@@ -6,1187 +6,2001 @@
 <title>Yusuf Tiamiyu — Data Analyst</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;700;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 
 <style>
+/* ═══════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#0a0a0f;
-  --bg2:#0f0f1a;
-  --bg3:#141420;
-  --lime:#c8ff00;
-  --lime-dim:rgba(200,255,0,0.1);
-  --lime-glow:rgba(200,255,0,0.05);
-  --coral:#ff4d6d;
-  --sky:#38bdf8;
-  --purple:#a855f7;
-  --text:#f0f0f5;
-  --text-muted:#8888a0;
-  --text-faint:#3d3d55;
-  --border:rgba(255,255,255,0.06);
-  --border-bright:rgba(200,255,0,0.3);
-  --display:"Bricolage Grotesque",sans-serif;
-  --serif:"Instrument Serif",serif;
+  --bg:#06060a;
+  --bg2:#0d0d14;
+  --bg3:#12121c;
+  --lime:#b8ff3f;
+  --lime2:#d4ff6e;
+  --lime-dim:rgba(184,255,63,0.08);
+  --lime-glow:rgba(184,255,63,0.15);
+  --coral:#ff5757;
+  --sky:#3de0f5;
+  --amber:#ffb547;
+  --purple:#9d6ef5;
+  --text:#f2f2f8;
+  --muted:#7a7a94;
+  --faint:#2e2e42;
+  --border:rgba(255,255,255,0.05);
+  --border-active:rgba(184,255,63,0.25);
+  --display:"Clash Display",sans-serif;
+  --body:"Satoshi",sans-serif;
   --mono:"JetBrains Mono",monospace;
-  --radius:8px;
 }
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--display);font-size:16px;line-height:1.7;overflow-x:hidden;cursor:none;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--body);background:var(--bg);color:var(--text);}
 
-/* ═══ GRAIN OVERLAY ═══ */
-body::before{content:"";position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;opacity:0.4;}
+/* ═══════════════════════════════════════
+   GRAIN TEXTURE
+═══════════════════════════════════════ */
+#grain{position:fixed;inset:0;pointer-events:none;z-index:9000;opacity:0.35;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
 
-/* ═══ CURSOR ═══ */
-#cursor{position:fixed;width:12px;height:12px;background:var(--lime);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s;mix-blend-mode:exclusion;}
-#cursor-ring{position:fixed;width:40px;height:40px;border:1.5px solid rgba(200,255,0,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all 0.15s ease-out;mix-blend-mode:exclusion;}
-#cursor-text{position:fixed;pointer-events:none;z-index:9999;font-family:var(--mono);font-size:10px;color:var(--lime);opacity:0;transition:opacity 0.2s;white-space:nowrap;transform:translate(20px,-8px);}
+/* ═══════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════ */
+body{cursor:none;}
+#cur{position:fixed;width:10px;height:10px;background:var(--lime);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s;mix-blend-mode:exclusion;}
+#cur-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(184,255,63,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all 0.12s ease-out;mix-blend-mode:exclusion;}
+@media(max-width:768px){body{cursor:auto;}#cur,#cur-ring{display:none;}}
 
-/* ═══ SCROLL PROGRESS ═══ */
-#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--lime),var(--coral));z-index:200;width:0;transition:width 0.05s linear;box-shadow:0 0 12px var(--lime);}
+/* ═══════════════════════════════════════
+   SLIDE ENGINE
+═══════════════════════════════════════ */
+#slides{position:fixed;inset:0;overflow:hidden;}
+.slide{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1),transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  transform:translateY(60px);
+  overflow:hidden;
+}
+.slide.active{opacity:1;pointer-events:all;transform:translateY(0);}
+.slide.exiting-up{opacity:0;transform:translateY(-60px);}
+.slide.exiting-down{opacity:0;transform:translateY(60px);}
 
-/* ═══ NAV ═══ */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:68px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.85);backdrop-filter:blur(24px);}
-.nav-logo{font-family:var(--display);font-size:18px;font-weight:800;color:var(--text);text-decoration:none;letter-spacing:-0.03em;transition:color 0.2s;}
-.nav-logo span{color:var(--lime);}
-.nav-logo:hover{color:var(--lime);}
+/* ═══════════════════════════════════════
+   PROGRESS DOTS
+═══════════════════════════════════════ */
+#dots{
+  position:fixed;right:28px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:10px;z-index:800;
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--faint);border:1px solid var(--border);
+  cursor:pointer;transition:all 0.3s;
+}
+.dot.active{background:var(--lime);border-color:var(--lime);box-shadow:0 0 10px var(--lime);}
+.dot:hover{background:var(--muted);}
+.dot-label{
+  position:absolute;right:22px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:9px;color:var(--lime);letter-spacing:0.1em;
+  opacity:0;transition:opacity 0.2s;white-space:nowrap;text-transform:uppercase;
+  pointer-events:none;
+}
+.dot:hover .dot-label{opacity:1;}
+
+/* ═══════════════════════════════════════
+   NAV BAR
+═══════════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:64px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 3rem;
+  background:rgba(6,6,10,0.7);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.03em;}
+.nav-logo em{color:var(--lime);font-style:normal;}
 .nav-links{display:flex;gap:2.5rem;list-style:none;}
-.nav-links a{font-family:var(--mono);font-size:11px;color:var(--text-muted);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s;position:relative;}
-.nav-links a:hover{color:var(--lime);}
-.nav-links a::after{content:"";position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--lime);transform:scaleX(0);transition:transform 0.25s;}
-.nav-links a:hover::after{transform:scaleX(1);}
-.nav-cta{font-family:var(--mono);font-size:11px;padding:9px 22px;border:1.5px solid var(--lime);color:var(--lime);border-radius:3px;text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:background 0.2s,color 0.2s;}
-.nav-cta:hover{background:var(--lime);color:var(--bg);}
+.nav-links a{font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;cursor:pointer;}
+.nav-links a:hover,.nav-links a.active{color:var(--lime);}
+.nav-hire{font-family:var(--mono);font-size:10px;padding:9px 20px;border:1px solid var(--lime);color:var(--lime);text-decoration:none;border-radius:2px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;cursor:pointer;}
+.nav-hire:hover{background:var(--lime);color:var(--bg);}
 
-/* ═══ HERO ═══ */
-#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 3rem 80px;max-width:1200px;margin:0 auto;position:relative;z-index:1;}
-#hero-canvas{position:fixed;top:0;left:0;width:100%;height:100vh;pointer-events:none;z-index:0;opacity:0.6;}
+/* ═══════════════════════════════════════
+   SCROLL HINT
+═══════════════════════════════════════ */
+#scroll-hint{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+  z-index:500;display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:1;transition:opacity 0.5s;pointer-events:none;
+}
+#scroll-hint .hint-text{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;}
+.hint-arrow{width:20px;height:20px;border-right:1px solid var(--muted);border-bottom:1px solid var(--muted);transform:rotate(45deg);animation:hintBounce 1.5s ease-in-out infinite;}
+@keyframes hintBounce{0%,100%{opacity:0.3;transform:rotate(45deg) translateY(-4px);}50%{opacity:1;transform:rotate(45deg) translateY(4px);}}
 
-.hero-eyebrow{font-family:var(--mono);font-size:12px;color:var(--lime);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:2rem;display:flex;align-items:center;gap:14px;opacity:0;animation:slideIn 0.8s 0.2s forwards;}
-.avail-dot{width:8px;height:8px;background:var(--lime);border-radius:50%;animation:pulse 2s ease-in-out infinite;box-shadow:0 0 8px var(--lime);}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.8);}}
+/* ═══════════════════════════════════════
+   MASCOT
+═══════════════════════════════════════ */
+#mascot-container{
+  position:fixed;z-index:600;
+  transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;
+}
+#mascot-container.pos-hero{bottom:60px;left:60px;}
+#mascot-container.pos-about{bottom:80px;right:60px;left:auto;}
+#mascot-container.pos-skills{top:50%;left:20px;transform:translateY(-50%);}
+#mascot-container.pos-projects{bottom:80px;left:60px;}
+#mascot-container.pos-lab{bottom:80px;right:80px;left:auto;}
+#mascot-container.pos-inventory{bottom:80px;left:80px;}
+#mascot-container.pos-sql{top:50%;right:40px;left:auto;transform:translateY(-50%);}
+#mascot-container.pos-contact{bottom:80px;left:50%;transform:translateX(-50%);}
 
-.hero-name{font-family:var(--display);font-size:clamp(3.5rem,9vw,8rem);font-weight:800;line-height:0.95;letter-spacing:-0.04em;color:var(--text);margin-bottom:0.25rem;opacity:0;animation:slideIn 0.9s 0.35s forwards;}
-.hero-name .stroke{-webkit-text-stroke:2px var(--text);color:transparent;}
-.hero-name .lime{color:var(--lime);}
+#mascot-bubble{
+  background:var(--bg2);border:1.5px solid var(--lime);
+  border-radius:14px 14px 3px 14px;
+  padding:10px 14px;font-family:var(--mono);font-size:10px;color:var(--lime);
+  max-width:200px;line-height:1.55;text-align:right;
+  opacity:0;transform:scale(0.85) translateY(8px);
+  transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  margin-bottom:8px;box-shadow:0 0 20px rgba(184,255,63,0.12);
+  position:relative;
+}
+#mascot-bubble.show{opacity:1;transform:scale(1) translateY(0);}
+#mascot-bubble::after{
+  content:"";position:absolute;bottom:-8px;right:14px;
+  width:0;height:0;
+  border-left:6px solid transparent;
+  border-right:6px solid transparent;
+  border-top:8px solid var(--lime);
+}
 
-.hero-role{font-family:var(--serif);font-style:italic;font-size:clamp(1.4rem,3vw,2.4rem);color:var(--text-muted);margin-bottom:1.5rem;opacity:0;animation:slideIn 0.9s 0.5s forwards;}
+#mascot-svg-wrap{
+  width:72px;height:72px;
+  animation:mascotFloat 3s ease-in-out infinite;
+  filter:drop-shadow(0 4px 12px rgba(184,255,63,0.2));
+}
+@keyframes mascotFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+#arm-l,#arm-r{transform-origin:center center;transition:transform 0.3s;}
 
-.hero-ticker{font-family:var(--mono);font-size:13px;color:var(--lime);letter-spacing:0.05em;margin-bottom:3rem;opacity:0;animation:slideIn 0.9s 0.65s forwards;display:flex;align-items:center;gap:10px;}
-.ticker-prefix{color:var(--text-faint);}
-#typewriter{color:var(--lime);}
-#typewriter::after{content:"▌";animation:blink 1s step-end infinite;}
+/* ═══════════════════════════════════════
+   SLIDE 0 – HERO
+═══════════════════════════════════════ */
+#slide-hero{background:var(--bg);}
+#hero-canvas{position:absolute;inset:0;pointer-events:none;}
+.hero-inner{
+  position:relative;z-index:2;
+  max-width:1100px;padding:0 3rem;
+  width:100%;
+}
+.hero-tag{
+  font-family:var(--mono);font-size:11px;color:var(--lime);
+  letter-spacing:0.2em;text-transform:uppercase;
+  display:flex;align-items:center;gap:12px;margin-bottom:2rem;
+  opacity:0;animation:rise 0.8s 0.3s forwards;
+}
+.avail-dot{width:8px;height:8px;background:var(--lime);border-radius:50%;animation:glowPulse 2s ease-in-out infinite;box-shadow:0 0 8px var(--lime);}
+@keyframes glowPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.8);}}
+
+.hero-name{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(4rem,10vw,9rem);line-height:0.92;letter-spacing:-0.04em;
+  margin-bottom:1rem;
+  opacity:0;animation:rise 0.9s 0.45s forwards;
+}
+.hero-name .outline{-webkit-text-stroke:2px var(--text);color:transparent;}
+.hero-name .filled{color:var(--lime);}
+
+.hero-role{
+  font-family:var(--body);font-size:clamp(1.2rem,2.5vw,1.8rem);
+  font-weight:300;color:var(--muted);letter-spacing:0.02em;
+  margin-bottom:2rem;
+  opacity:0;animation:rise 0.9s 0.6s forwards;
+}
+
+.hero-tw{
+  font-family:var(--mono);font-size:12px;color:var(--lime);
+  display:flex;align-items:center;gap:10px;margin-bottom:3rem;
+  opacity:0;animation:rise 0.9s 0.75s forwards;
+}
+.tw-prefix{color:var(--faint);}
+#tw{min-height:1em;}
+#tw::after{content:"▌";animation:blink 1s step-end infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
 
-.hero-desc{max-width:600px;font-size:1.05rem;color:var(--text-muted);line-height:1.85;margin-bottom:3.5rem;font-weight:300;opacity:0;animation:slideIn 0.9s 0.8s forwards;}
-.hero-desc strong{color:var(--text);font-weight:600;}
+.hero-bio{
+  max-width:560px;font-size:1.05rem;color:var(--muted);
+  line-height:1.85;margin-bottom:3rem;font-weight:300;
+  opacity:0;animation:rise 0.9s 0.9s forwards;
+}
+.hero-bio strong{color:var(--text);font-weight:500;}
 
-.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:slideIn 0.9s 0.95s forwards;}
-.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--lime);color:var(--bg);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:none;border-radius:3px;cursor:none;text-decoration:none;transition:opacity 0.2s,transform 0.2s,box-shadow 0.2s;}
-.btn-primary:hover{opacity:0.9;transform:translateY(-3px);box-shadow:0 12px 40px rgba(200,255,0,0.35);}
-.btn-ghost{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:transparent;color:var(--text);font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;border:1.5px solid var(--border);border-radius:3px;cursor:none;text-decoration:none;transition:border-color 0.2s,color 0.2s,transform 0.2s;}
-.btn-ghost:hover{border-color:rgba(200,255,0,0.4);color:var(--lime);transform:translateY(-3px);}
+.hero-actions{
+  display:flex;gap:1rem;flex-wrap:wrap;
+  opacity:0;animation:rise 0.9s 1.05s forwards;
+}
+.btn-lime{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;background:var(--lime);color:var(--bg);
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.08em;
+  text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-lime:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 10px 32px rgba(184,255,63,0.3);}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;background:transparent;color:var(--text);
+  font-family:var(--mono);font-size:11px;letter-spacing:0.08em;
+  text-transform:uppercase;border:1px solid var(--border);border-radius:3px;cursor:pointer;
+  transition:all 0.2s;text-decoration:none;
+}
+.btn-outline:hover{border-color:var(--border-active);color:var(--lime);transform:translateY(-2px);}
 
-.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:5rem;padding-top:2.5rem;border-top:1px solid var(--border);opacity:0;animation:slideIn 0.9s 1.1s forwards;}
-.stat-item{padding-right:2rem;border-right:1px solid var(--border);}
-.stat-item:last-child{border-right:none;}
-.stat-num{font-family:var(--display);font-size:2.2rem;font-weight:800;color:var(--lime);letter-spacing:-0.04em;line-height:1;}
-.stat-label{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;}
+.hero-metrics{
+  display:flex;gap:0;margin-top:4rem;padding-top:2rem;
+  border-top:1px solid var(--border);flex-wrap:wrap;
+  opacity:0;animation:rise 0.9s 1.2s forwards;
+}
+.metric{padding:0 3rem 0 0;border-right:1px solid var(--border);margin-right:3rem;}
+.metric:last-child{border-right:none;}
+.metric-num{font-family:var(--display);font-size:2.5rem;font-weight:700;color:var(--lime);letter-spacing:-0.04em;line-height:1;}
+.metric-lbl{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:0.12em;text-transform:uppercase;margin-top:4px;}
 
-@keyframes slideIn{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes rise{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
 
-/* ═══ MASCOT ═══ */
-#mascot-wrap{position:fixed;bottom:30px;right:30px;z-index:500;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none;}
-#mascot-bubble{background:var(--bg2);border:1.5px solid var(--lime);border-radius:12px 12px 2px 12px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--lime);max-width:220px;line-height:1.5;opacity:0;transform:translateY(10px) scale(0.95);transition:opacity 0.4s,transform 0.4s;pointer-events:none;text-align:right;box-shadow:0 0 20px rgba(200,255,0,0.1);}
-#mascot-bubble.show{opacity:1;transform:translateY(0) scale(1);}
-#mascot{width:64px;height:64px;position:relative;}
+/* ═══════════════════════════════════════
+   SLIDE 1 – ABOUT
+═══════════════════════════════════════ */
+#slide-about{background:var(--bg2);}
+.about-inner{
+  display:grid;grid-template-columns:1fr 1fr;gap:6rem;
+  max-width:1100px;padding:80px 3rem 0;width:100%;align-items:center;
+}
+.about-visual-wrap{position:relative;}
+.about-card-main{
+  background:var(--bg3);border:1px solid var(--border);border-radius:16px;
+  padding:2.5rem;position:relative;overflow:hidden;
+}
+.about-card-main::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--lime),var(--sky),var(--purple));
+}
+.about-avatar{
+  width:100%;aspect-ratio:1;border-radius:12px;
+  background:linear-gradient(135deg,rgba(184,255,63,0.06),rgba(157,110,245,0.06));
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.5rem;position:relative;overflow:hidden;font-size:5rem;
+}
+.avatar-scan{
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--lime),transparent);
+  animation:scan 2.5s ease-in-out infinite;
+}
+@keyframes scan{0%{top:0;opacity:1;}100%{top:100%;opacity:0;}}
+.about-kpis{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;transition:border-color 0.3s;}
+.kpi:hover{border-color:var(--border-active);}
+.kpi-num{font-family:var(--display);font-size:1.8rem;font-weight:700;color:var(--lime);}
+.kpi-lbl{font-family:var(--mono);font-size:8px;color:var(--faint);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
 
-/* Pixel mascot SVG is drawn inline */
+.about-text-side .eyebrow{font-family:var(--mono);font-size:10px;color:var(--lime);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:10px;}
+.about-text-side .eyebrow::before{content:"";width:24px;height:1px;background:var(--lime);}
+.slide-title{font-family:var(--display);font-size:clamp(2.2rem,4.5vw,3.2rem);font-weight:700;letter-spacing:-0.03em;line-height:1.05;margin-bottom:1.5rem;}
+.slide-title .accent{color:var(--lime);}
+.about-text-side p{font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.1rem;font-weight:300;}
+.about-text-side strong{color:var(--text);font-weight:500;}
+.about-quote{
+  margin-top:2rem;padding:1.4rem 1.6rem;
+  border-left:2.5px solid var(--lime);background:var(--lime-dim);
+  font-size:1rem;color:var(--text);line-height:1.65;border-radius:0 10px 10px 0;
+  font-style:italic;
+}
 
-/* ═══ SECTIONS ═══ */
-section,footer{position:relative;z-index:1;}
-.section-wrap{max-width:1200px;margin:0 auto;padding:120px 3rem;}
+/* ═══════════════════════════════════════
+   SLIDE 2 – SKILLS
+═══════════════════════════════════════ */
+#slide-skills{background:var(--bg);}
+.skills-inner{max-width:1100px;padding:80px 3rem 0;width:100%;}
+.skills-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4rem;flex-wrap:wrap;gap:1.5rem;}
+.skills-top .sub{font-size:0.9rem;color:var(--muted);font-weight:300;margin-top:0.5rem;}
 
-.section-eyebrow{font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:12px;}
-.section-eyebrow::before{content:"";display:block;width:28px;height:1px;background:var(--lime);}
-.section-title{font-family:var(--display);font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1rem;}
-.section-title .accent{color:var(--lime);}
-.section-title .italic{font-family:var(--serif);font-style:italic;font-weight:400;}
-.section-sub{font-size:1rem;color:var(--text-muted);max-width:540px;margin-bottom:5rem;font-weight:300;line-height:1.8;}
+.skills-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:start;}
+.skill-cats{display:flex;flex-direction:column;gap:1rem;}
+.skill-cat{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;cursor:pointer;
+  transition:border-color 0.3s,transform 0.3s;position:relative;overflow:hidden;
+}
+.skill-cat::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--lime);transform:scaleY(0);transition:transform 0.3s;
+  transform-origin:bottom;
+}
+.skill-cat.active::before{transform:scaleY(1);}
+.skill-cat.active,.skill-cat:hover{border-color:var(--border-active);transform:translateX(4px);}
+.cat-header{display:flex;align-items:center;gap:12px;}
+.cat-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.cat-icon.g{background:rgba(184,255,63,0.1);}
+.cat-icon.b{background:rgba(61,224,245,0.1);}
+.cat-icon.p{background:rgba(157,110,245,0.1);}
+.cat-icon.c{background:rgba(255,87,87,0.1);}
+.cat-name{font-family:var(--display);font-size:1rem;font-weight:600;color:var(--text);}
+.cat-sub{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
+.cat-preview{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:10px;display:none;}
+.skill-cat.active .cat-preview{display:block;}
 
-/* ═══ ABOUT ═══ */
-#about{background:var(--bg2);}
-.about-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:6rem;align-items:center;}
+.skill-detail-panel{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:2rem;position:sticky;top:0;
+}
+.skill-detail-title{font-family:var(--display);font-size:1.2rem;font-weight:700;margin-bottom:2rem;color:var(--text);}
+.skill-bars{display:flex;flex-direction:column;gap:14px;}
+.s-row{display:grid;grid-template-columns:130px 1fr 36px;gap:10px;align-items:center;}
+.s-name{font-size:0.82rem;color:var(--muted);font-weight:300;}
+.s-track{height:5px;background:var(--bg3);border-radius:5px;overflow:hidden;}
+.s-fill{height:100%;border-radius:5px;width:0;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);}
+.s-fill.lime{background:var(--lime);box-shadow:0 0 8px rgba(184,255,63,0.4);}
+.s-fill.sky{background:var(--sky);}
+.s-fill.purple{background:var(--purple);}
+.s-fill.coral{background:var(--coral);}
+.s-pct{font-family:var(--mono);font-size:9px;color:var(--faint);text-align:right;}
 
-.about-visual{position:relative;}
-.about-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;overflow:hidden;}
-.about-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--lime),transparent);}
-.about-avatar-zone{width:100%;aspect-ratio:1;border-radius:8px;background:linear-gradient(135deg,rgba(200,255,0,0.08),rgba(168,85,247,0.06));display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;position:relative;overflow:hidden;border:1px solid var(--border);}
-.avatar-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,255,0,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,0.06) 1px,transparent 1px);background-size:32px 32px;}
-.avatar-emoji{font-size:6rem;position:relative;z-index:1;filter:drop-shadow(0 0 30px rgba(200,255,0,0.3));}
-.about-mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.about-mini-stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;}
-.about-mini-num{font-family:var(--display);font-size:1.6rem;font-weight:800;color:var(--lime);}
-.about-mini-label{font-family:var(--mono);font-size:9px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
+.journey-strip{
+  margin-top:3rem;padding:2rem;background:var(--bg2);
+  border:1px solid var(--border);border-radius:12px;position:relative;overflow:hidden;
+}
+.journey-strip::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--lime),var(--sky),var(--purple),var(--coral));}
+.journey-title{font-family:var(--display);font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;}
+.journey-sub{font-size:0.85rem;color:var(--muted);font-weight:300;margin-bottom:2rem;}
+.journey-nodes{display:flex;position:relative;}
+.journey-nodes::before{content:"";position:absolute;top:22px;left:22px;right:22px;height:1.5px;background:linear-gradient(90deg,var(--lime),var(--sky),var(--purple),var(--coral),rgba(255,255,255,0.1));}
+.j-node{display:flex;flex-direction:column;align-items:center;gap:10px;flex:1;position:relative;z-index:1;}
+.j-circle{
+  width:44px;height:44px;border-radius:50%;border:2px solid var(--border);
+  background:var(--bg2);display:flex;align-items:center;justify-content:center;
+  font-size:18px;transition:all 0.3s;cursor:default;
+}
+.j-circle.done{border-color:var(--lime);box-shadow:0 0 14px rgba(184,255,63,0.3);}
+.j-circle.current{border-color:var(--sky);box-shadow:0 0 14px rgba(61,224,245,0.3);animation:nodeGlow 2s ease-in-out infinite;}
+@keyframes nodeGlow{0%,100%{box-shadow:0 0 14px rgba(61,224,245,0.3);}50%{box-shadow:0 0 24px rgba(61,224,245,0.6);}}
+.j-circle.next{border-color:rgba(255,255,255,0.1);opacity:0.4;}
+.j-lbl{font-family:var(--mono);font-size:8px;color:var(--faint);letter-spacing:0.06em;text-transform:uppercase;text-align:center;}
 
-.about-text p{color:var(--text-muted);line-height:1.9;margin-bottom:1.25rem;font-size:1rem;font-weight:300;}
-.about-text strong{color:var(--text);font-weight:600;}
-.about-quote{margin-top:2rem;padding:1.5rem 1.75rem;border-left:3px solid var(--lime);background:var(--lime-glow);font-family:var(--serif);font-style:italic;font-size:1.1rem;color:var(--text);border-radius:0 8px 8px 0;line-height:1.6;}
+/* ═══════════════════════════════════════
+   SLIDE 3 – PROJECTS HUB
+═══════════════════════════════════════ */
+#slide-projects{background:var(--bg2);}
+.projects-inner{max-width:1200px;padding:80px 3rem 0;width:100%;}
+.proj-header{margin-bottom:3rem;}
+.proj-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1.2rem;}
+.pcard{
+  background:var(--bg);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;cursor:pointer;
+  transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  opacity:0;transform:translateY(20px);
+}
+.pcard.in{opacity:1;transform:translateY(0);}
+.pcard:hover{border-color:var(--border-active);transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 40px rgba(184,255,63,0.06);}
+.pcard.c12{grid-column:span 12;}
+.pcard.c7{grid-column:span 7;}
+.pcard.c5{grid-column:span 5;}
+.pcard.c6{grid-column:span 6;}
 
-/* ═══ SKILLS ═══ */
-#skills{background:var(--bg);}
-.skills-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:5rem;flex-wrap:wrap;gap:2rem;}
-.skills-legend{display:flex;gap:2rem;font-family:var(--mono);font-size:11px;color:var(--text-faint);}
-.legend-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;}
+.pcard-visual{
+  height:180px;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+}
+.pcard.c12 .pcard-visual{height:220px;}
+.pcard-body{padding:1.5rem;}
+.pcard-eyebrow{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.5rem;}
+.pcard-title{font-family:var(--display);font-size:1.15rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;margin-bottom:0.4rem;}
+.pcard-tagline{font-size:0.82rem;color:var(--muted);font-style:italic;margin-bottom:1rem;line-height:1.5;}
+.pcard-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;}
+.ptag{font-family:var(--mono);font-size:8px;padding:3px 9px;border-radius:3px;letter-spacing:0.05em;text-transform:uppercase;}
+.ptag-l{background:rgba(184,255,63,0.07);color:var(--lime);border:1px solid rgba(184,255,63,0.15);}
+.ptag-b{background:rgba(61,224,245,0.07);color:var(--sky);border:1px solid rgba(61,224,245,0.15);}
+.ptag-p{background:rgba(157,110,245,0.07);color:var(--purple);border:1px solid rgba(157,110,245,0.15);}
+.ptag-c{background:rgba(255,87,87,0.07);color:var(--coral);border:1px solid rgba(255,87,87,0.15);}
+.ptag-a{background:rgba(255,181,71,0.07);color:var(--amber);border:1px solid rgba(255,181,71,0.15);}
+.pcard-cta{
+  font-family:var(--mono);font-size:10px;color:var(--lime);
+  display:flex;align-items:center;gap:6px;margin-top:0.5rem;
+  opacity:0;transform:translateY(4px);transition:all 0.3s;
+}
+.pcard:hover .pcard-cta{opacity:1;transform:translateY(0);}
+.featured-badge{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:8px;
+  padding:4px 10px;background:rgba(184,255,63,0.08);border:1px solid rgba(184,255,63,0.2);
+  color:var(--lime);border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem;
+}
 
-.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;}
+/* Project card mini vizzes */
+.mini-viz{width:100%;height:100%;padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:1;}
+.mini-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(184,255,63,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(184,255,63,0.03) 1px,transparent 1px);background-size:36px 36px;}
+.mini-label{font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;}
 
-.skill-category{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:2rem;opacity:0;transform:translateY(24px);transition:opacity 0.6s,transform 0.6s,border-color 0.3s,box-shadow 0.3s;}
-.skill-category.visible{opacity:1;transform:translateY(0);}
-.skill-category:hover{border-color:rgba(200,255,0,0.2);box-shadow:0 0 40px rgba(200,255,0,0.04);}
-.skill-category-header{display:flex;align-items:center;gap:14px;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
-.skill-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
-.skill-icon.green{background:rgba(200,255,0,0.1);}
-.skill-icon.purple{background:rgba(168,85,247,0.1);}
-.skill-icon.blue{background:rgba(56,189,248,0.1);}
-.skill-icon.coral{background:rgba(255,77,109,0.1);}
-.skill-category-title{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--text);}
-.skill-category-sub{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
-
-.skill-row{display:grid;grid-template-columns:140px 1fr 36px;align-items:center;gap:12px;margin-bottom:12px;}
-.skill-name{font-size:0.82rem;color:var(--text-muted);font-weight:400;}
-.skill-track{height:4px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative;}
-.skill-fill{height:100%;border-radius:4px;width:0;transition:width 1.4s cubic-bezier(0.16,1,0.3,1);}
-.skill-fill.lime{background:var(--lime);box-shadow:0 0 8px rgba(200,255,0,0.4);}
-.skill-fill.purple{background:var(--purple);}
-.skill-fill.blue{background:var(--sky);}
-.skill-fill.coral{background:var(--coral);}
-.skill-pct{font-family:var(--mono);font-size:10px;color:var(--text-faint);text-align:right;}
-
-/* ═══ SKILL JOURNEY (mascot section) ═══ */
-.skill-journey{margin-top:6rem;padding:3rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;position:relative;overflow:hidden;}
-.skill-journey::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--lime),var(--purple),var(--coral));}
-.journey-title{font-family:var(--display);font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;}
-.journey-sub{font-size:0.9rem;color:var(--text-muted);font-weight:300;margin-bottom:3rem;}
-.journey-path{display:flex;gap:0;position:relative;}
-.journey-path::before{content:"";position:absolute;top:28px;left:28px;right:28px;height:2px;background:linear-gradient(90deg,var(--lime),var(--purple),var(--coral),var(--sky));z-index:0;}
-.journey-node{display:flex;flex-direction:column;align-items:center;gap:12px;flex:1;position:relative;z-index:1;}
-.node-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid var(--border);background:var(--bg2);transition:transform 0.3s,box-shadow 0.3s;}
-.journey-node:hover .node-circle{transform:scale(1.15);}
-.node-circle.active{border-color:var(--lime);box-shadow:0 0 16px rgba(200,255,0,0.3);}
-.node-circle.active2{border-color:var(--purple);box-shadow:0 0 16px rgba(168,85,247,0.3);}
-.node-circle.active3{border-color:var(--coral);box-shadow:0 0 16px rgba(255,77,109,0.3);}
-.node-circle.active4{border-color:var(--sky);box-shadow:0 0 16px rgba(56,189,248,0.3);}
-.node-label{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.08em;text-align:center;text-transform:uppercase;}
-
-/* ═══ PROJECTS ═══ */
-#projects{background:var(--bg2);}
-.projects-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1.5rem;}
-
-.project-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;opacity:0;transform:translateY(28px);transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s,opacity 0.6s;}
-.project-card.visible{opacity:1;transform:translateY(0);}
-.project-card:hover{border-color:rgba(200,255,0,0.2);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 40px rgba(200,255,0,0.04);}
-
-.project-card.col-8{grid-column:span 8;}
-.project-card.col-4{grid-column:span 4;}
-.project-card.col-6{grid-column:span 6;}
-.project-card.col-12{grid-column:span 12;}
-
-.project-visual{min-height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
-.project-card.col-12 .project-visual{min-height:280px;}
-.project-card.col-8 .project-visual{min-height:260px;}
-
-.project-body{padding:1.75rem;}
-.project-eyebrow{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.6rem;}
-.project-title{font-family:var(--display);font-size:1.3rem;font-weight:700;margin-bottom:0.6rem;color:var(--text);line-height:1.2;letter-spacing:-0.02em;}
-.project-tagline{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--text-muted);margin-bottom:0.75rem;line-height:1.5;}
-.project-desc{font-size:0.87rem;color:var(--text-muted);line-height:1.75;margin-bottom:1.25rem;font-weight:300;}
-.project-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem;}
-.tag{font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:4px;letter-spacing:0.06em;text-transform:uppercase;}
-.tag-lime{background:rgba(200,255,0,0.08);color:var(--lime);border:1px solid rgba(200,255,0,0.15);}
-.tag-purple{background:rgba(168,85,247,0.08);color:var(--purple);border:1px solid rgba(168,85,247,0.15);}
-.tag-blue{background:rgba(56,189,248,0.08);color:var(--sky);border:1px solid rgba(56,189,248,0.15);}
-.tag-coral{background:rgba(255,77,109,0.08);color:var(--coral);border:1px solid rgba(255,77,109,0.15);}
-.tag-amber{background:rgba(251,191,36,0.08);color:#fbbf24;border:1px solid rgba(251,191,36,0.15);}
-.project-links{display:flex;gap:1.25rem;align-items:center;}
-.proj-link{font-family:var(--mono);font-size:11px;color:var(--lime);text-decoration:none;letter-spacing:0.06em;display:flex;align-items:center;gap:6px;transition:opacity 0.2s;}
-.proj-link:hover{opacity:0.7;}
-.proj-link-secondary{color:var(--text-faint);}
-.proj-link-secondary:hover{color:var(--text);}
-.featured-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;padding:5px 12px;background:rgba(200,255,0,0.08);border:1.5px solid rgba(200,255,0,0.25);color:var(--lime);border-radius:20px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;}
-
-/* ═══ PROJECT VISUALS ═══ */
-
-/* Featured TAT */
-.viz-tat{width:100%;height:100%;padding:24px;position:relative;z-index:1;background:linear-gradient(135deg,rgba(200,255,0,0.03),transparent);}
-.viz-tat-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,255,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,0.04) 1px,transparent 1px);background-size:40px 40px;}
-.tat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative;z-index:1;}
-.tat-title{font-family:var(--mono);font-size:10px;color:var(--lime);letter-spacing:0.15em;text-transform:uppercase;}
-.tat-live{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;color:var(--lime);}
-.tat-live-dot{width:6px;height:6px;background:var(--lime);border-radius:50%;animation:pulse 2s ease-in-out infinite;box-shadow:0 0 8px var(--lime);}
-.tat-sites{display:flex;gap:12px;position:relative;z-index:1;flex-wrap:wrap;}
-.tat-site{flex:1;min-width:80px;}
-.tat-site-name{font-family:var(--mono);font-size:8px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
-.tat-bar-track{height:80px;background:rgba(255,255,255,0.03);border-radius:4px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
-.tat-bar-fill{width:100%;background:var(--lime);border-radius:4px 4px 0 0;height:0;transition:height 1.4s cubic-bezier(0.16,1,0.3,1);}
-.tat-bar-fill.warn{background:var(--coral);}
-.tat-bar-fill.ok{background:var(--lime);}
-.tat-bar-fill.mid{background:#fbbf24;}
-.tat-target-line{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,0.2);bottom:73%;}
-.tat-pct{font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center;margin-top:5px;}
-.tat-footer{display:flex;gap:16px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);position:relative;z-index:1;}
-.tat-stat{text-align:center;}
-.tat-stat-num{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--lime);}
-.tat-stat-lbl{font-family:var(--mono);font-size:8px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;}
+/* TAT featured card viz */
+.tat-cols{display:flex;gap:8px;align-items:flex-end;flex:1;}
+.tat-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.tat-bar-t{flex:1;width:100%;max-height:90px;background:rgba(255,255,255,0.03);border-radius:3px 3px 0 0;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
+.tat-fill{width:100%;border-radius:3px 3px 0 0;height:0;transition:height 1.4s cubic-bezier(0.16,1,0.3,1);}
+.tat-site-lbl{font-family:var(--mono);font-size:7px;color:var(--faint);}
+.tat-footer-strip{display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border);}
+.tat-stat-s{text-align:center;}
+.tat-stat-n{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--lime);}
+.tat-stat-l{font-family:var(--mono);font-size:7px;color:var(--faint);text-transform:uppercase;letter-spacing:0.08em;}
+.live-badge{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:8px;color:var(--lime);}
+.live-dot{width:5px;height:5px;background:var(--lime);border-radius:50%;animation:glowPulse 2s ease-in-out infinite;box-shadow:0 0 6px var(--lime);}
 
 /* Layoffs viz */
-.viz-layoffs{width:100%;height:100%;padding:22px;position:relative;z-index:1;background:linear-gradient(135deg,rgba(255,77,109,0.03),transparent);}
-.lay-title{font-family:var(--mono);font-size:9px;color:var(--coral);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px;}
-.lay-rows{display:flex;flex-direction:column;gap:8px;}
-.lay-row{display:flex;align-items:center;gap:10px;}
-.lay-co{font-family:var(--mono);font-size:9px;color:var(--text-faint);min-width:72px;text-align:right;}
-.lay-track{flex:1;height:16px;background:rgba(255,255,255,0.03);border-radius:3px;overflow:hidden;}
-.lay-bar{height:100%;border-radius:3px;width:0;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;transition:width 1.8s cubic-bezier(0.16,1,0.3,1);}
-.lay-bar span{font-family:var(--mono);font-size:8px;color:rgba(10,10,15,0.9);font-weight:700;white-space:nowrap;}
-.lay-footer{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;}
-.lay-total{font-family:var(--display);font-size:1.6rem;font-weight:800;color:var(--coral);line-height:1;}
-.lay-total-lbl{font-family:var(--mono);font-size:8px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
+.lay-bars{display:flex;flex-direction:column;gap:6px;flex:1;justify-content:center;}
+.lay-r{display:flex;align-items:center;gap:8px;}
+.lay-co{font-family:var(--mono);font-size:8px;color:var(--faint);min-width:60px;text-align:right;}
+.lay-track{flex:1;height:14px;background:rgba(255,255,255,0.03);border-radius:2px;overflow:hidden;}
+.lay-fill{height:100%;border-radius:2px;width:0;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;transition:width 1.6s cubic-bezier(0.16,1,0.3,1);}
+.lay-fill span{font-family:var(--mono);font-size:7px;color:rgba(6,6,10,0.9);font-weight:700;white-space:nowrap;}
+.lay-total-num{font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--coral);}
+.lay-footer{margin-top:10px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;}
 
 /* Sales viz */
-.viz-sales{width:100%;height:100%;padding:20px;display:flex;flex-direction:column;position:relative;z-index:1;background:linear-gradient(135deg,rgba(56,189,248,0.03),transparent);}
-.sales-title{font-family:var(--mono);font-size:9px;color:var(--sky);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;}
-.sales-legend{display:flex;gap:14px;margin-bottom:10px;}
-.s-leg-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:8px;color:var(--text-faint);}
-.s-leg-dot{width:8px;height:8px;border-radius:2px;}
-.sales-chart{display:flex;align-items:flex-end;gap:6px;flex:1;padding-bottom:4px;}
-.s-col{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;}
-.s-bar-wrap{width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:80px;}
-.s-bar{width:100%;border-radius:3px 3px 0 0;height:0;transition:height 1.2s cubic-bezier(0.16,1,0.3,1);}
-.s-bar.actual{background:var(--sky);}
-.s-bar.est{background:#fbbf24;border:1px dashed rgba(251,191,36,0.5);}
-.s-date{font-family:var(--mono);font-size:7px;color:var(--text-faint);}
-.sales-footer{font-family:var(--mono);font-size:8px;color:var(--text-faint);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
-
-/* Inventory viz */
-.viz-inv{width:100%;height:100%;padding:20px;display:flex;align-items:center;justify-content:center;gap:20px;position:relative;z-index:1;background:linear-gradient(135deg,rgba(168,85,247,0.03),transparent);}
-.inv-donut-wrap{position:relative;width:110px;height:110px;flex-shrink:0;}
-.inv-donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.inv-donut-num{font-family:var(--display);font-size:1.15rem;font-weight:800;color:var(--text);line-height:1;}
-.inv-donut-lbl{font-family:var(--mono);font-size:7px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;}
-.inv-stats-col{display:flex;flex-direction:column;gap:10px;}
-.inv-stat-row{display:flex;align-items:center;gap:8px;}
-.inv-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
-.inv-num{font-family:var(--display);font-size:1.1rem;font-weight:800;}
-.inv-lbl{font-family:var(--mono);font-size:8px;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;}
-.inv-crisis{font-family:var(--mono);font-size:8px;color:var(--coral);padding-top:8px;border-top:1px solid var(--border);line-height:1.5;}
+.sales-bars-wrap{display:flex;align-items:flex-end;gap:5px;flex:1;padding-top:8px;}
+.s-bar-c{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+.s-bar-bw{width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:70px;}
+.s-bar-b{width:100%;border-radius:2px 2px 0 0;height:0;transition:height 1.2s cubic-bezier(0.16,1,0.3,1);}
+.s-bar-b.act{background:var(--sky);}
+.s-bar-b.est{background:var(--amber);border:1px dashed rgba(255,181,71,0.5);}
+.s-date-l{font-family:var(--mono);font-size:7px;color:var(--faint);}
 
 /* Lab Ops viz */
-.viz-lab{width:100%;height:100%;padding:22px;position:relative;z-index:1;background:linear-gradient(135deg,rgba(251,191,36,0.03),transparent);}
-.lab-title{font-family:var(--mono);font-size:9px;color:#fbbf24;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
-.lab-target-badge{font-size:8px;color:var(--text-faint);}
-.lab-rows{display:flex;flex-direction:column;gap:6px;}
-.lab-row{display:flex;align-items:center;gap:8px;}
-.lab-site{font-family:var(--mono);font-size:8px;color:var(--text-faint);min-width:38px;}
-.lab-track{flex:1;height:12px;background:rgba(255,255,255,0.03);border-radius:2px;overflow:hidden;position:relative;}
-.lab-fill{height:100%;border-radius:2px;width:0;transition:width 1.4s cubic-bezier(0.16,1,0.3,1);}
-.lab-target-line{position:absolute;top:0;bottom:0;width:1px;background:rgba(251,191,36,0.5);z-index:2;}
-.lab-pct{font-family:var(--mono);font-size:7px;color:var(--text-faint);min-width:32px;text-align:right;}
-.lab-footer{font-family:var(--mono);font-size:7px;color:var(--text-faint);margin-top:12px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;}
+.lab-rows-wrap{display:flex;flex-direction:column;gap:5px;flex:1;justify-content:center;}
+.lab-r{display:flex;align-items:center;gap:7px;}
+.lab-site-l{font-family:var(--mono);font-size:7px;color:var(--faint);min-width:36px;}
+.lab-track{flex:1;height:10px;background:rgba(255,255,255,0.03);border-radius:2px;overflow:hidden;position:relative;}
+.lab-fill-b{height:100%;border-radius:2px;width:0;transition:width 1.4s cubic-bezier(0.16,1,0.3,1);}
+.lab-tgt-line{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,181,71,0.6);z-index:2;}
+.lab-pct-l{font-family:var(--mono);font-size:7px;color:var(--faint);min-width:30px;text-align:right;}
+.lab-footer-s{font-family:var(--mono);font-size:7px;color:var(--faint);margin-top:8px;padding-top:7px;border-top:1px solid var(--border);display:flex;justify-content:space-between;}
 
-/* project story accordion */
-.proj-story{margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem;}
-.proj-story-toggle{font-family:var(--mono);font-size:10px;color:var(--text-faint);display:flex;align-items:center;gap:6px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s;background:none;border:none;padding:0;}
-.proj-story-toggle:hover{color:var(--lime);}
-.proj-story-toggle span{transition:transform 0.3s;}
-.proj-story-toggle.open span{transform:rotate(90deg);}
-.proj-story-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
-.proj-story-body.open{max-height:400px;}
-.proj-story-steps{display:flex;flex-direction:column;gap:10px;margin-top:1rem;}
-.proj-step{display:flex;gap:10px;align-items:flex-start;}
-.proj-step-num{font-family:var(--mono);font-size:10px;color:var(--lime);min-width:22px;padding-top:2px;}
-.proj-step-text{font-size:0.82rem;color:var(--text-muted);line-height:1.6;font-weight:300;}
-.proj-step-code{font-family:var(--mono);font-size:10px;color:var(--purple);background:rgba(168,85,247,0.08);padding:2px 6px;border-radius:3px;display:inline;}
+/* Inventory donut */
+.inv-wrap{display:flex;align-items:center;gap:18px;width:100%;height:100%;padding:16px 20px;}
+.inv-donut-wrap{position:relative;width:100px;height:100px;flex-shrink:0;}
+.inv-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.inv-big-num{font-family:var(--display);font-size:1.1rem;font-weight:700;}
+.inv-big-lbl{font-family:var(--mono);font-size:7px;color:var(--faint);letter-spacing:0.06em;text-transform:uppercase;}
+.inv-stats-s{display:flex;flex-direction:column;gap:8px;}
+.inv-s-row{display:flex;align-items:center;gap:7px;}
+.inv-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.inv-s-num{font-family:var(--display);font-size:1rem;font-weight:700;}
+.inv-s-lbl{font-family:var(--mono);font-size:7px;color:var(--faint);letter-spacing:0.05em;text-transform:uppercase;}
+.inv-alert{font-family:var(--mono);font-size:7px;color:var(--coral);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);}
 
-/* ═══ GAMMA CTA SECTION ═══ */
-.gamma-band{margin-top:4rem;padding:2.5rem;background:var(--bg3);border:1px solid var(--border);border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;position:relative;overflow:hidden;}
-.gamma-band::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(200,255,0,0.04),transparent 60%),radial-gradient(ellipse at bottom right,rgba(168,85,247,0.04),transparent 60%);}
-.gamma-band-text{position:relative;z-index:1;}
-.gamma-band-eyebrow{font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;}
-.gamma-band-title{font-family:var(--display);font-size:1.4rem;font-weight:700;margin-bottom:0.4rem;color:var(--text);}
-.gamma-band-sub{font-size:0.88rem;color:var(--text-muted);font-weight:300;max-width:420px;}
-.gamma-links{display:flex;gap:0.75rem;flex-wrap:wrap;position:relative;z-index:1;}
-.gamma-link{font-family:var(--mono);font-size:11px;padding:10px 20px;border-radius:5px;text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
-.gamma-link.primary{background:var(--purple);color:white;}
-.gamma-link.primary:hover{opacity:0.85;transform:translateY(-2px);}
-.gamma-link.ghost{border:1px solid rgba(168,85,247,0.3);color:var(--purple);}
-.gamma-link.ghost:hover{background:rgba(168,85,247,0.1);}
-
-/* ═══ CONTACT ═══ */
-#contact{background:var(--bg);}
-.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
-.contact-left h3{font-family:var(--display);font-size:2rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:1rem;line-height:1.1;}
-.contact-left p{font-size:1rem;color:var(--text-muted);line-height:1.85;font-weight:300;margin-bottom:2rem;}
-.contact-avail{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:0.08em;text-transform:uppercase;}
-
-.contact-links{display:flex;flex-direction:column;gap:1rem;}
-.contact-link{display:flex;align-items:center;gap:1.25rem;padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);font-size:0.9rem;transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;}
-.contact-link:hover{border-color:rgba(200,255,0,0.3);transform:translateX(6px);box-shadow:0 0 30px rgba(200,255,0,0.04);}
-.contact-link-icon{width:44px;height:44px;background:var(--lime-dim);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.contact-link-label{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:3px;}
-.contact-link-val{font-size:0.88rem;color:var(--text);}
-.contact-link-arrow{margin-left:auto;color:var(--text-faint);font-size:18px;transition:transform 0.2s;}
-.contact-link:hover .contact-link-arrow{transform:translateX(4px);color:var(--lime);}
-
-footer{background:var(--bg);border-top:1px solid var(--border);padding:2.5rem 3rem;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--text-faint);letter-spacing:0.06em;}
-footer .foot-logo{font-family:var(--display);font-size:16px;font-weight:800;color:var(--text);letter-spacing:-0.03em;}
-footer .foot-logo span{color:var(--lime);}
-footer .foot-copy{color:var(--text-faint);}
-
-/* ═══ REVEAL ═══ */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
-.reveal.visible{opacity:1;transform:translateY(0);}
-
-/* ═══ SECTION DIVIDER ═══ */
-.section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
-
-/* ═══ RESPONSIVE ═══ */
-@media(max-width:900px){
-  .about-grid{grid-template-columns:1fr;}
-  .about-visual{display:none;}
-  .project-card.col-8,.project-card.col-4,.project-card.col-6{grid-column:span 12;}
-  .skills-grid{grid-template-columns:1fr;}
-  .contact-layout{grid-template-columns:1fr;}
-  .hero-stats{grid-template-columns:repeat(2,1fr);}
-  .stat-item:nth-child(2){border-right:none;}
-  .stat-item{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;}
-  .gamma-band{flex-direction:column;}
-  footer{flex-direction:column;gap:1rem;text-align:center;}
+/* ═══════════════════════════════════════
+   PROJECT DETAIL OVERLAYS
+═══════════════════════════════════════ */
+.proj-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:var(--bg);
+  opacity:0;pointer-events:none;
+  transition:opacity 0.5s cubic-bezier(0.4,0,0.2,1);
+  overflow:hidden;
 }
-@media(max-width:600px){
-  #hero,.section-wrap{padding-left:1.5rem;padding-right:1.5rem;}
-  .journey-path{flex-wrap:wrap;gap:20px;}
-  .journey-path::before{display:none;}
-  .hero-stats{grid-template-columns:1fr 1fr;}
-  body{cursor:auto;}
-  #cursor,#cursor-ring,#cursor-text{display:none;}
+.proj-overlay.open{opacity:1;pointer-events:all;}
+
+.overlay-bg-glow{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+  opacity:0.6;
+}
+
+.overlay-inner{
+  position:relative;z-index:1;height:100%;overflow-y:auto;
+  padding:80px 0;
+  scrollbar-width:thin;scrollbar-color:var(--faint) transparent;
+}
+.overlay-inner::-webkit-scrollbar{width:4px;}
+.overlay-inner::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px;}
+
+.overlay-close{
+  position:fixed;top:24px;right:28px;z-index:2100;
+  width:44px;height:44px;border-radius:50%;background:var(--bg2);
+  border:1px solid var(--border);color:var(--muted);font-size:18px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.overlay-close:hover{border-color:var(--border-active);color:var(--lime);}
+.overlay-back{
+  position:fixed;top:24px;left:28px;z-index:2100;
+  font-family:var(--mono);font-size:10px;color:var(--muted);
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+  padding:10px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:3px;
+  transition:all 0.2s;letter-spacing:0.06em;text-transform:uppercase;
+}
+.overlay-back:hover{color:var(--lime);border-color:var(--border-active);}
+
+.overlay-content{max-width:960px;margin:0 auto;padding:0 3rem;}
+.overlay-eyebrow{font-family:var(--mono);font-size:10px;color:var(--lime);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:10px;}
+.overlay-eyebrow::before{content:"";width:24px;height:1px;background:var(--lime);}
+.overlay-title{font-family:var(--display);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;letter-spacing:-0.04em;line-height:0.95;margin-bottom:1.5rem;}
+.overlay-tagline{font-size:1.2rem;color:var(--muted);font-style:italic;margin-bottom:2rem;font-weight:300;}
+.overlay-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:3rem;}
+
+.stat-row{display:flex;gap:0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:4rem;}
+.stat-cell-o{flex:1;padding:1.5rem;text-align:center;border-right:1px solid var(--border);}
+.stat-cell-o:last-child{border-right:none;}
+.stat-big-o{font-family:var(--display);font-size:2rem;font-weight:700;color:var(--lime);display:block;}
+.stat-lbl-o{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;display:block;}
+
+.story-flow{display:flex;flex-direction:column;gap:0;margin-bottom:4rem;}
+.story-step{display:grid;grid-template-columns:64px 1fr;gap:2rem;position:relative;}
+.story-step:not(:last-child)::before{content:"";position:absolute;left:31px;top:60px;bottom:-1px;width:1px;background:var(--border);}
+.story-num{width:64px;height:64px;border-radius:12px;background:var(--bg2);border:1px solid var(--border-active);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.3rem;font-weight:700;color:var(--lime);flex-shrink:0;}
+.story-body{padding-bottom:3rem;}
+.story-body h4{font-family:var(--display);font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:0.6rem;}
+.story-body p{font-size:0.9rem;color:var(--muted);line-height:1.85;font-weight:300;margin-bottom:0.8rem;}
+.story-body .code-tag{font-family:var(--mono);font-size:9px;background:rgba(157,110,245,0.1);color:var(--purple);padding:2px 7px;border-radius:3px;display:inline;}
+
+.chart-zone{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-bottom:3rem;}
+.chart-zone-label{font-family:var(--mono);font-size:9px;color:var(--lime);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;}
+.chart-wrap{position:relative;height:260px;}
+
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2.5rem;}
+.tab-b{font-family:var(--mono);font-size:10px;padding:12px 20px;color:var(--faint);background:none;border:none;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;border-bottom:2px solid transparent;transition:all 0.2s;}
+.tab-b:hover{color:var(--muted);}
+.tab-b.active{color:var(--lime);border-bottom-color:var(--lime);}
+.tab-p{display:none;}
+.tab-p.active{display:block;}
+
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:3rem;}
+.insight-c{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:border-color 0.3s;}
+.insight-c:hover{border-color:var(--border-active);}
+.insight-c-lbl{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem;}
+.insight-c-title{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--text);margin-bottom:1rem;}
+.mini-bar-row{display:flex;align-items:center;gap:10px;font-size:0.75rem;margin-bottom:8px;}
+.mini-bar-name{min-width:90px;color:var(--muted);}
+.mini-bar-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.mini-bar-fill{height:100%;border-radius:3px;width:0;transition:width 1.4s cubic-bezier(0.16,1,0.3,1);}
+.mini-bar-val{font-family:var(--mono);font-size:9px;color:var(--faint);min-width:45px;text-align:right;}
+
+.callout-box{padding:1.2rem 1.4rem;border-left:2px solid var(--lime);background:var(--lime-dim);border-radius:0 8px 8px 0;margin:1.5rem 0;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.7;}
+.callout-box.amber{border-color:var(--amber);background:rgba(255,181,71,0.06);}
+.callout-box.coral{border-color:var(--coral);background:rgba(255,87,87,0.06);}
+
+.skill-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem;}
+.skill-pill{font-family:var(--mono);font-size:9px;padding:4px 12px;border-radius:3px;background:var(--bg3);color:var(--muted);border:1px solid var(--border);letter-spacing:0.04em;}
+
+/* SQL code blocks */
+.sql-block{margin:1rem 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.sql-hdr{background:var(--bg3);padding:7px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
+.sql-hdr-lbl{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:0.1em;text-transform:uppercase;}
+.sql-copy-btn{font-family:var(--mono);font-size:9px;color:var(--lime);background:none;border:1px solid var(--border-active);border-radius:2px;padding:2px 8px;cursor:pointer;transition:background 0.2s;}
+.sql-copy-btn:hover{background:var(--lime-dim);}
+.sql-pre{background:rgba(0,0,0,0.4);padding:1.2rem 1.4rem;overflow-x:auto;}
+.sql-pre pre{font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--muted);white-space:pre;}
+.kw{color:#60a5fa;}.fn{color:var(--purple);}.cm{color:var(--faint);font-style:italic;}.st{color:#34d399;}.nm{color:var(--amber);}.op{color:var(--lime);}
+
+/* ═══════════════════════════════════════
+   SLIDE 7 – CONTACT
+═══════════════════════════════════════ */
+#slide-contact{background:var(--bg);}
+.contact-inner{max-width:1100px;padding:80px 3rem;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+.contact-left h2{font-family:var(--display);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;letter-spacing:-0.04em;line-height:0.95;margin-bottom:1.5rem;}
+.contact-left h2 em{color:var(--lime);font-style:italic;font-family:var(--body);font-weight:300;}
+.contact-left p{font-size:0.95rem;color:var(--muted);line-height:1.85;font-weight:300;margin-bottom:2rem;}
+.contact-avail{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10px;color:var(--lime);letter-spacing:0.1em;text-transform:uppercase;}
+.contact-links{display:flex;flex-direction:column;gap:1rem;}
+.c-link{
+  display:flex;align-items:center;gap:1.25rem;padding:1.25rem 1.5rem;
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  text-decoration:none;color:var(--text);transition:all 0.25s;cursor:pointer;
+}
+.c-link:hover{border-color:var(--border-active);transform:translateX(6px);box-shadow:0 0 30px rgba(184,255,63,0.05);}
+.c-icon{width:44px;height:44px;background:var(--lime-dim);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.c-lbl{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:2px;}
+.c-val{font-size:0.88rem;color:var(--text);}
+.c-arrow{margin-left:auto;color:var(--faint);font-size:18px;transition:transform 0.2s;}
+.c-link:hover .c-arrow{transform:translateX(4px);color:var(--lime);}
+
+footer{position:fixed;bottom:0;left:0;right:0;z-index:400;height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:0.08em;border-top:1px solid var(--border);background:rgba(6,6,10,0.7);backdrop-filter:blur(16px);}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:900px){
+  .about-inner,.contact-inner{grid-template-columns:1fr;gap:2rem;padding:80px 1.5rem;}
+  .about-visual-wrap{display:none;}
+  .skills-layout{grid-template-columns:1fr;}
+  .pcard.c7,.pcard.c5,.pcard.c6{grid-column:span 12;}
+  #dots{display:none;}
   nav{padding:0 1.5rem;}
   .nav-links{display:none;}
-  #mascot-wrap{bottom:16px;right:16px;}
+  .hero-inner{padding:0 1.5rem;}
+  .projects-inner,.skills-inner{padding:80px 1.5rem 0;}
+  #mascot-container{display:none;}
+  .overlay-content{padding:0 1.5rem;}
+  .insight-grid{grid-template-columns:1fr;}
 }
-
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--text-faint);border-radius:2px;}
-::selection{background:rgba(200,255,0,0.15);color:var(--lime);}
+@media(max-width:600px){
+  .hero-metrics{gap:1.5rem;}
+  .metric{padding-right:1.5rem;margin-right:1.5rem;}
+  .stat-row{flex-wrap:wrap;}
+  .stat-cell-o{min-width:50%;border-right:1px solid var(--border);}
+  .tab-b{padding:10px 12px;font-size:9px;}
+}
+::selection{background:rgba(184,255,63,0.15);color:var(--lime);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--faint);}
 </style>
 </head>
 <body>
+<div id="grain"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
 
-<canvas id="hero-canvas"></canvas>
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-<div id="cursor-text"></div>
-<div id="progress"></div>
+<!-- PROGRESS DOTS -->
+<div id="dots">
+  <div class="dot active" onclick="goSlide(0)" title="Home"><span class="dot-label">Home</span></div>
+  <div class="dot" onclick="goSlide(1)" title="About"><span class="dot-label">About</span></div>
+  <div class="dot" onclick="goSlide(2)" title="Skills"><span class="dot-label">Skills</span></div>
+  <div class="dot" onclick="goSlide(3)" title="Projects"><span class="dot-label">Projects</span></div>
+  <div class="dot" onclick="goSlide(4)" title="Contact"><span class="dot-label">Contact</span></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" onclick="goSlide(0)" style="cursor:pointer;">YUSUF<em>.</em>T</a>
+  <ul class="nav-links">
+    <li><a onclick="goSlide(0)">Home</a></li>
+    <li><a onclick="goSlide(1)">About</a></li>
+    <li><a onclick="goSlide(2)">Skills</a></li>
+    <li><a onclick="goSlide(3)">Projects</a></li>
+    <li><a onclick="goSlide(4)">Contact</a></li>
+  </ul>
+  <a class="nav-hire" onclick="goSlide(4)">Hire Me →</a>
+</nav>
 
 <!-- MASCOT -->
-<div id="mascot-wrap">
-  <div id="mascot-bubble">👋 scroll down — I'll guide you through</div>
-  <div id="mascot">
-    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" id="mascot-svg">
-      <!-- Body -->
-      <rect x="20" y="28" width="24" height="22" rx="4" fill="#1a1a2e" stroke="#c8ff00" stroke-width="1.5"/>
-      <!-- Head -->
-      <rect x="18" y="10" width="28" height="22" rx="6" fill="#1a1a2e" stroke="#c8ff00" stroke-width="1.5"/>
-      <!-- Eyes -->
-      <rect x="23" y="17" width="8" height="6" rx="2" fill="#c8ff00"/>
-      <rect x="33" y="17" width="8" height="6" rx="2" fill="#c8ff00"/>
-      <!-- Pupils -->
-      <rect id="pupil-l" x="25" y="19" width="4" height="2" rx="1" fill="#0a0a0f"/>
-      <rect id="pupil-r" x="35" y="19" width="4" height="2" rx="1" fill="#0a0a0f"/>
-      <!-- Smile -->
-      <path d="M26 27 Q32 31 38 27" stroke="#c8ff00" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <!-- Arms -->
-      <rect id="arm-l" x="8" y="30" width="12" height="5" rx="2.5" fill="#1a1a2e" stroke="#c8ff00" stroke-width="1.2"/>
-      <rect id="arm-r" x="44" y="30" width="12" height="5" rx="2.5" fill="#1a1a2e" stroke="#c8ff00" stroke-width="1.2"/>
-      <!-- Legs -->
-      <rect x="22" y="48" width="8" height="12" rx="3" fill="#1a1a2e" stroke="#c8ff00" stroke-width="1.2"/>
-      <rect x="34" y="48" width="8" height="12" rx="3" fill="#1a1a2e" stroke="#c8ff00" stroke-width="1.2"/>
-      <!-- Chart icon on belly -->
-      <rect x="26" y="33" width="12" height="12" rx="2" fill="rgba(200,255,0,0.1)" stroke="rgba(200,255,0,0.3)" stroke-width="0.8"/>
-      <rect x="28" y="40" width="2" height="4" rx="0.5" fill="#c8ff00" opacity="0.8"/>
-      <rect x="31" y="37" width="2" height="7" rx="0.5" fill="#c8ff00" opacity="0.8"/>
-      <rect x="34" y="35" width="2" height="9" rx="0.5" fill="#c8ff00" opacity="0.8"/>
+<div id="mascot-container" class="pos-hero">
+  <div id="mascot-bubble">hey! 👋 I'm your data guide — scroll or click the dots to explore</div>
+  <div id="mascot-svg-wrap">
+    <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <rect x="24" y="32" width="32" height="28" rx="5" fill="#12121c" stroke="#b8ff3f" stroke-width="1.8"/>
+      <rect x="22" y="12" width="36" height="24" rx="7" fill="#12121c" stroke="#b8ff3f" stroke-width="1.8"/>
+      <rect x="27" y="19" width="10" height="7" rx="2.5" fill="#b8ff3f"/>
+      <rect x="43" y="19" width="10" height="7" rx="2.5" fill="#b8ff3f"/>
+      <rect id="pl" x="29" y="21" width="5" height="3" rx="1.5" fill="#06060a"/>
+      <rect id="pr" x="45" y="21" width="5" height="3" rx="1.5" fill="#06060a"/>
+      <path d="M32 32 Q40 37 48 32" stroke="#b8ff3f" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <rect id="arm-l" x="8" y="36" width="16" height="6" rx="3" fill="#12121c" stroke="#b8ff3f" stroke-width="1.5"/>
+      <rect id="arm-r" x="56" y="36" width="16" height="6" rx="3" fill="#12121c" stroke="#b8ff3f" stroke-width="1.5"/>
+      <rect x="28" y="58" width="10" height="14" rx="4" fill="#12121c" stroke="#b8ff3f" stroke-width="1.5"/>
+      <rect x="42" y="58" width="10" height="14" rx="4" fill="#12121c" stroke="#b8ff3f" stroke-width="1.5"/>
+      <rect x="32" y="40" width="16" height="14" rx="2.5" fill="rgba(184,255,63,0.08)" stroke="rgba(184,255,63,0.3)" stroke-width="0.8"/>
+      <rect x="34" y="49" width="3" height="5" rx="0.8" fill="#b8ff3f" opacity="0.8"/>
+      <rect x="38" y="46" width="3" height="8" rx="0.8" fill="#b8ff3f" opacity="0.8"/>
+      <rect x="42" y="43" width="3" height="11" rx="0.8" fill="#b8ff3f" opacity="0.8"/>
     </svg>
   </div>
 </div>
 
-<!-- NAV -->
-<nav>
-  <a href="#hero" class="nav-logo">YUSUF<span>.</span>T</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <a href="#contact" class="nav-cta">Hire Me →</a>
-</nav>
+<!-- SCROLL HINT -->
+<div id="scroll-hint">
+  <span class="hint-text">scroll to navigate</span>
+  <div class="hint-arrow"></div>
+</div>
 
-<!-- ══════════════════════════════ HERO ══════════════════════════════ -->
-<section id="hero">
-  <div class="hero-eyebrow">
-    <div class="avail-dot"></div>
-    Available for opportunities
-  </div>
-  <h1 class="hero-name">
-    Yusuf<br>
-    <span class="stroke">Tia</span><span class="lime">miyu.</span>
-  </h1>
-  <p class="hero-role">Data Analyst — Lagos, Nigeria</p>
-  <div class="hero-ticker">
-    <span class="ticker-prefix">// currently working with:</span>
-    <span id="typewriter"></span>
-  </div>
-  <p class="hero-desc">
-    I take messy, sprawling data and turn it into something that <strong>actually helps people make decisions</strong>. Not just charts for the sake of charts — real answers to real questions. I've built dashboards running live in hospitals, cleaned datasets tracking 386k job losses, and automated workflows that cut hours of manual work down to minutes.
-    <br><br>
-    If you've got a data problem, I want to hear about it.
-  </p>
-  <div class="hero-ctas">
-    <a href="#projects" class="btn-primary">See My Work →</a>
-    <a href="#contact" class="btn-ghost">Get In Touch</a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat-item">
-      <div class="stat-num">6+</div>
-      <div class="stat-label">Tools Mastered</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">5+</div>
-      <div class="stat-label">Live Projects</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">386k</div>
-      <div class="stat-label">Jobs Analysed</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">∞</div>
-      <div class="stat-label">Problems Solved</div>
-    </div>
-  </div>
-</section>
+<!-- ════════════════════════════════════
+     SLIDE CONTAINER
+════════════════════════════════════ -->
+<div id="slides">
 
-<div class="section-divider"></div>
+<!-- ═══ SLIDE 0: HERO ═══ -->
+<div class="slide active" id="slide-hero">
+  <canvas id="hero-canvas" style="position:absolute;inset:0;pointer-events:none;"></canvas>
+  <div class="hero-inner">
+    <div class="hero-tag"><div class="avail-dot"></div>Available for opportunities</div>
+    <h1 class="hero-name">
+      <span class="outline">Yusuf</span><br>
+      <span class="filled">Tiamiyu.</span>
+    </h1>
+    <p class="hero-role">Data Analyst — turning raw numbers into real decisions</p>
+    <div class="hero-tw">
+      <span class="tw-prefix">// specialising in</span>
+      <span id="tw"></span>
+    </div>
+    <p class="hero-bio">
+      I take messy, sprawling data and turn it into something that <strong>actually helps people make decisions.</strong>
+      Real dashboards. Real databases. Real answers.
+      I've built live systems running in hospitals, cleaned datasets tracking 386k job losses, and automated workflows that cut hours down to minutes.
+      <br><br>If you have a data problem — I want to hear it.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-lime" onclick="goSlide(3)">Explore My Work →</button>
+      <button class="btn-outline" onclick="goSlide(4)">Get In Touch</button>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="metric-num">6+</div><div class="metric-lbl">Tools Mastered</div></div>
+      <div class="metric"><div class="metric-num">386k</div><div class="metric-lbl">Jobs Analysed</div></div>
+      <div class="metric"><div class="metric-num">1,578</div><div class="metric-lbl">Items Tracked</div></div>
+      <div class="metric"><div class="metric-num">∞</div><div class="metric-lbl">Problems Solved</div></div>
+    </div>
+  </div>
+</div>
 
-<!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
-<section id="about">
-  <div class="section-wrap">
-    <div class="about-grid">
-      <div class="about-visual reveal">
-        <div class="about-card">
-          <div class="about-avatar-zone">
-            <div class="avatar-grid"></div>
-            <div class="avatar-emoji">🧠</div>
-          </div>
-          <div class="about-mini-stats">
-            <div class="about-mini-stat">
-              <div class="about-mini-num">9</div>
-              <div class="about-mini-label">Sites Tracked</div>
-            </div>
-            <div class="about-mini-stat">
-              <div class="about-mini-num">12k+</div>
-              <div class="about-mini-label">Tests Monitored</div>
-            </div>
-            <div class="about-mini-stat">
-              <div class="about-mini-num">89%</div>
-              <div class="about-mini-label">Stock Crisis Found</div>
-            </div>
-            <div class="about-mini-stat">
-              <div class="about-mini-num">∞</div>
-              <div class="about-mini-label">Curiosity Level</div>
-            </div>
-          </div>
+<!-- ═══ SLIDE 1: ABOUT ═══ -->
+<div class="slide" id="slide-about">
+  <div class="about-inner">
+    <div class="about-visual-wrap">
+      <div class="about-card-main">
+        <div class="about-avatar">
+          <div class="avatar-scan"></div>
+          🧠
+        </div>
+        <div class="about-kpis">
+          <div class="kpi"><div class="kpi-num">9</div><div class="kpi-lbl">Sites Tracked</div></div>
+          <div class="kpi"><div class="kpi-num">12k+</div><div class="kpi-lbl">Tests Monitored</div></div>
+          <div class="kpi"><div class="kpi-num">89%</div><div class="kpi-lbl">Crisis Found</div></div>
+          <div class="kpi"><div class="kpi-num">∞</div><div class="kpi-lbl">Curiosity</div></div>
         </div>
       </div>
-      <div class="about-text reveal">
-        <div class="section-eyebrow">About Me</div>
-        <h2 class="section-title">Data That Actually <span class="accent italic">Means Something</span></h2>
-        <p>I'm Yusuf — data analyst, problem-solver, based in Lagos, Nigeria. I got into this because I genuinely like figuring things out. Give me a pile of numbers and I'll tell you what's actually going on inside them.</p>
-        <p>Most of my work has been in healthcare analytics. I built a live TAT monitoring dashboard that's running today across multiple lab sites at Cerba Lancet Nigeria. I built an Excel operations tracker for 9 sites. I found a stock crisis hiding in 1,578 inventory rows that nobody had spotted. <strong>The best analysis runs itself</strong> — so people focus on decisions, not spreadsheets.</p>
-        <p>I use Python and AI tools to automate the repetitive stuff. Tasks that used to take an afternoon now take minutes. Still growing (Python and ML are very much a work in progress), but I'm the type who figures it out and gets it done.</p>
-        <div class="about-quote">"The goal is never just a chart. It's the decision someone makes because of that chart."</div>
-      </div>
+    </div>
+    <div class="about-text-side">
+      <div class="eyebrow">About Me</div>
+      <h2 class="slide-title">Data That Actually<br><span class="accent">Means Something</span></h2>
+      <p>I'm Yusuf — data analyst, problem-solver, based in Lagos, Nigeria. I got into this because I genuinely like figuring things out. Give me a pile of numbers and I'll tell you what's actually going on inside them.</p>
+      <p>Most of my work has been in healthcare analytics. I built a <strong>live TAT monitoring dashboard</strong> running today across multiple lab sites. I found a stock crisis hiding in 1,578 inventory rows that nobody had spotted. <strong>The best analysis runs itself</strong> — so people can focus on decisions, not spreadsheets.</p>
+      <p>I lean heavily on Python and AI tools to automate the repetitive stuff. Still growing (Python and ML very much in progress), but I figure things out and get them done.</p>
+      <div class="about-quote">"The goal is never just a chart. It's the decision someone makes because of that chart."</div>
     </div>
   </div>
-</section>
+</div>
 
-<div class="section-divider"></div>
-
-<!-- ══════════════════════════════ SKILLS ══════════════════════════════ -->
-<section id="skills">
-  <div class="section-wrap">
-    <div class="skills-header">
+<!-- ═══ SLIDE 2: SKILLS ═══ -->
+<div class="slide" id="slide-skills">
+  <div class="skills-inner">
+    <div class="skills-top">
       <div>
-        <div class="section-eyebrow">What I Work With</div>
-        <h2 class="section-title">Skills &amp; <span class="accent">Tools</span></h2>
-        <p class="section-sub" style="margin-bottom:0;">Honest look — lime bars are solid, everything else is still growing.</p>
+        <div class="eyebrow" style="font-family:var(--mono);font-size:10px;color:var(--lime);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:10px;"><span style="display:block;width:24px;height:1px;background:var(--lime);"></span>What I Work With</div>
+        <h2 class="slide-title">Skills &amp; <span class="accent">Tools</span></h2>
+        <p class="sub">Click a category to explore. Lime = solid. Everything else is levelling up.</p>
       </div>
     </div>
-
-    <div class="skills-grid">
-      <!-- BI -->
-      <div class="skill-category" data-delay="0">
-        <div class="skill-category-header">
-          <div class="skill-icon green">📊</div>
-          <div>
-            <div class="skill-category-title">Business Intelligence</div>
-            <div class="skill-category-sub">Dashboards &amp; Visualisation</div>
+    <div class="skills-layout">
+      <div class="skill-cats" id="skill-cats">
+        <div class="skill-cat active" data-cat="bi" onclick="selectCat(this)">
+          <div class="cat-header">
+            <div class="cat-icon g">📊</div>
+            <div><div class="cat-name">Business Intelligence</div><div class="cat-sub">Dashboards &amp; Visualisation</div></div>
           </div>
+          <div class="cat-preview">Power BI · Tableau · DAX · Power Query</div>
         </div>
-        <div class="skill-row"><span class="skill-name">Power BI</span><div class="skill-track"><div class="skill-fill lime" data-w="82"></div></div><span class="skill-pct">82%</span></div>
-        <div class="skill-row"><span class="skill-name">Tableau</span><div class="skill-track"><div class="skill-fill lime" data-w="80"></div></div><span class="skill-pct">80%</span></div>
-        <div class="skill-row"><span class="skill-name">Power Query</span><div class="skill-track"><div class="skill-fill lime" data-w="85"></div></div><span class="skill-pct">85%</span></div>
-        <div class="skill-row"><span class="skill-name">DAX</span><div class="skill-track"><div class="skill-fill purple" data-w="62"></div></div><span class="skill-pct">62%</span></div>
-      </div>
-      <!-- Excel -->
-      <div class="skill-category" data-delay="100">
-        <div class="skill-category-header">
-          <div class="skill-icon blue">📗</div>
-          <div>
-            <div class="skill-category-title">Excel</div>
-            <div class="skill-category-sub">Spreadsheets &amp; Analysis</div>
+        <div class="skill-cat" data-cat="excel" onclick="selectCat(this)">
+          <div class="cat-header">
+            <div class="cat-icon b">📗</div>
+            <div><div class="cat-name">Excel</div><div class="cat-sub">Spreadsheets &amp; Analysis</div></div>
           </div>
+          <div class="cat-preview">Pivot Tables · Power Query · SUMIFS · Dashboards</div>
         </div>
-        <div class="skill-row"><span class="skill-name">Pivot Tables</span><div class="skill-track"><div class="skill-fill lime" data-w="92"></div></div><span class="skill-pct">92%</span></div>
-        <div class="skill-row"><span class="skill-name">Power Query</span><div class="skill-track"><div class="skill-fill lime" data-w="88"></div></div><span class="skill-pct">88%</span></div>
-        <div class="skill-row"><span class="skill-name">Formulas &amp; Logic</span><div class="skill-track"><div class="skill-fill lime" data-w="90"></div></div><span class="skill-pct">90%</span></div>
-        <div class="skill-row"><span class="skill-name">Dashboard Design</span><div class="skill-track"><div class="skill-fill lime" data-w="85"></div></div><span class="skill-pct">85%</span></div>
-      </div>
-      <!-- SQL -->
-      <div class="skill-category" data-delay="200">
-        <div class="skill-category-header">
-          <div class="skill-icon coral">🗃️</div>
-          <div>
-            <div class="skill-category-title">SQL &amp; Databases</div>
-            <div class="skill-category-sub">Storage &amp; Querying</div>
+        <div class="skill-cat" data-cat="sql" onclick="selectCat(this)">
+          <div class="cat-header">
+            <div class="cat-icon c">🗃️</div>
+            <div><div class="cat-name">SQL &amp; Databases</div><div class="cat-sub">Storage &amp; Querying</div></div>
           </div>
+          <div class="cat-preview">MySQL · Window Functions · CTEs · Cloud</div>
         </div>
-        <div class="skill-row"><span class="skill-name">MySQL Workbench</span><div class="skill-track"><div class="skill-fill lime" data-w="85"></div></div><span class="skill-pct">85%</span></div>
-        <div class="skill-row"><span class="skill-name">Joins &amp; Queries</span><div class="skill-track"><div class="skill-fill lime" data-w="83"></div></div><span class="skill-pct">83%</span></div>
-        <div class="skill-row"><span class="skill-name">Window Functions</span><div class="skill-track"><div class="skill-fill lime" data-w="78"></div></div><span class="skill-pct">78%</span></div>
-        <div class="skill-row"><span class="skill-name">Cloud Hosting</span><div class="skill-track"><div class="skill-fill blue" data-w="70"></div></div><span class="skill-pct">70%</span></div>
-      </div>
-      <!-- Python -->
-      <div class="skill-category" data-delay="300">
-        <div class="skill-category-header">
-          <div class="skill-icon purple">⚡</div>
-          <div>
-            <div class="skill-category-title">Python &amp; Automation</div>
-            <div class="skill-category-sub">Workflows, Apps &amp; AI</div>
+        <div class="skill-cat" data-cat="python" onclick="selectCat(this)">
+          <div class="cat-header">
+            <div class="cat-icon p">⚡</div>
+            <div><div class="cat-name">Python &amp; Automation</div><div class="cat-sub">Workflows, Apps &amp; AI</div></div>
           </div>
+          <div class="cat-preview">Flask · Pandas · AI Automation · Jupyter</div>
         </div>
-        <div class="skill-row"><span class="skill-name">AI-Driven Automation</span><div class="skill-track"><div class="skill-fill lime" data-w="88"></div></div><span class="skill-pct">88%</span></div>
-        <div class="skill-row"><span class="skill-name">Flask Web Apps</span><div class="skill-track"><div class="skill-fill purple" data-w="55"></div></div><span class="skill-pct">55%</span></div>
-        <div class="skill-row"><span class="skill-name">Python + AI assist</span><div class="skill-track"><div class="skill-fill purple" data-w="58"></div></div><span class="skill-pct">58%</span></div>
-        <div class="skill-row"><span class="skill-name">Pandas / Jupyter</span><div class="skill-track"><div class="skill-fill blue" data-w="50"></div></div><span class="skill-pct">50%</span></div>
       </div>
-    </div>
-
-    <!-- SKILL JOURNEY -->
-    <div class="skill-journey reveal" style="margin-top:4rem;">
-      <div class="journey-title">The Learning Arc 🗺️</div>
-      <div class="journey-sub">Where I started, where I am, where I'm heading.</div>
-      <div class="journey-path">
-        <div class="journey-node">
-          <div class="node-circle active">📗</div>
-          <div class="node-label">Excel<br>Master</div>
+      <div>
+        <div class="skill-detail-panel" id="skill-panel">
+          <div class="skill-detail-title" id="skill-panel-title">Business Intelligence</div>
+          <div class="skill-bars" id="skill-bars"></div>
         </div>
-        <div class="journey-node">
-          <div class="node-circle active2">🗃️</div>
-          <div class="node-label">SQL<br>Analyst</div>
-        </div>
-        <div class="journey-node">
-          <div class="node-circle active3">📊</div>
-          <div class="node-label">BI<br>Developer</div>
-        </div>
-        <div class="journey-node">
-          <div class="node-circle active4">⚡</div>
-          <div class="node-label">Python<br>Automator</div>
-        </div>
-        <div class="journey-node">
-          <div class="node-circle" style="border-color:rgba(255,255,255,0.2);opacity:0.5;">🤖</div>
-          <div class="node-label" style="opacity:0.5;">ML<br>Engineer</div>
+        <div class="journey-strip" style="margin-top:1.5rem;">
+          <div class="journey-title">The Learning Arc 🗺️</div>
+          <div class="journey-sub">Where I started, where I am, where I'm heading.</div>
+          <div class="journey-nodes">
+            <div class="j-node"><div class="j-circle done">📗</div><div class="j-lbl">Excel<br>Master</div></div>
+            <div class="j-node"><div class="j-circle done">🗃️</div><div class="j-lbl">SQL<br>Analyst</div></div>
+            <div class="j-node"><div class="j-circle done">📊</div><div class="j-lbl">BI<br>Dev</div></div>
+            <div class="j-node"><div class="j-circle current">⚡</div><div class="j-lbl">Python<br>Auto</div></div>
+            <div class="j-node"><div class="j-circle next">🤖</div><div class="j-lbl">ML<br>Eng</div></div>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
-</section>
+</div>
 
-<div class="section-divider"></div>
+<!-- ═══ SLIDE 3: PROJECTS ═══ -->
+<div class="slide" id="slide-projects">
+  <div class="projects-inner">
+    <div class="proj-header">
+      <div class="eyebrow" style="font-family:var(--mono);font-size:10px;color:var(--lime);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:10px;"><span style="display:block;width:24px;height:1px;background:var(--lime);"></span>Work</div>
+      <h2 class="slide-title">Featured <span class="accent">Projects</span></h2>
+      <p style="font-size:0.9rem;color:var(--muted);font-weight:300;">Real problems. Real data. Click any card to enter the full story.</p>
+    </div>
+    <div class="proj-grid">
 
-<!-- ══════════════════════════════ PROJECTS ══════════════════════════════ -->
-<section id="projects">
-  <div class="section-wrap">
-    <div class="section-eyebrow">Work</div>
-    <h2 class="section-title">Featured <span class="accent">Projects</span></h2>
-    <p class="section-sub">Real problems. Real data. Real solutions. Each card shows you what it does — click for the full story.</p>
-
-    <div class="projects-grid">
-
-      <!-- ── FEATURED: LAB TAT DASHBOARD ── -->
-      <div class="project-card col-12 reveal" id="tat-card">
-        <div class="project-visual" style="min-height:300px;">
-          <div id="tat-viz" class="viz-tat" style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;">
-            <div class="viz-tat-grid"></div>
-            <div class="tat-header">
-              <div class="tat-title">Turnaround Time (TAT) — Live Dashboard</div>
-              <div class="tat-live"><div class="tat-live-dot"></div>Live Production</div>
+      <!-- TAT FLASK APP - FEATURED -->
+      <div class="pcard c12" id="pc-tat" onclick="openOverlay('tat')">
+        <div class="pcard-visual" style="background:linear-gradient(135deg,rgba(184,255,63,0.03),transparent);">
+          <div class="mini-viz" id="tat-card-viz">
+            <div class="mini-grid"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;position:relative;z-index:1;">
+              <span class="mini-label" style="color:var(--lime);">Turnaround Time — Multi-Site Live</span>
+              <span class="live-badge"><span class="live-dot"></span>Live Production</span>
             </div>
-            <div class="tat-sites">
-              <div class="tat-site">
-                <div class="tat-site-name">Ikeja</div>
-                <div class="tat-bar-track"><div class="tat-target-line"></div><div class="tat-bar-fill ok" data-h="88"></div></div>
-                <div class="tat-pct">88%</div>
-              </div>
-              <div class="tat-site">
-                <div class="tat-site-name">Lekki</div>
-                <div class="tat-bar-track"><div class="tat-target-line"></div><div class="tat-bar-fill mid" data-h="85"></div></div>
-                <div class="tat-pct">85%</div>
-              </div>
-              <div class="tat-site">
-                <div class="tat-site-name">V/Island</div>
-                <div class="tat-bar-track"><div class="tat-target-line"></div><div class="tat-bar-fill ok" data-h="91"></div></div>
-                <div class="tat-pct">91%</div>
-              </div>
-              <div class="tat-site">
-                <div class="tat-site-name">Yaba</div>
-                <div class="tat-bar-track"><div class="tat-target-line"></div><div class="tat-bar-fill warn" data-h="78"></div></div>
-                <div class="tat-pct" style="color:var(--coral);">78% ⚠</div>
-              </div>
-              <div class="tat-site">
-                <div class="tat-site-name">Surulere</div>
-                <div class="tat-bar-track"><div class="tat-target-line"></div><div class="tat-bar-fill mid" data-h="84"></div></div>
-                <div class="tat-pct">84%</div>
-              </div>
-              <div class="tat-site">
-                <div class="tat-site-name">Ikorodu</div>
-                <div class="tat-bar-track"><div class="tat-target-line"></div><div class="tat-bar-fill warn" data-h="76"></div></div>
-                <div class="tat-pct" style="color:var(--coral);">76% ⚠</div>
-              </div>
-            </div>
-            <div class="tat-footer">
-              <div class="tat-stat"><div class="tat-stat-num">6</div><div class="tat-stat-lbl">Sites</div></div>
-              <div class="tat-stat"><div class="tat-stat-num">4</div><div class="tat-stat-lbl">Departments</div></div>
-              <div class="tat-stat"><div class="tat-stat-num">90%</div><div class="tat-stat-lbl">Target TAT</div></div>
-              <div class="tat-stat"><div class="tat-stat-num">Flask + MySQL</div><div class="tat-stat-lbl">Stack</div></div>
+            <div class="tat-cols" id="tat-card-cols" style="position:relative;z-index:1;"></div>
+            <div class="tat-footer-strip" style="position:relative;z-index:1;">
+              <div class="tat-stat-s"><div class="tat-stat-n">6</div><div class="tat-stat-l">Sites</div></div>
+              <div class="tat-stat-s"><div class="tat-stat-n">4</div><div class="tat-stat-l">Depts</div></div>
+              <div class="tat-stat-s"><div class="tat-stat-n">90%</div><div class="tat-stat-l">Target</div></div>
+              <div class="tat-stat-s"><div class="tat-stat-n">Flask+MySQL</div><div class="tat-stat-l">Stack</div></div>
             </div>
           </div>
         </div>
-        <div class="project-body">
-          <div class="featured-pill">⭐ Featured — Live Production App</div>
-          <div class="project-tags">
-            <span class="tag tag-lime">Flask</span>
-            <span class="tag tag-blue">MySQL</span>
-            <span class="tag tag-purple">Railway</span>
-            <span class="tag tag-amber">Healthcare</span>
-            <span class="tag tag-lime">Python</span>
-          </div>
-          <h3 class="project-title">Lab TAT Monitoring Dashboard</h3>
-          <p class="project-tagline">A hospital network's daily heartbeat — deployed, live, in use today.</p>
-          <p class="project-desc">Cerba Lancet Nigeria needed visibility across every lab site in real time. So I built it — an upload-to-dashboard pipeline where staff drop in an Excel file, it gets parsed into MySQL, and everyone from lab managers to execs can see which sites are hitting their turnaround time targets and which ones aren't. No more emailing spreadsheets back and forth.</p>
-          <div class="project-links">
-            <a href="#" class="proj-link">↗ Live App</a>
-            <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="proj-link proj-link-secondary">⌘ GitHub</a>
-          </div>
-          <div class="proj-story">
-            <button class="proj-story-toggle" onclick="toggleStory(this)">
-              <span>▶</span> Technical breakdown
-            </button>
-            <div class="proj-story-body">
-              <div class="proj-story-steps">
-                <div class="proj-step"><div class="proj-step-num">01</div><div class="proj-step-text">Staff upload weekly Excel reports → <span class="proj-step-code">pandas</span> parses them and validates columns before touching the DB</div></div>
-                <div class="proj-step"><div class="proj-step-num">02</div><div class="proj-step-text">Parsed data written to <span class="proj-step-code">MySQL</span> via <span class="proj-step-code">SQLAlchemy</span> — each upload updates weekly records per site/department</div></div>
-                <div class="proj-step"><div class="proj-step-num">03</div><div class="proj-step-text"><span class="proj-step-code">Flask</span> routes serve the dashboard — charts built with <span class="proj-step-code">Chart.js</span>, showing TAT% vs 90% target with week-over-week trend lines</div></div>
-                <div class="proj-step"><div class="proj-step-num">04</div><div class="proj-step-text">Deployed on <span class="proj-step-code">Railway</span> with persistent MySQL instance — always-on, always current</div></div>
-              </div>
-            </div>
-          </div>
+        <div class="pcard-body">
+          <div class="featured-badge">⭐ Featured — Live Production App</div>
+          <div class="pcard-tags"><span class="ptag ptag-l">Flask</span><span class="ptag ptag-b">MySQL</span><span class="ptag ptag-p">Railway</span><span class="ptag ptag-a">Healthcare</span><span class="ptag ptag-l">Python</span></div>
+          <div class="pcard-title">Lab TAT Monitoring Dashboard</div>
+          <div class="pcard-tagline">A hospital network's daily heartbeat — deployed, live, in use today.</div>
+          <div class="pcard-cta">↗ Enter full story</div>
         </div>
       </div>
 
-      <!-- ── LAYOFFS SQL ── -->
-      <div class="project-card col-6 reveal" id="layoffs-card" onclick="window.location.href='sql-layoffs-project.html'" style="cursor:pointer;">
-        <div class="project-visual">
-          <div class="viz-layoffs" style="width:100%;height:100%;">
-            <div class="lay-title">Top layoffs by company — 2020–2023</div>
-            <div class="lay-rows">
-              <div class="lay-row"><span class="lay-co">Amazon</span><div class="lay-track"><div class="lay-bar" data-w="100" style="background:linear-gradient(90deg,var(--coral),#c2185b);"><span>18,150</span></div></div></div>
-              <div class="lay-row"><span class="lay-co">Google</span><div class="lay-track"><div class="lay-bar" data-w="66" style="background:linear-gradient(90deg,var(--sky),#0284c7);"><span>12,000</span></div></div></div>
-              <div class="lay-row"><span class="lay-co">Meta</span><div class="lay-track"><div class="lay-bar" data-w="61" style="background:linear-gradient(90deg,var(--purple),#7e22ce);"><span>11,000</span></div></div></div>
-              <div class="lay-row"><span class="lay-co">Salesforce</span><div class="lay-track"><div class="lay-bar" data-w="56" style="background:linear-gradient(90deg,#fbbf24,#d97706);"><span>10,090</span></div></div></div>
-              <div class="lay-row"><span class="lay-co">Microsoft</span><div class="lay-track"><div class="lay-bar" data-w="55" style="background:linear-gradient(90deg,var(--sky),var(--purple));"><span>10,000</span></div></div></div>
-            </div>
-            <div class="lay-footer">
-              <div><div class="lay-total" id="lay-counter">0</div><div class="lay-total-lbl">total jobs lost</div></div>
-              <div style="font-family:var(--mono);font-size:8px;color:var(--text-faint);text-align:right;">2,361 companies<br><span style="color:var(--lime);">MySQL · EDA · Window Fns</span></div>
+      <!-- LAYOFFS SQL -->
+      <div class="pcard c6" id="pc-layoffs" onclick="openOverlay('layoffs')">
+        <div class="pcard-visual" style="background:linear-gradient(135deg,rgba(255,87,87,0.03),transparent);">
+          <div class="mini-viz" id="layoffs-card-viz">
+            <div class="mini-grid" style="background-image:linear-gradient(rgba(255,87,87,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,87,87,0.03) 1px,transparent 1px);background-size:36px 36px;"></div>
+            <span class="mini-label" style="color:var(--coral);position:relative;z-index:1;">Top layoffs — 2020–2023</span>
+            <div class="lay-bars" id="layoffs-card-bars"></div>
+            <div class="lay-footer" style="position:relative;z-index:1;">
+              <div><div class="lay-total-num" id="lay-counter">0</div><div style="font-family:var(--mono);font-size:7px;color:var(--faint);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;">total jobs lost</div></div>
+              <div style="font-family:var(--mono);font-size:8px;color:var(--faint);text-align:right;">2,361 companies<br><span style="color:var(--lime);">MySQL · EDA</span></div>
             </div>
           </div>
         </div>
-        <div class="project-body">
-          <div class="project-eyebrow">SQL Analysis</div>
-          <div class="project-tags">
-            <span class="tag tag-blue">MySQL</span><span class="tag tag-lime">Data Cleaning</span><span class="tag tag-purple">EDA</span>
-          </div>
-          <h3 class="project-title">World Layoffs — SQL Cleaning &amp; EDA</h3>
-          <p class="project-tagline">386,000 jobs lost. I tracked every one.</p>
-          <p class="project-desc">2,361 companies, 4-step cleaning pipeline, then full exploratory analysis using CTEs, window functions, rolling totals, and DENSE_RANK. The dataset was a mess — duplicates, nulls, inconsistent formatting. By the end, you could actually ask it questions.</p>
-          <div class="project-links">
-            <a href="sql-layoffs-project.html" class="proj-link" onclick="event.stopPropagation();">↗ Full Case Study</a>
-            <a href="https://github.com/Yusuf-Tiamiyu/world-layoffs-sql-analysis" target="_blank" class="proj-link proj-link-secondary" onclick="event.stopPropagation();">⌘ GitHub</a>
-          </div>
+        <div class="pcard-body">
+          <div class="pcard-eyebrow">SQL Analysis</div>
+          <div class="pcard-tags"><span class="ptag ptag-b">MySQL</span><span class="ptag ptag-l">Data Cleaning</span><span class="ptag ptag-p">EDA</span></div>
+          <div class="pcard-title">World Layoffs — SQL EDA</div>
+          <div class="pcard-tagline">386,000 jobs lost. I tracked every one.</div>
+          <div class="pcard-cta">↗ Full case study</div>
         </div>
       </div>
 
-      <!-- ── SALES SQL ── -->
-      <div class="project-card col-6 reveal" id="sales-card" onclick="window.location.href='sql-sales-estimates.html'" style="cursor:pointer;">
-        <div class="project-visual">
-          <div class="viz-sales" style="width:100%;height:100%;">
-            <div class="sales-title">Sales gap estimation — actual vs estimated</div>
-            <div class="sales-legend">
-              <div class="s-leg-item"><div class="s-leg-dot" style="background:var(--sky);"></div>Actual</div>
-              <div class="s-leg-item"><div class="s-leg-dot" style="background:#fbbf24;border:1px dashed rgba(251,191,36,0.6);"></div>LAG/LEAD Estimate</div>
-            </div>
-            <div class="sales-chart">
-              <div class="s-col"><div class="s-bar-wrap"><div class="s-bar actual" data-h="61"></div></div><div class="s-date">Jan 1</div></div>
-              <div class="s-col"><div class="s-bar-wrap"><div class="s-bar actual" data-h="72"></div></div><div class="s-date">Jan 2</div></div>
-              <div class="s-col"><div class="s-bar-wrap"><div class="s-bar est" data-h="78" data-delay="600"></div></div><div class="s-date" style="color:#fbbf24;">Jan 3</div></div>
-              <div class="s-col"><div class="s-bar-wrap"><div class="s-bar actual" data-h="84"></div></div><div class="s-date">Jan 4</div></div>
-              <div class="s-col"><div class="s-bar-wrap"><div class="s-bar actual" data-h="95"></div></div><div class="s-date">Jan 5</div></div>
-              <div class="s-col"><div class="s-bar-wrap"><div class="s-bar est" data-h="86" data-delay="800"></div></div><div class="s-date" style="color:#fbbf24;">Jan 6</div></div>
-              <div class="s-col"><div class="s-bar-wrap"><div class="s-bar actual" data-h="77"></div></div><div class="s-date">Jan 7</div></div>
-            </div>
-            <div class="sales-footer">12 SQL concepts · Recursive CTE · LAG &amp; LEAD interpolation</div>
+      <!-- SALES SQL -->
+      <div class="pcard c6" id="pc-sales" onclick="openOverlay('sales')">
+        <div class="pcard-visual" style="background:linear-gradient(135deg,rgba(61,224,245,0.03),transparent);">
+          <div class="mini-viz" id="sales-card-viz">
+            <div class="mini-grid" style="background-image:linear-gradient(rgba(61,224,245,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(61,224,245,0.03) 1px,transparent 1px);background-size:36px 36px;"></div>
+            <span class="mini-label" style="color:var(--sky);position:relative;z-index:1;">Sales gap estimation — actual vs estimated</span>
+            <div class="sales-bars-wrap" id="sales-card-bars" style="position:relative;z-index:1;"></div>
+            <div style="font-family:var(--mono);font-size:7px;color:var(--faint);margin-top:8px;padding-top:7px;border-top:1px solid var(--border);position:relative;z-index:1;">12 SQL concepts · Recursive CTE · LAG &amp; LEAD</div>
           </div>
         </div>
-        <div class="project-body">
-          <div class="project-eyebrow">SQL Skills Showcase</div>
-          <div class="project-tags">
-            <span class="tag tag-blue">MySQL</span><span class="tag tag-lime">Window Functions</span><span class="tag tag-purple">Recursive CTE</span>
-          </div>
-          <h3 class="project-title">SQL Sales Estimation Engine</h3>
-          <p class="project-tagline">Missing data isn't a dead end — it's a puzzle.</p>
-          <p class="project-desc">Sparse sales records with gaps in the dates. Rather than ignore them, I used LAG/LEAD interpolation and recursive CTEs to estimate what probably happened. 12 SQL concepts, one clean script, built as a skills demonstration from SELECT all the way up to advanced window functions.</p>
-          <div class="project-links">
-            <a href="sql-sales-estimates.html" class="proj-link" onclick="event.stopPropagation();">↗ Full Breakdown</a>
-            <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="proj-link proj-link-secondary" onclick="event.stopPropagation();">⌘ GitHub</a>
-          </div>
+        <div class="pcard-body">
+          <div class="pcard-eyebrow">SQL Skills Showcase</div>
+          <div class="pcard-tags"><span class="ptag ptag-b">MySQL</span><span class="ptag ptag-l">Window Functions</span><span class="ptag ptag-p">Recursive CTE</span></div>
+          <div class="pcard-title">SQL Sales Estimation Engine</div>
+          <div class="pcard-tagline">Missing data isn't a dead end — it's a puzzle.</div>
+          <div class="pcard-cta">↗ Full breakdown</div>
         </div>
       </div>
 
-      <!-- ── LAB OPS EXCEL ── -->
-      <div class="project-card col-6 reveal" id="lab-card" onclick="window.location.href='excel-lab-ops.html'" style="cursor:pointer;">
-        <div class="project-visual">
-          <div class="viz-lab" style="width:100%;height:100%;">
-            <div class="lab-title">
-              TAT % by site vs 90% target
-              <span class="lab-target-badge">▲ 90% target</span>
+      <!-- LAB OPS EXCEL -->
+      <div class="pcard c6" id="pc-labops" onclick="openOverlay('labops')">
+        <div class="pcard-visual" style="background:linear-gradient(135deg,rgba(255,181,71,0.03),transparent);">
+          <div class="mini-viz" id="labops-card-viz">
+            <div class="mini-grid" style="background-image:linear-gradient(rgba(255,181,71,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,181,71,0.03) 1px,transparent 1px);background-size:36px 36px;"></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;position:relative;z-index:1;">
+              <span class="mini-label" style="color:var(--amber);">TAT% by site vs 90% target</span>
+              <span style="font-family:var(--mono);font-size:7px;color:var(--faint);">▲ 90% target</span>
             </div>
-            <div class="lab-rows">
-              <div class="lab-row"><span class="lab-site">Site A</span><div class="lab-track"><div class="lab-target-line" style="left:97.8%;"></div><div class="lab-fill" data-w="97.8" style="background:var(--lime);"></div></div><span class="lab-pct">88.2%</span></div>
-              <div class="lab-row"><span class="lab-site">Site B</span><div class="lab-track"><div class="lab-target-line" style="left:97.8%;"></div><div class="lab-fill" data-w="94.7" style="background:#fbbf24;"></div></div><span class="lab-pct">85.2%</span></div>
-              <div class="lab-row"><span class="lab-site">Site C</span><div class="lab-track"><div class="lab-target-line" style="left:97.8%;"></div><div class="lab-fill" data-w="100" style="background:var(--lime);"></div></div><span class="lab-pct" style="color:var(--lime);">90.3% ✓</span></div>
-              <div class="lab-row"><span class="lab-site">Site D</span><div class="lab-track"><div class="lab-target-line" style="left:97.8%;"></div><div class="lab-fill" data-w="94.4" style="background:#fbbf24;"></div></div><span class="lab-pct">85.0%</span></div>
-              <div class="lab-row"><span class="lab-site">Site F</span><div class="lab-track"><div class="lab-target-line" style="left:97.8%;"></div><div class="lab-fill" data-w="94.2" style="background:var(--coral);"></div></div><span class="lab-pct" style="color:var(--coral);">84.8%</span></div>
-              <div class="lab-row"><span class="lab-site">Site I</span><div class="lab-track"><div class="lab-target-line" style="left:97.8%;"></div><div class="lab-fill" data-w="93.0" style="background:var(--coral);"></div></div><span class="lab-pct" style="color:var(--coral);">83.7%</span></div>
-            </div>
-            <div class="lab-footer"><span>9 sites · 6 departments</span><span>12,465 tests tracked</span></div>
+            <div class="lab-rows-wrap" id="labops-card-rows" style="position:relative;z-index:1;"></div>
+            <div class="lab-footer-s" style="position:relative;z-index:1;"><span>9 sites · 6 depts</span><span>12,465 tests</span></div>
           </div>
         </div>
-        <div class="project-body">
-          <div class="project-eyebrow">Excel Dashboard</div>
-          <div class="project-tags">
-            <span class="tag tag-lime">Excel</span><span class="tag tag-amber">SUMIFS</span><span class="tag tag-blue">Multi-Site</span><span class="tag tag-purple">Healthcare</span>
-          </div>
-          <h3 class="project-title">Lab Operations Dashboard — Excel</h3>
-          <p class="project-tagline">Nine sites. One dashboard. No more guessing.</p>
-          <p class="project-desc">Before this existed, managers were calling sites individually to get numbers. Now they open one file — and every metric across 9 sites and 6 departments is there: test volume, TAT%, analyzer status, staffing. All driven by SUMIFS/AVERAGEIFS with a dropdown filter system.</p>
-          <div class="project-links">
-            <a href="excel-lab-ops.html" class="proj-link" onclick="event.stopPropagation();">↗ Full Case Study</a>
-            <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="proj-link proj-link-secondary" onclick="event.stopPropagation();">⌘ GitHub</a>
-          </div>
+        <div class="pcard-body">
+          <div class="pcard-eyebrow">Excel Dashboard</div>
+          <div class="pcard-tags"><span class="ptag ptag-l">Excel</span><span class="ptag ptag-a">SUMIFS</span><span class="ptag ptag-b">Multi-Site</span><span class="ptag ptag-p">Healthcare</span></div>
+          <div class="pcard-title">Lab Operations Dashboard</div>
+          <div class="pcard-tagline">Nine sites. One dashboard. No more guessing.</div>
+          <div class="pcard-cta">↗ Full case study</div>
         </div>
       </div>
 
-      <!-- ── INVENTORY EXCEL ── -->
-      <div class="project-card col-6 reveal" id="inv-card" onclick="window.location.href='excel-inventory.html'" style="cursor:pointer;">
-        <div class="project-visual">
-          <div class="viz-inv" style="width:100%;height:100%;">
+      <!-- INVENTORY EXCEL -->
+      <div class="pcard c6" id="pc-inventory" onclick="openOverlay('inventory')">
+        <div class="pcard-visual" style="background:linear-gradient(135deg,rgba(157,110,245,0.03),transparent);">
+          <div class="inv-wrap">
             <div class="inv-donut-wrap">
-              <canvas id="inv-donut" width="110" height="110"></canvas>
-              <div class="inv-donut-center">
-                <div class="inv-donut-num">1,578</div>
-                <div class="inv-donut-lbl">items</div>
+              <canvas id="inv-donut-card" width="100" height="100"></canvas>
+              <div class="inv-center">
+                <div class="inv-big-num">1,578</div>
+                <div class="inv-big-lbl">items</div>
               </div>
             </div>
-            <div class="inv-stats-col">
-              <div class="inv-stat-row">
-                <div class="inv-dot" style="background:var(--coral);"></div>
-                <div><div class="inv-num" style="color:var(--coral);">1,413</div><div class="inv-lbl">Reorder Now</div></div>
-              </div>
-              <div class="inv-stat-row">
-                <div class="inv-dot" style="background:var(--lime);"></div>
-                <div><div class="inv-num" style="color:var(--lime);">165</div><div class="inv-lbl">Stock OK</div></div>
-              </div>
-              <div class="inv-crisis">⚠ 89.5% were below<br>reorder level on deploy</div>
+            <div class="inv-stats-s">
+              <div class="inv-s-row"><div class="inv-dot" style="background:var(--coral);"></div><div><div class="inv-s-num" style="color:var(--coral);">1,414</div><div class="inv-s-lbl">Reorder</div></div></div>
+              <div class="inv-s-row"><div class="inv-dot" style="background:var(--lime);"></div><div><div class="inv-s-num" style="color:var(--lime);">164</div><div class="inv-s-lbl">Stock OK</div></div></div>
+              <div class="inv-alert">⚠ 89.6% below reorder<br>level on first deploy</div>
             </div>
           </div>
         </div>
-        <div class="project-body">
-          <div class="project-eyebrow">Excel Automation</div>
-          <div class="project-tags">
-            <span class="tag tag-lime">Excel</span><span class="tag tag-coral">IF / IFERROR</span><span class="tag tag-amber">SUMIFS</span>
-          </div>
-          <h3 class="project-title">Lab Inventory Reorder Tracker</h3>
-          <p class="project-tagline">1,578 items. One spreadsheet. A crisis nobody saw coming.</p>
-          <p class="project-desc">Built a smart inventory system with automatic REORDER NOW alerts, a 2-month safety buffer formula, issuance logging, and dynamic monthly summaries. When it went live, it immediately flagged that 89.5% of stock items were below reorder level. That was a very interesting morning for the procurement team.</p>
-          <div class="project-links">
-            <a href="excel-inventory.html" class="proj-link" onclick="event.stopPropagation();">↗ Full Case Study</a>
-            <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="proj-link proj-link-secondary" onclick="event.stopPropagation();">⌘ GitHub</a>
-          </div>
+        <div class="pcard-body">
+          <div class="pcard-eyebrow">Excel Automation</div>
+          <div class="pcard-tags"><span class="ptag ptag-l">Excel</span><span class="ptag ptag-c">IF / IFERROR</span><span class="ptag ptag-a">SUMIFS</span></div>
+          <div class="pcard-title">Lab Inventory Reorder Tracker</div>
+          <div class="pcard-tagline">1,578 items. A crisis nobody saw coming.</div>
+          <div class="pcard-cta">↗ Full case study</div>
         </div>
       </div>
 
-    </div><!-- end projects-grid -->
-
-    <!-- GAMMA BAND -->
-    <div class="gamma-band reveal">
-      <div class="gamma-band-text">
-        <div class="gamma-band-eyebrow">📑 Deep Dives Available</div>
-        <div class="gamma-band-title">Want the full story on any project?</div>
-        <div class="gamma-band-sub">Each project has a detailed Gamma presentation — walking through the problem, the process, the code, and the outcome. Built for both technical and non-technical readers.</div>
-      </div>
-      <div class="gamma-links">
-        <a href="sql-layoffs-project.html" class="gamma-link primary">🔍 Layoffs Deep Dive</a>
-        <a href="excel-lab-ops.html" class="gamma-link ghost">📊 Lab Ops Report</a>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ══════════════════════════════ CONTACT ══════════════════════════════ -->
-<section id="contact">
-  <div class="section-wrap">
-    <div class="section-eyebrow">Contact</div>
-    <div class="contact-layout">
-      <div class="contact-left reveal">
-        <h2 class="section-title">Got a data <span class="accent italic">problem?</span></h2>
-        <p>Whether it's messy data that needs making sense of, a dashboard that needs building, a workflow that needs automating — or you just want someone who genuinely cares about the work — I'm here. Based in Lagos, fully available remotely.</p>
-        <div class="contact-avail">
-          <div class="avail-dot"></div>
-          Open to roles &amp; freelance
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="contact-links">
-          <a href="#" class="contact-link" onclick="navigator.clipboard.writeText('tiamiyuyusufademola@gmail.com');this.querySelector('.contact-link-val').textContent='Copied! ✓';setTimeout(()=>this.querySelector('.contact-link-val').textContent='tiamiyuyusufademola@gmail.com',2500);return false;">
-            <div class="contact-link-icon">✉️</div>
-            <div>
-              <div class="contact-link-label">Email</div>
-              <div class="contact-link-val">tiamiyuyusufademola@gmail.com</div>
-            </div>
-            <div class="contact-link-arrow">→</div>
-          </a>
-          <a href="https://www.linkedin.com/in/yusuf-tiamiyu-demola" target="_blank" class="contact-link">
-            <div class="contact-link-icon">💼</div>
-            <div>
-              <div class="contact-link-label">LinkedIn</div>
-              <div class="contact-link-val">yusuf-tiamiyu-demola</div>
-            </div>
-            <div class="contact-link-arrow">→</div>
-          </a>
-          <a href="https://github.com/Yusuf-Tiamiyu" target="_blank" class="contact-link">
-            <div class="contact-link-icon">🖥️</div>
-            <div>
-              <div class="contact-link-label">GitHub</div>
-              <div class="contact-link-val">github.com/Yusuf-Tiamiyu</div>
-            </div>
-            <div class="contact-link-arrow">→</div>
-          </a>
-        </div>
-      </div>
     </div>
   </div>
-</section>
+</div>
+
+<!-- ═══ SLIDE 4: CONTACT ═══ -->
+<div class="slide" id="slide-contact">
+  <div class="contact-inner">
+    <div class="contact-left">
+      <h2>Got a data <em>problem?</em></h2>
+      <p>Whether it's messy data needing a story, a dashboard that should build itself, or a workflow someone's doing manually that really shouldn't be — I'm here. Lagos-based, fully remote-ready.</p>
+      <div class="contact-avail"><div class="avail-dot"></div>Open to roles &amp; freelance</div>
+    </div>
+    <div class="contact-links">
+      <div class="c-link" onclick="navigator.clipboard.writeText('tiamiyuyusufademola@gmail.com');this.querySelector('.c-val').textContent='Copied! ✓';setTimeout(()=>this.querySelector('.c-val').textContent='tiamiyuyusufademola@gmail.com',2500);">
+        <div class="c-icon">✉️</div>
+        <div><div class="c-lbl">Email</div><div class="c-val">tiamiyuyusufademola@gmail.com</div></div>
+        <div class="c-arrow">→</div>
+      </div>
+      <a class="c-link" href="https://www.linkedin.com/in/yusuf-tiamiyu-demola" target="_blank">
+        <div class="c-icon">💼</div>
+        <div><div class="c-lbl">LinkedIn</div><div class="c-val">yusuf-tiamiyu-demola</div></div>
+        <div class="c-arrow">→</div>
+      </a>
+      <a class="c-link" href="https://github.com/Yusuf-Tiamiyu" target="_blank">
+        <div class="c-icon">🖥️</div>
+        <div><div class="c-lbl">GitHub</div><div class="c-val">github.com/Yusuf-Tiamiyu</div></div>
+        <div class="c-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #slides -->
 
 <footer>
-  <div class="foot-logo">YUSUF<span>.</span>T</div>
-  <div class="foot-copy">Data Analyst · Lagos, Nigeria · Built with purpose</div>
-  <div style="font-family:var(--mono);font-size:10px;color:var(--text-faint);">2025</div>
+  <span>YUSUF.T — Data Analyst · Lagos, Nigeria</span>
+  <span id="slide-counter" style="color:var(--lime);">01 / 05</span>
+  <span>Built with purpose &amp; data</span>
 </footer>
 
+<!-- ═══════════════════════════════════════════
+     PROJECT DETAIL OVERLAYS
+═══════════════════════════════════════════ -->
+
+<!-- TAT OVERLAY -->
+<div class="proj-overlay" id="overlay-tat">
+  <div class="overlay-bg-glow" style="background:radial-gradient(ellipse at top left,rgba(184,255,63,0.05),transparent 50%),radial-gradient(ellipse at bottom right,rgba(61,224,245,0.04),transparent 50%);"></div>
+  <button class="overlay-close" onclick="closeOverlay('tat')">✕</button>
+  <div class="overlay-back" onclick="closeOverlay('tat')">← Projects</div>
+  <div class="overlay-inner">
+    <div class="overlay-content">
+      <div class="overlay-eyebrow">Featured Project · Live App</div>
+      <h1 class="overlay-title">Lab TAT<br>Monitoring<br>Dashboard</h1>
+      <p class="overlay-tagline">A hospital network's daily heartbeat — deployed, live, in use today at Cerba Lancet Nigeria.</p>
+      <div class="overlay-tags"><span class="ptag ptag-l">Flask</span><span class="ptag ptag-b">MySQL</span><span class="ptag ptag-p">Railway</span><span class="ptag ptag-a">Healthcare</span><span class="ptag ptag-l">Python</span><span class="ptag ptag-b">SQLAlchemy</span><span class="ptag ptag-l">Chart.js</span></div>
+      <div class="stat-row">
+        <div class="stat-cell-o"><span class="stat-big-o" data-count="6">0</span><span class="stat-lbl-o">Lab Sites</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o" data-count="4">0</span><span class="stat-lbl-o">Departments</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">90%</span><span class="stat-lbl-o">TAT Target</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">Live</span><span class="stat-lbl-o">Status</span></div>
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-b active" onclick="switchOTab(this,'tat','story')">The Story</button>
+        <button class="tab-b" onclick="switchOTab(this,'tat','tech')">How It Works</button>
+        <button class="tab-b" onclick="switchOTab(this,'tat','chart')">Live Data</button>
+      </div>
+
+      <div class="tab-p active" id="tat-tab-story">
+        <div class="story-flow">
+          <div class="story-step">
+            <div class="story-num">01</div>
+            <div class="story-body">
+              <h4>The Problem</h4>
+              <p>Cerba Lancet Nigeria runs multiple diagnostic lab sites across Lagos. Every week, lab managers needed to know: are we meeting our 90% TAT target? Which sites are struggling? Which departments are the bottleneck? The answer was buried in Excel files, emailed back and forth, manually compiled. By the time anyone had a full picture, the week was already over.</p>
+              <div class="callout-box">Before this dashboard existed, a manager getting a network-wide view of lab performance had to call each site individually, collect spreadsheets, and stitch them together. Every. Single. Week.</div>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">02</div>
+            <div class="story-body">
+              <h4>The Approach</h4>
+              <p>Build an upload-to-dashboard pipeline. Staff drop in their weekly Excel file → it gets parsed and pushed into a live MySQL database → everyone with a browser can immediately see the full picture. No email chains. No manual compilation. No waiting.</p>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">03</div>
+            <div class="story-body">
+              <h4>The Impact</h4>
+              <p>Real-time visibility across the network. Sites that fall below 90% TAT are immediately visible — not days later when someone remembers to chase up a spreadsheet. Lab managers can spot trends week over week. Execs can see the whole network in one view.</p>
+              <div class="callout-box amber">This application is live in production. Real data. Real users. It runs on Railway with a persistent MySQL instance — always on, always current.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-p" id="tat-tab-tech">
+        <div class="story-flow">
+          <div class="story-step">
+            <div class="story-num">01</div>
+            <div class="story-body">
+              <h4>Upload & Parse</h4>
+              <p>Staff upload the weekly Excel report through the app interface. <span class="code-tag">pandas</span> reads it, validates column structure, and rejects malformed files before they touch the database.</p>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">02</div>
+            <div class="story-body">
+              <h4>Write to MySQL</h4>
+              <p>Parsed rows write to the <span class="code-tag">MySQL</span> database via <span class="code-tag">SQLAlchemy</span>. Each upload inserts new weekly records per site and department — nothing is overwritten, so the full history builds up over time.</p>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">03</div>
+            <div class="story-body">
+              <h4>Serve the Dashboard</h4>
+              <p><span class="code-tag">Flask</span> routes query the database and serve an interactive dashboard. Charts built with <span class="code-tag">Chart.js</span> show TAT% per site vs the 90% target, week-over-week trend lines, and department-level breakdowns.</p>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">04</div>
+            <div class="story-body">
+              <h4>Deploy on Railway</h4>
+              <p>The full stack runs on <span class="code-tag">Railway</span> — Python app + persistent MySQL instance. Always-on, no manual server management, auto-deploys on push.</p>
+              <div class="skill-pills"><span class="skill-pill">Flask</span><span class="skill-pill">Python</span><span class="skill-pill">pandas</span><span class="skill-pill">SQLAlchemy</span><span class="skill-pill">MySQL</span><span class="skill-pill">Chart.js</span><span class="skill-pill">Railway</span><span class="skill-pill">REST APIs</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-p" id="tat-tab-chart">
+        <div class="chart-zone">
+          <div class="chart-zone-label">
+            <span>TAT % by Site (All-Time Avg) vs 90% Target</span>
+            <span style="color:var(--muted);">Real data from the dashboard</span>
+          </div>
+          <div class="chart-wrap"><canvas id="tat-chart"></canvas></div>
+        </div>
+        <div class="chart-zone">
+          <div class="chart-zone-label"><span>Tests by Department (All Periods)</span></div>
+          <div class="chart-wrap" style="height:220px;"><canvas id="tat-dept-chart"></canvas></div>
+        </div>
+        <div class="callout-box">These charts use the actual data from the Excel files powering the dashboard — the exact same data Cerba Lancet Nigeria's lab managers see every week.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOFFS OVERLAY -->
+<div class="proj-overlay" id="overlay-layoffs">
+  <div class="overlay-bg-glow" style="background:radial-gradient(ellipse at top right,rgba(255,87,87,0.06),transparent 50%);"></div>
+  <button class="overlay-close" onclick="closeOverlay('layoffs')">✕</button>
+  <div class="overlay-back" onclick="closeOverlay('layoffs')">← Projects</div>
+  <div class="overlay-inner">
+    <div class="overlay-content">
+      <div class="overlay-eyebrow">SQL Analysis · Kaggle Dataset</div>
+      <h1 class="overlay-title">World Layoffs<br>SQL Cleaning<br>&amp; EDA</h1>
+      <p class="overlay-tagline">386,000 jobs lost across 2,361 companies. I tracked every one — cleaned the data, then let curiosity drive the queries.</p>
+      <div class="overlay-tags"><span class="ptag ptag-b">MySQL</span><span class="ptag ptag-l">Data Cleaning</span><span class="ptag ptag-p">EDA</span><span class="ptag ptag-a">Kaggle</span><span class="ptag ptag-p">Window Functions</span><span class="ptag ptag-b">CTEs</span></div>
+      <div class="stat-row">
+        <div class="stat-cell-o"><span class="stat-big-o" data-count="2361">0</span><span class="stat-lbl-o">Records</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o" data-count="386379" data-format="k">0</span><span class="stat-lbl-o">Jobs Lost</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o" data-count="116">0</span><span class="stat-lbl-o">Fully Shut Down</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">4yr</span><span class="stat-lbl-o">Coverage</span></div>
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-b active" onclick="switchOTab(this,'layoffs','story')">Story</button>
+        <button class="tab-b" onclick="switchOTab(this,'layoffs','cleaning')">Cleaning</button>
+        <button class="tab-b" onclick="switchOTab(this,'layoffs','insights')">Insights</button>
+      </div>
+
+      <div class="tab-p active" id="layoffs-tab-story">
+        <p style="color:var(--muted);line-height:1.9;margin-bottom:1.25rem;font-weight:300;font-size:0.95rem;">I came across this Kaggle dataset covering global tech layoffs from March 2020 to early 2023 — the full post-COVID arc. Hiring booms, then mass corrections. Companies that raised billions shutting down overnight. I wanted to see what the numbers actually looked like underneath all the headlines.</p>
+        <p style="color:var(--muted);line-height:1.9;margin-bottom:1.25rem;font-weight:300;font-size:0.95rem;">But the data was real-world messy: inconsistent date formats, blank industry fields, duplicates, trailing punctuation in country names. Before asking any questions, I had to make the data trustworthy.</p>
+        <div class="callout-box">I always clean first, explore second. Running analysis on dirty data gives you confidently wrong answers — and that's worse than no answer at all.</div>
+        <p style="color:var(--muted);line-height:1.9;margin-bottom:1.25rem;font-weight:300;font-size:0.95rem;margin-top:1.5rem;">For the EDA, I went in without a fixed hypothesis. Just started pulling threads — which companies collapsed entirely? Which years were worst? Which industries got hit hardest? The data led.</p>
+        <div class="chart-zone" style="margin-top:2rem;">
+          <div class="chart-zone-label"><span>Layoffs by Year — 2020 to 2023</span></div>
+          <div class="chart-wrap" style="height:220px;"><canvas id="layoffs-yr-chart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="tab-p" id="layoffs-tab-cleaning">
+        <div class="story-flow">
+          <div class="story-step">
+            <div class="story-num">01</div>
+            <div class="story-body">
+              <h4>Staging Table</h4>
+              <p>Never touch raw data. Create a staging copy first — the original stays safe if anything goes wrong.</p>
+              <div class="sql-block"><div class="sql-hdr"><span class="sql-hdr-lbl">Setup</span><button class="sql-copy-btn" onclick="copySQL(this)">Copy</button></div><div class="sql-pre"><pre><span class="kw">CREATE TABLE</span> layoffs_staging <span class="kw">LIKE</span> layoffs<span class="op">;</span>
+<span class="kw">INSERT INTO</span> layoffs_staging <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> layoffs<span class="op">;</span></pre></div></div>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">02</div>
+            <div class="story-body">
+              <h4>Remove Duplicates with ROW_NUMBER()</h4>
+              <p>Used <span class="code-tag">ROW_NUMBER()</span> partitioned across all key columns to flag exact duplicates. Anything with row_num > 1 is a copy — delete it.</p>
+              <div class="sql-block"><div class="sql-hdr"><span class="sql-hdr-lbl">Duplicate Removal</span><button class="sql-copy-btn" onclick="copySQL(this)">Copy</button></div><div class="sql-pre"><pre><span class="kw">WITH</span> dedup <span class="kw">AS</span> <span class="op">(</span>
+  <span class="kw">SELECT</span> <span class="op">*</span><span class="op">,</span> <span class="fn">ROW_NUMBER</span><span class="op">()</span> <span class="kw">OVER</span> <span class="op">(</span>
+    <span class="kw">PARTITION BY</span> company<span class="op">,</span> location<span class="op">,</span> industry<span class="op">,</span>
+    total_laid_off<span class="op">,</span> percentage_laid_off<span class="op">,</span> <span class="op">`</span>date<span class="op">`,</span>
+    stage<span class="op">,</span> country<span class="op">,</span> funds_raised_millions
+    <span class="kw">ORDER BY</span> company<span class="op">)</span> <span class="kw">AS</span> row_num
+  <span class="kw">FROM</span> layoffs_staging
+<span class="op">)</span>
+<span class="kw">DELETE FROM</span> layoffs_staging2 <span class="kw">WHERE</span> row_num <span class="op">&gt;</span> <span class="nm">1</span><span class="op">;</span></pre></div></div>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">03</div>
+            <div class="story-body">
+              <h4>Standardise: Crypto, Country Names, Dates</h4>
+              <p>"Crypto", "Crypto Currency", "CryptoCurrency" — all the same thing. "United States." with a rogue period. Dates stored as text strings. Fixed them all.</p>
+              <div class="sql-block"><div class="sql-hdr"><span class="sql-hdr-lbl">Standardisation</span><button class="sql-copy-btn" onclick="copySQL(this)">Copy</button></div><div class="sql-pre"><pre><span class="kw">UPDATE</span> layoffs_staging2
+<span class="kw">SET</span> industry <span class="op">=</span> <span class="st">'Crypto'</span> <span class="kw">WHERE</span> industry <span class="kw">LIKE</span> <span class="st">'Crypto%'</span><span class="op">;</span>
+
+<span class="kw">UPDATE</span> layoffs_staging2
+<span class="kw">SET</span> country <span class="op">=</span> <span class="fn">TRIM</span><span class="op">(</span><span class="kw">TRAILING</span> <span class="st">'.'</span> <span class="kw">FROM</span> country<span class="op">);</span>
+
+<span class="cm">-- Convert text dates to proper DATE type</span>
+<span class="kw">UPDATE</span> layoffs_staging2
+<span class="kw">SET</span> <span class="op">`</span>date<span class="op">`</span> <span class="op">=</span> <span class="fn">STR_TO_DATE</span><span class="op">(</span><span class="op">`</span>date<span class="op">`,</span> <span class="st">'%m/%d/%Y'</span><span class="op">);</span></pre></div></div>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">04</div>
+            <div class="story-body">
+              <h4>Top 3 Per Year — DENSE_RANK + Double CTE</h4>
+              <p>The most interesting query: rank companies by layoffs within each year to see who led the cuts year by year, not just overall.</p>
+              <div class="sql-block"><div class="sql-hdr"><span class="sql-hdr-lbl">EDA — Top 3 Per Year</span><button class="sql-copy-btn" onclick="copySQL(this)">Copy</button></div><div class="sql-pre"><pre><span class="kw">WITH</span> Company_Year <span class="kw">AS</span> <span class="op">(</span>
+  <span class="kw">SELECT</span> company<span class="op">,</span> <span class="fn">YEAR</span><span class="op">(</span><span class="op">`</span>date<span class="op">`)</span> <span class="kw">AS</span> yr<span class="op">,</span>
+    <span class="fn">SUM</span><span class="op">(</span>total_laid_off<span class="op">)</span> <span class="kw">AS</span> total
+  <span class="kw">FROM</span> layoffs_staging2
+  <span class="kw">GROUP BY</span> company<span class="op">,</span> yr
+<span class="op">),</span>
+Ranked <span class="kw">AS</span> <span class="op">(</span>
+  <span class="kw">SELECT</span> <span class="op">*</span><span class="op">,</span>
+    <span class="fn">DENSE_RANK</span><span class="op">()</span> <span class="kw">OVER</span> <span class="op">(</span>
+      <span class="kw">PARTITION BY</span> yr
+      <span class="kw">ORDER BY</span> total <span class="kw">DESC</span><span class="op">)</span> <span class="kw">AS</span> rank_num
+  <span class="kw">FROM</span> Company_Year
+<span class="op">)</span>
+<span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> Ranked
+<span class="kw">WHERE</span> rank_num <span class="op">&lt;=</span> <span class="nm">3</span> <span class="kw">AND</span> yr <span class="kw">IS NOT NULL</span>
+<span class="kw">ORDER BY</span> yr<span class="op">;</span></pre></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-p" id="layoffs-tab-insights">
+        <div class="insight-grid">
+          <div class="insight-c">
+            <div class="insight-c-lbl">By Company</div>
+            <div class="insight-c-title">Top Layoffs</div>
+            <div id="layoffs-company-bars"></div>
+          </div>
+          <div class="insight-c">
+            <div class="insight-c-lbl">By Industry</div>
+            <div class="insight-c-title">Hardest-Hit Sectors</div>
+            <div id="layoffs-industry-bars"></div>
+          </div>
+        </div>
+        <div class="callout-box">2022 was by far the worst year — 161,711 layoffs, nearly half the entire dataset. 2021 was surprisingly quiet (only 15,823) — the post-COVID hiring boom was still in full swing.</div>
+        <div class="callout-box coral">Quibi raised $2 billion and laid off 100% of its workforce. It was one of 116 companies that completely shut down in this period.</div>
+        <div class="skill-pills" style="margin-top:2rem;"><span class="skill-pill">CTEs</span><span class="skill-pill">ROW_NUMBER</span><span class="skill-pill">DENSE_RANK</span><span class="skill-pill">PARTITION BY</span><span class="skill-pill">SUM OVER</span><span class="skill-pill">Self-JOIN</span><span class="skill-pill">STR_TO_DATE</span><span class="skill-pill">Rolling Totals</span><span class="skill-pill">NULL handling</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SALES OVERLAY -->
+<div class="proj-overlay" id="overlay-sales">
+  <div class="overlay-bg-glow" style="background:radial-gradient(ellipse at top left,rgba(61,224,245,0.05),transparent 50%);"></div>
+  <button class="overlay-close" onclick="closeOverlay('sales')">✕</button>
+  <div class="overlay-back" onclick="closeOverlay('sales')">← Projects</div>
+  <div class="overlay-inner">
+    <div class="overlay-content">
+      <div class="overlay-eyebrow">SQL Skills Showcase</div>
+      <h1 class="overlay-title">SQL Sales<br>Estimation<br>Engine</h1>
+      <p class="overlay-tagline">Sparse sales data. Missing dates. 12 SQL concepts, one progressive build — from SELECT all the way to LAG/LEAD interpolation.</p>
+      <div class="overlay-tags"><span class="ptag ptag-b">MySQL</span><span class="ptag ptag-p">Recursive CTE</span><span class="ptag ptag-b">Window Functions</span><span class="ptag ptag-a">COALESCE</span><span class="ptag ptag-l">LAG &amp; LEAD</span></div>
+      <div class="stat-row">
+        <div class="stat-cell-o"><span class="stat-big-o">12</span><span class="stat-lbl-o">SQL Concepts</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">2</span><span class="stat-lbl-o">Gaps Filled</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">1</span><span class="stat-lbl-o">Clean Script</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">∞</span><span class="stat-lbl-o">Date Ranges</span></div>
+      </div>
+      <div class="chart-zone">
+        <div class="chart-zone-label"><span>Actual vs Estimated Sales — Jan 1–7</span><span style="color:var(--muted);">Jan 3 &amp; Jan 6 estimated via LAG/LEAD</span></div>
+        <div class="chart-wrap" style="height:240px;"><canvas id="sales-chart"></canvas></div>
+      </div>
+      <div class="callout-box">Why LAG/LEAD instead of just the average? Because the average ignores local trends. Jan 3 gets (72+84)/2 = 78. Jan 6 gets (95+77)/2 = 86. Context-aware, closer to reality.</div>
+      <div class="sql-block"><div class="sql-hdr"><span class="sql-hdr-lbl">Final Query — LAG/LEAD Interpolation</span><button class="sql-copy-btn" onclick="copySQL(this)">Copy</button></div><div class="sql-pre"><pre><span class="kw">WITH RECURSIVE</span> cte <span class="kw">AS</span> <span class="op">(</span>
+  <span class="kw">SELECT</span> <span class="fn">CAST</span><span class="op">(</span><span class="st">'2025-01-01'</span> <span class="kw">AS</span> <span class="kw">DATE</span><span class="op">)</span> <span class="kw">AS</span> dt
+  <span class="kw">UNION ALL</span>
+  <span class="kw">SELECT</span> dt <span class="op">+</span> <span class="kw">INTERVAL</span> <span class="nm">1</span> <span class="kw">DAY</span> <span class="kw">FROM</span> cte
+  <span class="kw">WHERE</span> dt <span class="op">&lt;</span> <span class="fn">CAST</span><span class="op">(</span><span class="st">'2025-01-07'</span> <span class="kw">AS</span> <span class="kw">DATE</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="kw">SELECT</span> cte.dt<span class="op">,</span>
+  <span class="fn">COALESCE</span><span class="op">(</span>
+    s.num_sales<span class="op">,</span>
+    <span class="fn">ROUND</span><span class="op">((</span>
+      <span class="fn">LAG</span><span class="op">(</span>s.num_sales<span class="op">)</span> <span class="kw">OVER</span><span class="op">(</span><span class="kw">ORDER BY</span> cte.dt<span class="op">)</span> <span class="op">+</span>
+      <span class="fn">LEAD</span><span class="op">(</span>s.num_sales<span class="op">)</span> <span class="kw">OVER</span><span class="op">(</span><span class="kw">ORDER BY</span> cte.dt<span class="op">)</span>
+    <span class="op">)</span> <span class="op">/</span> <span class="nm">2</span><span class="op">)</span>
+  <span class="op">)</span> <span class="kw">AS</span> sales_estimate
+<span class="kw">FROM</span> cte
+<span class="kw">LEFT JOIN</span> sales s <span class="kw">ON</span> cte.dt <span class="op">=</span> s.dt<span class="op">;</span></pre></div></div>
+      <div class="skill-pills" style="margin-top:2rem;"><span class="skill-pill">Recursive CTE</span><span class="skill-pill">LAG / LEAD</span><span class="skill-pill">ROW_NUMBER</span><span class="skill-pill">COALESCE</span><span class="skill-pill">LEFT JOIN</span><span class="skill-pill">UNION ALL</span><span class="skill-pill">Date arithmetic</span><span class="skill-pill">NULL handling</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LAB OPS OVERLAY -->
+<div class="proj-overlay" id="overlay-labops">
+  <div class="overlay-bg-glow" style="background:radial-gradient(ellipse at top right,rgba(255,181,71,0.05),transparent 50%);"></div>
+  <button class="overlay-close" onclick="closeOverlay('labops')">✕</button>
+  <div class="overlay-back" onclick="closeOverlay('labops')">← Projects</div>
+  <div class="overlay-inner">
+    <div class="overlay-content">
+      <div class="overlay-eyebrow">Excel Dashboard · Healthcare</div>
+      <h1 class="overlay-title">Lab Operations<br>Dashboard</h1>
+      <p class="overlay-tagline">Nine sites. Six departments. 12,465 tests. One dynamic Excel dashboard — driven entirely by SUMIFS/AVERAGEIFS with a live filter system.</p>
+      <div class="overlay-tags"><span class="ptag ptag-l">Excel</span><span class="ptag ptag-a">SUMIFS</span><span class="ptag ptag-b">Multi-Site</span><span class="ptag ptag-p">Healthcare</span><span class="ptag ptag-l">Power Query</span></div>
+      <div class="stat-row">
+        <div class="stat-cell-o"><span class="stat-big-o">9</span><span class="stat-lbl-o">Sites</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">6</span><span class="stat-lbl-o">Departments</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">12,465</span><span class="stat-lbl-o">Tests Tracked</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">86.8%</span><span class="stat-lbl-o">Network TAT Avg</span></div>
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-b active" onclick="switchOTab(this,'labops','story')">Story</button>
+        <button class="tab-b" onclick="switchOTab(this,'labops','charts')">Site Data</button>
+        <button class="tab-b" onclick="switchOTab(this,'labops','tech')">How It Works</button>
+      </div>
+
+      <div class="tab-p active" id="labops-tab-story">
+        <p style="color:var(--muted);line-height:1.9;margin-bottom:1.25rem;font-weight:300;font-size:0.95rem;">Before this dashboard existed, getting a network-wide view of lab operations meant calling each site individually. Managers were asking things like "how many tests did Site F run last week?" and waiting on someone to go find a spreadsheet. Now they open one file.</p>
+        <div class="callout-box">The dashboard tracks Test Volume, TAT%, Analyzer Status, and Staffing — all updated by changing a week/month/site filter. Everything else recalculates automatically.</div>
+        <p style="color:var(--muted);line-height:1.9;font-weight:300;font-size:0.95rem;margin-top:1.25rem;">The real insight when this first went live: <strong style="color:var(--text);">52% staff adequacy across the network</strong>. Nearly half the departments were understaffed. That's not a number anyone had in front of them before — it was hidden inside individual site reports that nobody was aggregating.</p>
+        <div class="callout-box amber">Data without visibility is just storage. This dashboard made the invisible visible — and gave management something concrete to act on.</div>
+      </div>
+
+      <div class="tab-p" id="labops-tab-charts">
+        <div class="chart-zone">
+          <div class="chart-zone-label"><span>Average TAT% by Site vs 90% Target</span></div>
+          <div class="chart-wrap"><canvas id="labops-site-chart"></canvas></div>
+        </div>
+        <div class="chart-zone">
+          <div class="chart-zone-label"><span>Total Tests by Department</span></div>
+          <div class="chart-wrap" style="height:220px;"><canvas id="labops-dept-chart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="tab-p" id="labops-tab-tech">
+        <div class="story-flow">
+          <div class="story-step">
+            <div class="story-num">01</div>
+            <div class="story-body">
+              <h4>Data Architecture</h4>
+              <p>Three sheets: <span class="code-tag">DATA ENTRY</span> (where weekly data gets added), <span class="code-tag">PIVOT DATA</span> (pre-computed all-time organisation totals), and <span class="code-tag">DASHBOARD</span> (what management sees). No manual copying between sheets — formulas handle everything.</p>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">02</div>
+            <div class="story-body">
+              <h4>Filter-Driven Calculations</h4>
+              <p>A <span class="code-tag">SELECTIONS</span> sheet holds the current filter state (Year / Month / Week / Site / Department). Every KPI on the dashboard uses <span class="code-tag">SUMIFS</span> and <span class="code-tag">AVERAGEIFS</span> referencing those filter cells. Change the filter — every number updates instantly.</p>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">03</div>
+            <div class="story-body">
+              <h4>Staffing Gap Logic</h4>
+              <p>Each site row in the data has required headcount vs actual. The dashboard calculates gap = actual - required, then flags anything with a negative gap as understaffed. The network-level 52% adequacy figure is an <span class="code-tag">AVERAGEIFS</span> across all sites.</p>
+              <div class="skill-pills"><span class="skill-pill">SUMIFS</span><span class="skill-pill">AVERAGEIFS</span><span class="skill-pill">COUNTIFS</span><span class="skill-pill">IF / IFERROR</span><span class="skill-pill">Dynamic References</span><span class="skill-pill">Pivot Tables</span><span class="skill-pill">Conditional Formatting</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INVENTORY OVERLAY -->
+<div class="proj-overlay" id="overlay-inventory">
+  <div class="overlay-bg-glow" style="background:radial-gradient(ellipse at bottom left,rgba(157,110,245,0.06),transparent 50%);"></div>
+  <button class="overlay-close" onclick="closeOverlay('inventory')">✕</button>
+  <div class="overlay-back" onclick="closeOverlay('inventory')">← Projects</div>
+  <div class="overlay-inner">
+    <div class="overlay-content">
+      <div class="overlay-eyebrow">Excel Automation · Healthcare</div>
+      <h1 class="overlay-title">Lab Inventory<br>Reorder<br>Tracker</h1>
+      <p class="overlay-tagline">1,578 lab items. Smart auto-alerts. A 2-month safety buffer. When it launched, it immediately found that 89.6% of stock was below reorder level.</p>
+      <div class="overlay-tags"><span class="ptag ptag-l">Excel</span><span class="ptag ptag-c">IF / IFERROR</span><span class="ptag ptag-a">SUMIFS</span><span class="ptag ptag-p">Dynamic Summaries</span><span class="ptag ptag-l">Automation</span></div>
+      <div class="stat-row">
+        <div class="stat-cell-o"><span class="stat-big-o" data-count="1578">0</span><span class="stat-lbl-o">Items Tracked</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o" data-count="1414">0</span><span class="stat-lbl-o">Need Reorder</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">89.6%</span><span class="stat-lbl-o">Crisis Rate</span></div>
+        <div class="stat-cell-o"><span class="stat-big-o">2mo</span><span class="stat-lbl-o">Safety Buffer</span></div>
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-b active" onclick="switchOTab(this,'inventory','story')">Story</button>
+        <button class="tab-b" onclick="switchOTab(this,'inventory','sample')">Sample Data</button>
+        <button class="tab-b" onclick="switchOTab(this,'inventory','logic')">Logic</button>
+      </div>
+
+      <div class="tab-p active" id="inventory-tab-story">
+        <p style="color:var(--muted);line-height:1.9;margin-bottom:1.25rem;font-weight:300;font-size:0.95rem;">The lab procurement team was managing 1,578 consumable items — gloves, reagents, pipettes, blood collection tubes — with no centralised system. Items were running out mid-month. Staff were discovering stockouts when they went to use something.</p>
+        <div class="callout-box coral">When the tracker went live for the first time, it flagged 1,414 of 1,578 items as below reorder level. 89.6%. That was a very interesting morning for the procurement team.</div>
+        <p style="color:var(--muted);line-height:1.9;font-weight:300;font-size:0.95rem;margin-top:1.25rem;">The tracker doesn't just show current stock. It calculates how many months of stock remain based on average monthly usage — so procurement can see not just "this is low" but "this will run out in 3 weeks."</p>
+        <div class="chart-zone" style="margin-top:2rem;">
+          <div class="chart-zone-label"><span>Stock Status Distribution</span></div>
+          <div class="chart-wrap" style="height:200px;"><canvas id="inv-status-chart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="tab-p" id="inventory-tab-sample">
+        <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;font-weight:300;">A sample of items from the actual tracker — showing the auto-status logic in action:</p>
+        <div style="overflow-x:auto;margin-bottom:1.5rem;">
+          <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:10px;">
+            <thead><tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:8px 12px;text-align:left;color:var(--faint);letter-spacing:0.1em;font-weight:400;">Item ID</th>
+              <th style="padding:8px 12px;text-align:left;color:var(--faint);letter-spacing:0.1em;font-weight:400;">Description</th>
+              <th style="padding:8px 12px;text-align:right;color:var(--faint);font-weight:400;">Qty</th>
+              <th style="padding:8px 12px;text-align:right;color:var(--faint);font-weight:400;">Reorder At</th>
+              <th style="padding:8px 12px;text-align:right;color:var(--faint);font-weight:400;">Months Left</th>
+              <th style="padding:8px 12px;text-align:center;color:var(--faint);font-weight:400;">Status</th>
+            </tr></thead>
+            <tbody id="inv-sample-rows"></tbody>
+          </table>
+        </div>
+        <div class="callout-box">The <span style="color:var(--lime);">Status</span> column is driven by a single formula: <code style="font-family:var(--mono);font-size:10px;">IF(C3&lt;=D3,"REORDER NOW","OK")</code>. The "Months of Stock" column divides current quantity by average monthly usage — so procurement knows exactly how urgent each item is.</div>
+      </div>
+
+      <div class="tab-p" id="inventory-tab-logic">
+        <div class="story-flow">
+          <div class="story-step">
+            <div class="story-num">01</div>
+            <div class="story-body">
+              <h4>Reorder Status Logic</h4>
+              <p>The core formula: if current quantity is at or below the reorder level, flag it. Simple, but applied across 1,578 rows with conditional formatting, it turns the spreadsheet into a live alert system.</p>
+              <div class="callout-box"><code style="font-family:var(--mono);">=IF(C3&lt;=D3,"REORDER NOW","OK")</code><br>Reorder Level is set at 2× average monthly usage — a built-in 2-month safety buffer.</div>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">02</div>
+            <div class="story-body">
+              <h4>Months of Stock</h4>
+              <p>Each item has an average monthly usage figure. Dividing current stock by that gives remaining months. <span class="code-tag">IFERROR</span> handles cases where usage is 0 to avoid divide-by-zero errors.</p>
+              <div class="callout-box"><code style="font-family:var(--mono);">=IFERROR(C3/H3,0)</code></div>
+            </div>
+          </div>
+          <div class="story-step">
+            <div class="story-num">03</div>
+            <div class="story-body">
+              <h4>Monthly Summary Sheet</h4>
+              <p>Change the month in one cell → the summary sheet recalculates total issuances, number of transactions, and most-issued-to department for every item. Powered by <span class="code-tag">SUMIFS</span> and <span class="code-tag">COUNTIFS</span> referencing the Issuance Log.</p>
+              <div class="skill-pills"><span class="skill-pill">IF / IFERROR</span><span class="skill-pill">SUMIFS</span><span class="skill-pill">COUNTIFS</span><span class="skill-pill">Dynamic Month Filter</span><span class="skill-pill">Conditional Formatting</span><span class="skill-pill">Data Validation</span><span class="skill-pill">Named Ranges</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
 <script>
-// ═══ PARTICLE CANVAS ═══
-var canvas = document.getElementById("hero-canvas");
-var ctx = canvas.getContext("2d");
-var particles = [];
-var mouse = {x:-1000, y:-1000};
+// ═══════════════════════════════════════════════════
+// SLIDE ENGINE
+// ═══════════════════════════════════════════════════
+var currentSlide = 0;
+var totalSlides = 5;
+var isAnimating = false;
+var slideIds = ['slide-hero','slide-about','slide-skills','slide-projects','slide-contact'];
+var mascotPositions = ['pos-hero','pos-about','pos-skills','pos-projects','pos-contact'];
+var mascotMessages = {
+  0: "hey! 👋 I'm your data guide. scroll or click the dots to explore",
+  1: "this is the 'who I am' bit — spoiler: I really like data 📊",
+  2: "click any category to see the skill breakdown! lime = locked in 🔒",
+  3: "these are live projects. click any card to go deep 🔍",
+  4: "you made it here? that means you liked what you saw 😄 reach out!"
+};
 
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-resize();
-window.addEventListener("resize", resize);
-
-function Particle(){
-  this.reset();
+function goSlide(idx) {
+  if (isAnimating || idx === currentSlide) return;
+  if (idx < 0 || idx >= totalSlides) return;
+  isAnimating = true;
+  
+  var oldSlide = document.getElementById(slideIds[currentSlide]);
+  var newSlide = document.getElementById(slideIds[idx]);
+  var direction = idx > currentSlide ? 'up' : 'down';
+  
+  oldSlide.classList.add(direction === 'up' ? 'exiting-up' : 'exiting-down');
+  oldSlide.classList.remove('active');
+  
+  setTimeout(function() {
+    oldSlide.classList.remove('exiting-up','exiting-down');
+    newSlide.classList.add('active');
+    currentSlide = idx;
+    updateUI();
+    
+    setTimeout(function() {
+      isAnimating = false;
+      onSlideEnter(idx);
+    }, 700);
+  }, 50);
 }
-Particle.prototype.reset = function(){
-  this.x = Math.random()*canvas.width;
-  this.y = Math.random()*canvas.height;
-  this.vx = (Math.random()-0.5)*0.3;
-  this.vy = (Math.random()-0.5)*0.3;
-  this.r = Math.random()*1.8+0.4;
-  this.hue = Math.random()>0.7 ? 200 : 75; // teal or lime
-};
-Particle.prototype.update = function(){
-  this.x+=this.vx; this.y+=this.vy;
-  if(this.x<0||this.x>canvas.width)this.vx*=-1;
-  if(this.y<0||this.y>canvas.height)this.vy*=-1;
-  var dx=this.x-mouse.x, dy=this.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy);
-  if(d<140){this.x+=dx/d*1.2;this.y+=dy/d*1.2;}
-};
-for(var i=0;i<80;i++)particles.push(new Particle());
 
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  for(var i=0;i<particles.length;i++){
-    particles[i].update();
-    var col = particles[i].hue===75 ? "rgba(200,255,0,0.6)" : "rgba(56,189,248,0.5)";
-    ctx.beginPath();ctx.arc(particles[i].x,particles[i].y,particles[i].r,0,Math.PI*2);
-    ctx.fillStyle=col;ctx.fill();
-    for(var j=i+1;j<particles.length;j++){
-      var dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
-      var d=Math.sqrt(dx*dx+dy*dy);
-      if(d<120){
-        ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
-        ctx.strokeStyle="rgba(200,255,0,"+(0.2*(1-d/120))+")";ctx.lineWidth=0.5;ctx.stroke();
-      }
-    }
+function updateUI() {
+  // Dots
+  document.querySelectorAll('.dot').forEach(function(d,i){ d.classList.toggle('active', i===currentSlide); });
+  // Nav links
+  document.querySelectorAll('.nav-links a').forEach(function(a,i){ a.classList.toggle('active', i===currentSlide); });
+  // Counter
+  document.getElementById('slide-counter').textContent = String(currentSlide+1).padStart(2,'0') + ' / 0' + totalSlides;
+  // Scroll hint
+  document.getElementById('scroll-hint').style.opacity = currentSlide === 0 ? '1' : '0';
+  // Mascot position
+  var mc = document.getElementById('mascot-container');
+  mc.className = 'pos-' + ['hero','about','skills','projects','contact'][currentSlide];
+  // Mascot message
+  showBubble(mascotMessages[currentSlide]);
+}
+
+// Wheel scrolling
+var wheelCooldown = false;
+window.addEventListener('wheel', function(e){
+  if (wheelCooldown || isAnimating) return;
+  wheelCooldown = true;
+  setTimeout(function(){wheelCooldown=false;},900);
+  if (e.deltaY > 0) goSlide(currentSlide+1);
+  else goSlide(currentSlide-1);
+}, {passive:true});
+
+// Keyboard
+window.addEventListener('keydown', function(e){
+  if (document.querySelector('.proj-overlay.open')) return;
+  if (e.key==='ArrowDown'||e.key==='PageDown') goSlide(currentSlide+1);
+  if (e.key==='ArrowUp'||e.key==='PageUp') goSlide(currentSlide-1);
+});
+
+// Touch
+var touchY = 0;
+window.addEventListener('touchstart', function(e){touchY=e.touches[0].clientY;},{passive:true});
+window.addEventListener('touchend', function(e){
+  if (document.querySelector('.proj-overlay.open')) return;
+  var dy = touchY - e.changedTouches[0].clientY;
+  if (Math.abs(dy)>50){
+    if(dy>0) goSlide(currentSlide+1);
+    else goSlide(currentSlide-1);
   }
-  requestAnimationFrame(draw);
-}
-draw();
-document.addEventListener("mousemove",function(e){mouse.x=e.clientX;mouse.y=e.clientY;});
+},{passive:true});
 
-// ═══ CURSOR ═══
-var cur=document.getElementById("cursor"), ring=document.getElementById("cursor-ring"), curText=document.getElementById("cursor-text");
+// ═══════════════════════════════════════════════════
+// CURSOR
+// ═══════════════════════════════════════════════════
+var cur=document.getElementById('cur'), ring=document.getElementById('cur-ring');
 var cx=0,cy=0,rx=0,ry=0;
-document.addEventListener("mousemove",function(e){cx=e.clientX;cy=e.clientY;curText.style.left=cx+"px";curText.style.top=cy+"px";});
-(function animCursor(){
-  rx+=(cx-rx)*0.1;ry+=(cy-ry)*0.1;
-  cur.style.left=cx+"px";cur.style.top=cy+"px";
-  ring.style.left=rx+"px";ring.style.top=ry+"px";
-  requestAnimationFrame(animCursor);
+document.addEventListener('mousemove',function(e){cx=e.clientX;cy=e.clientY;});
+(function animCur(){
+  rx+=(cx-rx)*0.1; ry+=(cy-ry)*0.1;
+  cur.style.left=cx+'px'; cur.style.top=cy+'px';
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animCur);
 })();
-document.querySelectorAll("a,button,.project-card").forEach(function(el){
-  el.addEventListener("mouseenter",function(){
-    cur.style.transform="translate(-50%,-50%) scale(2.5)";ring.style.transform="translate(-50%,-50%) scale(1.5)";
-    curText.style.opacity="1";
-    if(el.classList.contains("project-card"))curText.textContent="View →";
-    else if(el.tagName==="A")curText.textContent="Open ↗";
-    else curText.textContent="Click";
-  });
-  el.addEventListener("mouseleave",function(){
-    cur.style.transform="translate(-50%,-50%) scale(1)";ring.style.transform="translate(-50%,-50%) scale(1)";
-    curText.style.opacity="0";
-  });
+document.querySelectorAll('a,button,.pcard,.skill-cat,.kpi,.c-link').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.transform='translate(-50%,-50%) scale(2.5)';ring.style.transform='translate(-50%,-50%) scale(1.6)';});
+  el.addEventListener('mouseleave',function(){cur.style.transform='translate(-50%,-50%) scale(1)';ring.style.transform='translate(-50%,-50%) scale(1)';});
 });
 
-// ═══ SCROLL PROGRESS ═══
-var prog=document.getElementById("progress");
-window.addEventListener("scroll",function(){
-  var st=window.scrollY, dh=document.documentElement.scrollHeight-window.innerHeight;
-  prog.style.width=(st/dh*100)+"%";
-});
+// ═══════════════════════════════════════════════════
+// HERO CANVAS PARTICLES
+// ═══════════════════════════════════════════════════
+(function(){
+  var canvas = document.getElementById('hero-canvas');
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var mouse = {x:-9999,y:-9999};
+  
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  
+  for(var i=0;i<90;i++){
+    particles.push({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      vx:(Math.random()-0.5)*0.35,
+      vy:(Math.random()-0.5)*0.35,
+      r:Math.random()*1.8+0.4,
+      type:Math.random()>0.7?'sky':'lime'
+    });
+  }
+  
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(function(p,i){
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>canvas.width) p.vx*=-1;
+      if(p.y<0||p.y>canvas.height) p.vy*=-1;
+      var dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<150){p.x+=dx/d*1.5;p.y+=dy/d*1.5;}
+      var col=p.type==='lime'?'rgba(184,255,63,0.6)':'rgba(61,224,245,0.4)';
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+      for(var j=i+1;j<particles.length;j++){
+        var dx2=p.x-particles[j].x,dy2=p.y-particles[j].y,d2=Math.sqrt(dx2*dx2+dy2*dy2);
+        if(d2<130){
+          ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle='rgba(184,255,63,'+(0.18*(1-d2/130))+')';ctx.lineWidth=0.5;ctx.stroke();
+        }
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  document.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;});
+})();
 
-// ═══ TYPEWRITER ═══
-var phrases=["Excel & Power Query","Power BI & Tableau","SQL & MySQL","Python Automation","AI-Powered Workflows","Healthcare Analytics"];
+// ═══════════════════════════════════════════════════
+// TYPEWRITER
+// ═══════════════════════════════════════════════════
+var phrases=['Excel & Power Query','Power BI & Tableau','SQL & MySQL','Python Automation','Healthcare Analytics','AI-Powered Workflows'];
 var pi=0,ci=0,del=false;
-var tw=document.getElementById("typewriter");
+var tw=document.getElementById('tw');
 function typeLoop(){
   var w=phrases[pi];
-  if(!del){tw.textContent=w.slice(0,ci+1);ci++;if(ci===w.length){del=true;setTimeout(typeLoop,2200);return;}setTimeout(typeLoop,75);}
-  else{tw.textContent=w.slice(0,ci-1);ci--;if(ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(typeLoop,350);return;}setTimeout(typeLoop,35);}
+  if(!del){tw.textContent=w.slice(0,ci+1);ci++;if(ci===w.length){del=true;setTimeout(typeLoop,2400);return;}setTimeout(typeLoop,70);}
+  else{tw.textContent=w.slice(0,ci-1);ci--;if(ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(typeLoop,350);return;}setTimeout(typeLoop,32);}
 }
 typeLoop();
 
-// ═══ REVEAL ON SCROLL ═══
-var revObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add("visible");revObs.unobserve(e.target);}});
-},{threshold:0.12});
-document.querySelectorAll(".reveal").forEach(function(el){revObs.observe(el);});
-
-// ═══ SKILL BARS ═══
-var skillObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting){
-      var delay=parseInt(e.target.dataset.delay||0);
-      setTimeout(function(){
-        e.target.classList.add("visible");
-        e.target.querySelectorAll(".skill-fill").forEach(function(bar){bar.style.width=bar.dataset.w+"%";});
-      },delay);
-      skillObs.unobserve(e.target);
-    }
-  });
-},{threshold:0.2});
-document.querySelectorAll(".skill-category").forEach(function(c){skillObs.observe(c);});
-
-// ═══ PROJECT CARD REVEAL ═══
-var pcObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e,i){
-    if(e.isIntersecting){setTimeout(function(){e.target.classList.add("visible");},i*100);pcObs.unobserve(e.target);}
-  });
-},{threshold:0.08});
-document.querySelectorAll(".project-card").forEach(function(c){pcObs.observe(c);});
-
-// ═══ TAT VIZ ═══
-var tatDone=false;
-var tatObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting&&!tatDone){
-      tatDone=true;
-      setTimeout(function(){
-        document.querySelectorAll(".tat-bar-fill").forEach(function(bar){
-          var h=parseInt(bar.dataset.h);
-          bar.style.height=((h/100)*80)+"px";
-        });
-      },300);
-    }
-  });
-},{threshold:0.3});
-var tatCard=document.getElementById("tat-card");if(tatCard)tatObs.observe(tatCard);
-
-// ═══ LAYOFFS VIZ ═══
-var layDone=false;
-var layObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting&&!layDone){
-      layDone=true;
-      setTimeout(function(){
-        document.querySelectorAll(".lay-bar").forEach(function(bar){bar.style.width=bar.dataset.w+"%";});
-        var counter=document.getElementById("lay-counter"), target=386379, dur=1800, start=null;
-        function step(ts){if(!start)start=ts;var p=Math.min((ts-start)/dur,1);var e=1-Math.pow(1-p,3);counter.textContent=Math.round(target*e).toLocaleString();if(p<1)requestAnimationFrame(step);}
-        requestAnimationFrame(step);
-      },300);
-    }
-  });
-},{threshold:0.3});
-var layCard=document.getElementById("layoffs-card");if(layCard)layObs.observe(layCard);
-
-// ═══ SALES VIZ ═══
-var salesDone=false;
-var salesObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting&&!salesDone){
-      salesDone=true;
-      var maxH=95;
-      document.querySelectorAll(".s-bar").forEach(function(bar){
-        var delay=parseInt(bar.dataset.delay||0);
-        setTimeout(function(){bar.style.height=((parseInt(bar.dataset.h)/maxH)*72)+"px";},delay);
-      });
-    }
-  });
-},{threshold:0.3});
-var sCard=document.getElementById("sales-card");if(sCard)salesObs.observe(sCard);
-
-// ═══ LAB VIZ ═══
-var labDone=false;
-var labObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting&&!labDone){
-      labDone=true;
-      setTimeout(function(){document.querySelectorAll(".lab-fill").forEach(function(bar){bar.style.width=bar.dataset.w+"%";});},300);
-    }
-  });
-},{threshold:0.3});
-var lCard=document.getElementById("lab-card");if(lCard)labObs.observe(lCard);
-
-// ═══ INVENTORY DONUT ═══
-var invDone=false;
-var invObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting&&!invDone){
-      invDone=true;
-      var c=document.getElementById("inv-donut");
-      var ctx2=c.getContext("2d");
-      var total=1578,reo=1413,ok=165;
-      var sa=-Math.PI/2;
-      var prog2=0,dur=1200,s=null;
-      function animDonut(ts){
-        if(!s)s=ts;
-        prog2=Math.min((ts-s)/dur,1);
-        ctx2.clearRect(0,0,110,110);
-        var ea=1-Math.pow(1-prog2,3);
-        // reorder arc
-        ctx2.beginPath();ctx2.arc(55,55,40,sa,sa+(reo/total)*Math.PI*2*ea);
-        ctx2.lineWidth=14;ctx2.strokeStyle="var(--coral)";ctx2.stroke();
-        // ok arc
-        ctx2.beginPath();ctx2.arc(55,55,40,sa+(reo/total)*Math.PI*2*ea,sa+Math.PI*2*ea);
-        ctx2.lineWidth=14;ctx2.strokeStyle="var(--lime)";ctx2.stroke();
-        if(prog2<1)requestAnimationFrame(animDonut);
-      }
-      requestAnimationFrame(animDonut);
-    }
-  });
-},{threshold:0.3});
-var invCard=document.getElementById("inv-card");if(invCard)invObs.observe(invCard);
-
-// ═══ MASCOT MESSAGES ═══
-var mascotMessages = {
-  "hero":    "hey! 👋 I'm your data guide. scroll to see what I've built.",
-  "about":   "this is where I talk about myself — the good stuff 😄",
-  "skills":  "watch those bars fill up 📊 some are still levelling up!",
-  "projects":"click any card to go deeper 🔍",
-  "contact": "wanna work together? this is the part where you reach out 📬"
-};
-var lastSection="hero";
-var bubble=document.getElementById("mascot-bubble");
-
+// ═══════════════════════════════════════════════════
+// MASCOT
+// ═══════════════════════════════════════════════════
 function showBubble(msg){
-  bubble.textContent=msg;
-  bubble.classList.add("show");
-  clearTimeout(bubble._timer);
-  bubble._timer=setTimeout(function(){bubble.classList.remove("show");},4500);
+  var b=document.getElementById('mascot-bubble');
+  b.textContent=msg;
+  b.classList.add('show');
+  clearTimeout(b._t);
+  b._t=setTimeout(function(){b.classList.remove('show');},5000);
+}
+function waveMascot(){
+  var al=document.getElementById('arm-l'),ar=document.getElementById('arm-r');
+  if(!al)return;
+  al.style.transform='rotate(-30deg) translateY(-6px)';
+  ar.style.transform='rotate(30deg) translateY(-6px)';
+  setTimeout(function(){al.style.transform='';ar.style.transform='';},700);
 }
 
-window.addEventListener("scroll",function(){
-  var sections=["contact","projects","skills","about","hero"];
-  var current="hero";
-  for(var i=0;i<sections.length;i++){
-    var el=document.getElementById(sections[i]);
-    if(el&&window.scrollY>=el.offsetTop-200){current=sections[i];break;}
+// Init greeting after 2s
+setTimeout(function(){showBubble(mascotMessages[0]);waveMascot();},2000);
+
+// ═══════════════════════════════════════════════════
+// SKILLS PANEL
+// ═══════════════════════════════════════════════════
+var skillData = {
+  bi: {
+    title:'Business Intelligence',
+    skills:[
+      {name:'Power BI',val:82,cls:'lime'},{name:'Tableau',val:80,cls:'lime'},
+      {name:'Power Query',val:85,cls:'lime'},{name:'DAX',val:62,cls:'purple'}
+    ]
+  },
+  excel: {
+    title:'Excel',
+    skills:[
+      {name:'Pivot Tables',val:92,cls:'lime'},{name:'Power Query',val:88,cls:'lime'},
+      {name:'Formulas & Logic',val:90,cls:'lime'},{name:'Dashboard Design',val:85,cls:'lime'}
+    ]
+  },
+  sql: {
+    title:'SQL & Databases',
+    skills:[
+      {name:'MySQL',val:85,cls:'lime'},{name:'Joins & Queries',val:83,cls:'lime'},
+      {name:'Window Functions',val:78,cls:'lime'},{name:'Cloud Hosting',val:70,cls:'sky'}
+    ]
+  },
+  python: {
+    title:'Python & Automation',
+    skills:[
+      {name:'AI Automation',val:88,cls:'lime'},{name:'Flask Apps',val:55,cls:'purple'},
+      {name:'Python + AI',val:58,cls:'purple'},{name:'Pandas',val:50,cls:'sky'}
+    ]
   }
-  if(current!==lastSection){
-    lastSection=current;
-    showBubble(mascotMessages[current]||"");
-    // Animate mascot arms
-    var armL=document.getElementById("arm-l"), armR=document.getElementById("arm-r");
-    armL.style.transform="rotate(-25deg) translateY(-5px)";
-    armR.style.transform="rotate(25deg) translateY(-5px)";
-    setTimeout(function(){armL.style.transform="";armR.style.transform="";},600);
-  }
+};
+
+function selectCat(el){
+  document.querySelectorAll('.skill-cat').forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');
+  renderSkillPanel(el.dataset.cat);
+  waveMascot();
+}
+
+function renderSkillPanel(cat){
+  var data=skillData[cat];
+  document.getElementById('skill-panel-title').textContent=data.title;
+  var bars=document.getElementById('skill-bars');
+  bars.innerHTML='';
+  data.skills.forEach(function(s,i){
+    var row=document.createElement('div');row.className='s-row';
+    row.innerHTML='<span class="s-name">'+s.name+'</span><div class="s-track"><div class="s-fill '+s.cls+'" style="width:0" data-w="'+s.val+'"></div></div><span class="s-pct">'+s.val+'%</span>';
+    bars.appendChild(row);
+    setTimeout(function(){row.querySelector('.s-fill').style.width=s.val+'%';},i*80+50);
+  });
+}
+renderSkillPanel('bi');
+
+// ═══════════════════════════════════════════════════
+// PROJECT CARD VIZZES
+// ═══════════════════════════════════════════════════
+
+// TAT card
+var tatSites=[
+  {name:'Ikeja',val:88,cls:'ok'},{name:'Lekki',val:85,cls:'mid'},
+  {name:'V/Is.',val:91,cls:'ok'},{name:'Yaba',val:78,cls:'warn'},
+  {name:'Suru.',val:84,cls:'mid'},{name:'Ikor.',val:76,cls:'warn'}
+];
+var tatColors={ok:'var(--lime)',mid:'var(--amber)',warn:'var(--coral)'};
+var tatCols=document.getElementById('tat-card-cols');
+tatSites.forEach(function(s){
+  var col=document.createElement('div');col.className='tat-col';
+  col.innerHTML='<div class="tat-bar-t" style="height:90px;"><div class="tat-fill '+s.cls+'" data-h="'+s.val+'" style="background:'+tatColors[s.cls]+';height:0;"></div></div><div class="tat-site-lbl">'+s.name+'</div>';
+  tatCols.appendChild(col);
 });
 
-// Initial greeting
-setTimeout(function(){showBubble(mascotMessages["hero"]);},1800);
+// Layoffs card
+var layCos=[
+  {name:'Amazon',w:100,col:'linear-gradient(90deg,var(--coral),#c2185b)',val:'18,150'},
+  {name:'Google',w:66,col:'linear-gradient(90deg,var(--sky),#0284c7)',val:'12,000'},
+  {name:'Meta',w:61,col:'linear-gradient(90deg,var(--purple),#7e22ce)',val:'11,000'},
+  {name:'Salesforce',w:56,col:'linear-gradient(90deg,var(--amber),#d97706)',val:'10,090'},
+  {name:'Microsoft',w:55,col:'linear-gradient(90deg,var(--sky),var(--purple))',val:'10,000'}
+];
+var layBars=document.getElementById('layoffs-card-bars');
+layCos.forEach(function(c){
+  var r=document.createElement('div');r.className='lay-r';
+  r.innerHTML='<span class="lay-co">'+c.name+'</span><div class="lay-track"><div class="lay-fill" data-w="'+c.w+'" style="background:'+c.col+';width:0;"><span>'+c.val+'</span></div></div>';
+  layBars.appendChild(r);
+});
 
-// ═══ STORY TOGGLE ═══
-function toggleStory(btn){
-  btn.classList.toggle("open");
-  var body=btn.nextElementSibling;
-  body.classList.toggle("open");
+// Sales card
+var salesData=[
+  {h:61,type:'act'},{h:72,type:'act'},{h:78,type:'est',dl:600},
+  {h:84,type:'act'},{h:95,type:'act'},{h:86,type:'est',dl:800},{h:77,type:'act'}
+];
+var salesDates=['J1','J2','J3','J4','J5','J6','J7'];
+var salesBarsEl=document.getElementById('sales-card-bars');
+salesData.forEach(function(d,i){
+  var col=document.createElement('div');col.className='s-bar-c';
+  var dateStyle=d.type==='est'?'color:var(--amber);':'';
+  col.innerHTML='<div class="s-bar-bw"><div class="s-bar-b '+d.type+'" data-h="'+d.h+'" data-dl="'+(d.dl||0)+'" style="height:0;"></div></div><div class="s-date-l" style="'+dateStyle+'">'+salesDates[i]+'</div>';
+  salesBarsEl.appendChild(col);
+});
+
+// Lab ops card
+var labSites=[
+  {name:'Site A',w:97.8,pct:'88.2%',col:'var(--lime)'},
+  {name:'Site B',w:94.7,pct:'85.2%',col:'var(--amber)'},
+  {name:'Site C',w:100,pct:'90.3%✓',col:'var(--lime)'},
+  {name:'Site D',w:94.4,pct:'85.0%',col:'var(--amber)'},
+  {name:'Site F',w:94.2,pct:'84.8%',col:'var(--coral)'},
+  {name:'Site I',w:93.0,pct:'83.7%',col:'var(--coral)'}
+];
+var labRowsEl=document.getElementById('labops-card-rows');
+labSites.forEach(function(s){
+  var r=document.createElement('div');r.className='lab-r';
+  var pctStyle=s.col==='var(--lime)'?'color:var(--lime);':(s.col==='var(--coral)'?'color:var(--coral);':'');
+  r.innerHTML='<span class="lab-site-l">'+s.name+'</span><div class="lab-track"><div class="lab-tgt-line" style="left:97.8%;"></div><div class="lab-fill-b" data-w="'+s.w+'" style="background:'+s.col+';width:0;"></div></div><span class="lab-pct-l" style="'+pctStyle+'">'+s.pct+'</span>';
+  labRowsEl.appendChild(r);
+});
+
+// Inventory donut
+(function(){
+  var c=document.getElementById('inv-donut-card');
+  if(!c)return;
+  var ctx2=c.getContext('2d');
+  var sa=-Math.PI/2,total=1578,reo=1414;
+  var prog=0,dur=1400,s=null;
+  function animDonut(ts){
+    if(!s)s=ts;
+    var p=Math.min((ts-s)/dur,1);
+    var ea=1-Math.pow(1-p,3);
+    ctx2.clearRect(0,0,100,100);
+    ctx2.beginPath();ctx2.arc(50,50,36,sa,sa+(reo/total)*Math.PI*2*ea);
+    ctx2.lineWidth=12;ctx2.strokeStyle='#ff5757';ctx2.stroke();
+    ctx2.beginPath();ctx2.arc(50,50,36,sa+(reo/total)*Math.PI*2*ea,sa+Math.PI*2*ea);
+    ctx2.lineWidth=12;ctx2.strokeStyle='#b8ff3f';ctx2.stroke();
+    if(p<1)requestAnimationFrame(animDonut);
+  }
+  setTimeout(function(){requestAnimationFrame(animDonut);},1000);
+})();
+
+// ═══════════════════════════════════════════════════
+// ON SLIDE ENTER — trigger animations
+// ═══════════════════════════════════════════════════
+var tatVisDone=false,layVisDone=false,salesVisDone=false,labVisDone=false,invVisDone=false;
+
+function onSlideEnter(idx){
+  waveMascot();
+  if(idx===2){
+    // Skills — re-render active panel
+    var active=document.querySelector('.skill-cat.active');
+    if(active) renderSkillPanel(active.dataset.cat);
+  }
+  if(idx===3){
+    // Projects — staggered card reveal + vizzes
+    document.querySelectorAll('.pcard').forEach(function(c,i){
+      setTimeout(function(){c.classList.add('in');},i*90);
+    });
+    // TAT bars
+    if(!tatVisDone){
+      tatVisDone=true;
+      setTimeout(function(){
+        document.querySelectorAll('.tat-fill').forEach(function(bar){
+          bar.style.height=((parseInt(bar.dataset.h)/100)*80)+'px';
+        });
+      },400);
+    }
+    // Layoffs bars + counter
+    if(!layVisDone){
+      layVisDone=true;
+      setTimeout(function(){
+        document.querySelectorAll('.lay-fill').forEach(function(b){b.style.width=b.dataset.w+'%';});
+        var counter=document.getElementById('lay-counter'),target=386379,dur=2000,s=null;
+        function step(ts){if(!s)s=ts;var p=Math.min((ts-s)/dur,1);var e=1-Math.pow(1-p,3);counter.textContent=Math.round(target*e).toLocaleString();if(p<1)requestAnimationFrame(step);}
+        requestAnimationFrame(step);
+      },400);
+    }
+    // Sales bars
+    if(!salesVisDone){
+      salesVisDone=true;
+      var maxH=95;
+      document.querySelectorAll('.s-bar-b').forEach(function(b){
+        var dl=parseInt(b.dataset.dl||0);
+        setTimeout(function(){b.style.height=((parseInt(b.dataset.h)/maxH)*64)+'px';},400+dl);
+      });
+    }
+    // Lab rows
+    if(!labVisDone){
+      labVisDone=true;
+      setTimeout(function(){document.querySelectorAll('.lab-fill-b').forEach(function(b){b.style.width=b.dataset.w+'%';});},400);
+    }
+  }
 }
+
+// ═══════════════════════════════════════════════════
+// PROJECT OVERLAYS
+// ═══════════════════════════════════════════════════
+var chartInstances={};
+
+function openOverlay(id){
+  var ov=document.getElementById('overlay-'+id);
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+  waveMascot();
+  showBubble('digging into the details 🔬');
+  // Init charts for this overlay
+  setTimeout(function(){initOverlayCharts(id);initOverlayCounters(ov);},200);
+}
+
+function closeOverlay(id){
+  document.getElementById('overlay-'+id).classList.remove('open');
+  document.body.style.overflow='hidden';
+  waveMascot();
+  showBubble(mascotMessages[currentSlide]);
+}
+
+function switchOTab(btn,proj,tab){
+  var overlay=document.getElementById('overlay-'+proj);
+  overlay.querySelectorAll('.tab-b').forEach(function(b){b.classList.remove('active');});
+  overlay.querySelectorAll('.tab-p').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  var panel=document.getElementById(proj+'-tab-'+tab);
+  if(panel){
+    panel.classList.add('active');
+    setTimeout(function(){initOverlayCharts(proj,tab);initMiniBarsFill(panel);},100);
+  }
+}
+
+function initOverlayCounters(overlay){
+  overlay.querySelectorAll('.stat-big-o[data-count]').forEach(function(el){
+    var target=parseInt(el.dataset.count);
+    var fmt=el.dataset.format;
+    var dur=1600,s=null;
+    function step(ts){
+      if(!s)s=ts;
+      var p=Math.min((ts-s)/dur,1);
+      var e=1-Math.pow(1-p,3);
+      var v=Math.round(target*e);
+      el.textContent=(fmt==='k')?(v>=1000?(v/1000).toFixed(0)+'K+':v):v.toLocaleString();
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+function initMiniBarsFill(container){
+  container.querySelectorAll('.mini-bar-fill[data-w]').forEach(function(b){
+    b.style.width=b.dataset.w+'%';
+  });
+}
+
+function destroyChart(id){
+  if(chartInstances[id]){chartInstances[id].destroy();delete chartInstances[id];}
+}
+
+function makeChart(id,config){
+  destroyChart(id);
+  var el=document.getElementById(id);
+  if(!el)return;
+  chartInstances[id]=new Chart(el,config);
+}
+
+var chartDefaults={
+  color:'#7a7a94',
+  font:{family:"'JetBrains Mono'",size:10},
+  plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d0d14',borderColor:'rgba(255,255,255,0.08)',borderWidth:1,titleColor:'#f2f2f8',bodyColor:'#7a7a94',titleFont:{family:"'JetBrains Mono'",size:10},bodyFont:{family:"'JetBrains Mono'",size:10}}},
+  scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#7a7a94',font:{family:"'JetBrains Mono'",size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#7a7a94',font:{family:"'JetBrains Mono'",size:9}}}}
+};
+
+function initOverlayCharts(proj,tab){
+  if(proj==='tat'){
+    // TAT site chart
+    makeChart('tat-chart',{
+      type:'bar',
+      data:{
+        labels:['Site A','Site B','Site C','Site D','Site E','Site F','Site G','Site H','Site I'],
+        datasets:[
+          {label:'Avg TAT%',data:[88.2,85.2,90.3,85.0,86.0,84.8,89.0,88.8,83.7],
+            backgroundColor:function(ctx){var v=ctx.dataset.data[ctx.dataIndex];return v>=90?'rgba(184,255,63,0.8)':v>=85?'rgba(255,181,71,0.8)':'rgba(255,87,87,0.8)';},
+            borderRadius:4,borderSkipped:false},
+          {label:'Target',data:[90,90,90,90,90,90,90,90,90],type:'line',borderColor:'rgba(255,255,255,0.2)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false}
+        ]
+      },
+      options:{...chartDefaults,responsive:true,maintainAspectRatio:false,
+        plugins:{...chartDefaults.plugins,legend:{display:false}},
+        scales:{...chartDefaults.scales,y:{...chartDefaults.scales.y,min:78,max:95,ticks:{...chartDefaults.scales.y.ticks,callback:function(v){return v+'%';}}}}}
+    });
+    // Dept chart
+    makeChart('tat-dept-chart',{
+      type:'doughnut',
+      data:{
+        labels:['Chemistry','Serology','Hematology','Cardiac Markers','Endocrinology','Toxicology'],
+        datasets:[{data:[2275,1824,1717,2016,2170,2463],backgroundColor:['rgba(184,255,63,0.7)','rgba(61,224,245,0.7)','rgba(157,110,245,0.7)','rgba(255,181,71,0.7)','rgba(255,87,87,0.7)','rgba(184,255,63,0.4)'],borderColor:'transparent',borderWidth:0}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{...chartDefaults.plugins,legend:{display:true,position:'right',labels:{color:'#7a7a94',font:{family:"'JetBrains Mono'",size:9},boxWidth:10,padding:12}}}}
+    });
+  }
+  if(proj==='layoffs'){
+    makeChart('layoffs-yr-chart',{
+      type:'bar',
+      data:{
+        labels:['2020','2021','2022','2023*'],
+        datasets:[{label:'Layoffs',data:[81068,15823,161711,127277],
+          backgroundColor:['rgba(61,224,245,0.6)','rgba(184,255,63,0.6)','rgba(255,87,87,0.8)','rgba(255,181,71,0.7)'],
+          borderRadius:4,borderSkipped:false}]
+      },
+      options:{...chartDefaults,responsive:true,maintainAspectRatio:false,
+        scales:{...chartDefaults.scales,y:{...chartDefaults.scales.y,ticks:{...chartDefaults.scales.y.ticks,callback:function(v){return(v/1000)+'K';}}}}}
+    });
+    // Insight bars in insights tab
+    var compNames=['Amazon','Google','Meta','Salesforce','Philips','Microsoft'];
+    var compVals=[18150,12000,11000,10090,10000,10000];
+    var compMax=18150;
+    var cbEl=document.getElementById('layoffs-company-bars');
+    if(cbEl){cbEl.innerHTML='';compNames.forEach(function(n,i){var row=document.createElement('div');row.className='mini-bar-row';row.innerHTML='<span class="mini-bar-name">'+n+'</span><div class="mini-bar-track"><div class="mini-bar-fill" data-w="'+Math.round(compVals[i]/compMax*100)+'" style="background:var(--coral);width:0;"></div></div><span class="mini-bar-val">'+compVals[i].toLocaleString()+'</span>';cbEl.appendChild(row);});setTimeout(function(){cbEl.querySelectorAll('.mini-bar-fill').forEach(function(b){b.style.width=b.dataset.w+'%';});},100);}
+    
+    var indNames=['Consumer','Retail','Other','Transport','Finance','Healthcare'];
+    var indVals=[46682,43613,36289,31998,28344,25953];
+    var indMax=46682;
+    var ibEl=document.getElementById('layoffs-industry-bars');
+    if(ibEl){ibEl.innerHTML='';indNames.forEach(function(n,i){var row=document.createElement('div');row.className='mini-bar-row';row.innerHTML='<span class="mini-bar-name">'+n+'</span><div class="mini-bar-track"><div class="mini-bar-fill" data-w="'+Math.round(indVals[i]/indMax*100)+'" style="background:var(--amber);width:0;"></div></div><span class="mini-bar-val">'+indVals[i].toLocaleString()+'</span>';ibEl.appendChild(row);});setTimeout(function(){ibEl.querySelectorAll('.mini-bar-fill').forEach(function(b){b.style.width=b.dataset.w+'%';});},100);}
+  }
+  if(proj==='sales'){
+    makeChart('sales-chart',{
+      type:'bar',
+      data:{
+        labels:['Jan 1','Jan 2','Jan 3 (est)','Jan 4','Jan 5','Jan 6 (est)','Jan 7'],
+        datasets:[
+          {label:'Sales',data:[61,72,null,84,95,null,77],backgroundColor:'rgba(61,224,245,0.7)',borderRadius:3,borderSkipped:false},
+          {label:'Estimated',data:[null,null,78,null,null,86,null],backgroundColor:'rgba(255,181,71,0.7)',borderRadius:3,borderSkipped:false,borderWidth:1,borderColor:'rgba(255,181,71,0.5)',borderDash:[4,4]}
+        ]
+      },
+      options:{...chartDefaults,responsive:true,maintainAspectRatio:false,
+        plugins:{...chartDefaults.plugins,legend:{display:true,labels:{color:'#7a7a94',font:{family:"'JetBrains Mono'",size:9},boxWidth:10}}}}
+    });
+  }
+  if(proj==='labops'){
+    makeChart('labops-site-chart',{
+      type:'bar',
+      data:{
+        labels:['A','B','C','D','E','F','G','H','I'],
+        datasets:[
+          {label:'Avg TAT%',data:[88.2,85.2,90.3,85.0,86.0,84.8,89.0,88.8,83.7],
+            backgroundColor:function(ctx){var v=ctx.dataset.data[ctx.dataIndex];return v>=90?'rgba(184,255,63,0.8)':v>=85?'rgba(255,181,71,0.8)':'rgba(255,87,87,0.8)';},
+            borderRadius:4,borderSkipped:false},
+          {label:'90% Target',data:[90,90,90,90,90,90,90,90,90],type:'line',borderColor:'rgba(184,255,63,0.3)',borderDash:[5,5],borderWidth:2,pointRadius:0,fill:false}
+        ]
+      },
+      options:{...chartDefaults,responsive:true,maintainAspectRatio:false,
+        scales:{...chartDefaults.scales,y:{...chartDefaults.scales.y,min:78,max:95,ticks:{...chartDefaults.scales.y.ticks,callback:function(v){return v+'%';}}}}}
+    });
+    makeChart('labops-dept-chart',{
+      type:'bar',
+      data:{
+        labels:['Chemistry','Serology','Hematology','Cardiac Mrkrs','Endocrinology','Toxicology'],
+        datasets:[{label:'Tests',data:[2275,1824,1717,2016,2170,2463],backgroundColor:'rgba(184,255,63,0.6)',borderRadius:4,borderSkipped:false}]
+      },
+      options:{...chartDefaults,responsive:true,maintainAspectRatio:false}
+    });
+  }
+  if(proj==='inventory'){
+    makeChart('inv-status-chart',{
+      type:'doughnut',
+      data:{
+        labels:['Reorder Now (1,414)','Stock OK (164)'],
+        datasets:[{data:[1414,164],backgroundColor:['rgba(255,87,87,0.8)','rgba(184,255,63,0.7)'],borderColor:'transparent',borderWidth:0,hoverOffset:8}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{...chartDefaults.plugins,legend:{display:true,position:'bottom',labels:{color:'#7a7a94',font:{family:"'JetBrains Mono'",size:10},boxWidth:12,padding:16}}}}
+    });
+    // Sample rows
+    var sampleItems=[
+      {id:'LAB-00001',desc:'Cottonwool Ball Medium',qty:27,reorder:20,months:2.7,status:'OK'},
+      {id:'LAB-00002',desc:'Forceps Plain 13cm',qty:0,reorder:6,months:0,status:'REORDER NOW'},
+      {id:'LAB-00005',desc:'Nitrile Gloves Med (Box/100)',qty:280,reorder:100,months:5.6,status:'OK'},
+      {id:'LAB-00006',desc:'Nitrile Gloves Lg (Box/100)',qty:770,reorder:200,months:7.7,status:'OK'},
+      {id:'LAB-00008',desc:'Face Mask N95 (Box/50)',qty:400,reorder:100,months:8,status:'OK'},
+      {id:'LAB-00011',desc:'Specimen Bag Lancet Green',qty:0,reorder:6,months:0,status:'REORDER NOW'},
+      {id:'LAB-00015',desc:'Barcode Labels 9-UP',qty:0,reorder:6,months:0,status:'REORDER NOW'},
+      {id:'LAB-00019',desc:'Pasteur Pipettes 3ml (500)',qty:29,reorder:20,months:2.9,status:'OK'}
+    ];
+    var tbody=document.getElementById('inv-sample-rows');
+    if(tbody){tbody.innerHTML='';sampleItems.forEach(function(item){
+      var tr=document.createElement('tr');
+      var statusColor=item.status==='OK'?'var(--lime)':'var(--coral)';
+      var qtyColor=item.qty===0?'var(--coral)':item.qty<=item.reorder?'var(--amber)':'var(--text)';
+      tr.innerHTML='<td style="padding:7px 12px;color:var(--faint);">'+item.id+'</td><td style="padding:7px 12px;color:var(--muted);">'+item.desc+'</td><td style="padding:7px 12px;text-align:right;color:'+qtyColor+';">'+item.qty+'</td><td style="padding:7px 12px;text-align:right;color:var(--faint);">'+item.reorder+'</td><td style="padding:7px 12px;text-align:right;color:var(--muted);">'+item.months+'</td><td style="padding:7px 12px;text-align:center;font-family:var(--mono);font-size:9px;color:'+statusColor+';">'+item.status+'</td>';
+      tbody.appendChild(tr);
+    });}
+  }
+}
+
+// SQL copy
+function copySQL(btn){
+  var text=btn.closest('.sql-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).catch(function(){});
+  btn.textContent='Copied!';
+  setTimeout(function(){btn.textContent='Copy';},2000);
+}
+
+// Init on load
+document.getElementById('slide-counter').textContent='01 / 05';
 </script>
-</body>
-</html>
