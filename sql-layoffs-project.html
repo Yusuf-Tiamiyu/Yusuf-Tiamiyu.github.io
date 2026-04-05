@@ -6,25 +6,25 @@
 <title>World Layoffs SQL Project — Yusuf Tiamiyu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #060d1b; --bg2: #0b1627; --bg3: #0f1e35; --bg4: #091220;
-    --teal: #00d4aa; --teal-dim: rgba(0,212,170,0.12); --teal-glow: rgba(0,212,170,0.06);
+    --bg: #080810; --bg2: #0e0e1a; --bg3: #141422; --bg4: #080810;
+    --teal: #c8ff00; --teal-dim: rgba(200,255,0,0.08); --teal-glow: rgba(200,255,0,0.04);
     --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.1);
     --blue: #3b82f6; --blue-dim: rgba(59,130,246,0.1);
     --purple: #8b5cf6; --purple-dim: rgba(139,92,246,0.1);
     --red: #ef4444; --red-dim: rgba(239,68,68,0.1);
     --text: #e8edf5; --text-muted: #7a8ea8; --text-faint: #3d5068;
-    --border: rgba(255,255,255,0.07); --border-bright: rgba(0,212,170,0.3);
+    --border: rgba(255,255,255,0.07); --border-bright: rgba(200,255,0,0.25);
     --sans: "DM Sans", sans-serif; --display: "Syne", sans-serif; --mono: "IBM Plex Mono", monospace;
   }
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
   body::after {
     content: ""; position: fixed; inset: 0;
-    background-image: linear-gradient(rgba(0,212,170,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,170,0.02) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(200,255,0,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(200,255,0,0.015) 1px, transparent 1px);
     background-size: 60px 60px; pointer-events: none; z-index: 0;
   }
   nav {
@@ -48,7 +48,7 @@
   .proj-subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 680px; line-height: 1.8; margin-bottom: 2rem; }
   .proj-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem; }
   .meta-pill { font-family: var(--mono); font-size: 11px; padding: 6px 14px; border-radius: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
-  .pill-teal { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,212,170,0.2); }
+  .pill-teal { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(200,255,0,0.15); }
   .pill-blue { background: var(--blue-dim); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
   .pill-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
   .pill-purple { background: var(--purple-dim); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
@@ -151,6 +151,86 @@
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--text-faint); border-radius: 2px; }
+  
+  /* Enhanced background animation */
+  body { background: #080810; }
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(200,255,0,0.015) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(200,255,0,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+    animation: gridDrift 25s linear infinite;
+  }
+  @keyframes gridDrift {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+  }
+  /* Floating accent orb */
+  body::before {
+    content: "";
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,255,0,0.03) 0%, transparent 70%);
+    top: -200px; right: -200px;
+    pointer-events: none; z-index: 0;
+    animation: orbPulse 12s ease-in-out infinite alternate;
+  }
+  @keyframes orbPulse {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    100% { transform: scale(1.1); opacity: 1; }
+  }
+  
+  /* Nav logo uses portfolio font feel */
+  .nav-logo { letter-spacing: 0.12em; }
+  
+  /* Stat strip enhanced */
+  .stat-big { color: var(--teal); }
+  
+  /* Callout enhanced */
+  .callout {
+    border-left-color: var(--teal);
+    position: relative;
+  }
+  .callout::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--teal), transparent);
+  }
+  
+  /* Tab active indicator glow */
+  .tab-btn.active {
+    text-shadow: 0 0 12px rgba(200,255,0,0.4);
+  }
+  
+  /* Step dots enhanced */
+  .step-dot { box-shadow: 0 0 12px rgba(200,255,0,0.2); }
+  
+  /* Scroll reveal for page elements */
+  .page-wrap > * {
+    animation: pageReveal 0.6s var(--ease-out, cubic-bezier(0.22,1,0.36,1)) both;
+  }
+  @keyframes pageReveal {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  :root { --ease-out: cubic-bezier(0.22,1,0.36,1); }
+  
+  /* Insight/bar fills with glow */
+  .bar-fill.teal { box-shadow: 0 0 8px rgba(200,255,0,0.3); }
+  
+  /* Concept cards hover */
+  .concept-card:hover {
+    border-color: rgba(200,255,0,0.3);
+    transform: translateY(-2px);
+    transition: all 0.2s;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
   ::selection { background: var(--teal-dim); color: var(--teal); }
 </style>
 </head>
