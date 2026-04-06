@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Operations Dashboard, Yusuf Tiamiyu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080810; --bg2: #0e0e1a; --bg3: #141422; --bg4: #080810;
+    --teal: #c8ff00; --teal-dim: rgba(200,255,0,0.08); --teal-glow: rgba(200,255,0,0.04);
+    --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.1);
+    --blue: #3b82f6; --blue-dim: rgba(59,130,246,0.1);
+    --purple: #8b5cf6; --purple-dim: rgba(139,92,246,0.1);
+    --red: #ef4444; --red-dim: rgba(239,68,68,0.1);
+    --green: #10b981; --green-dim: rgba(16,185,129,0.1);
+    --text: #e8edf5; --text-muted: #7a8ea8; --text-faint: #3d5068;
+    --border: rgba(255,255,255,0.07); --border-bright: rgba(200,255,0,0.25);
+    --sans: "DM Sans", sans-serif; --display: "Syne", sans-serif; --mono: "IBM Plex Mono", monospace;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+  body::after { content: ""; position: fixed; inset: 0; background-image: linear-gradient(rgba(200,255,0,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(200,255,0,0.015) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(6,13,27,0.9); backdrop-filter: blur(16px); }
+  .nav-logo { font-family: var(--display); font-size: 15px; font-weight: 700; letter-spacing: 0.08em; color: var(--teal); text-decoration: none; text-transform: uppercase; }
+  .nav-back { font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+  .nav-back:hover { color: var(--teal); }
+  .nav-back svg { transition: transform 0.2s; }
+  .nav-back:hover svg { transform: translateX(-3px); }
+
+  .page-wrap { max-width: 1000px; margin: 0 auto; padding: 100px 2rem 80px; position: relative; z-index: 1; }
+
+  .proj-breadcrumb { font-family: var(--mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; }
+  .proj-breadcrumb span { color: var(--teal); }
+  .proj-title { font-family: var(--display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1rem; }
+  .proj-title span { color: var(--teal); }
+  .proj-subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 700px; line-height: 1.8; margin-bottom: 2rem; }
+  .proj-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+  .meta-pill { font-family: var(--mono); font-size: 11px; padding: 6px 14px; border-radius: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .pill-teal { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(200,255,0,0.15); }
+  .pill-blue { background: var(--blue-dim); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+  .pill-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+  .pill-purple { background: var(--purple-dim); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
+  .pill-green { background: var(--green-dim); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+
+  .gh-btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--teal); border: 1px solid var(--border-bright); padding: 9px 18px; text-decoration: none; transition: background 0.2s; margin-bottom: 3rem; border-radius: 2px; }
+  .gh-btn:hover { background: var(--teal-dim); }
+
+  .stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 4rem; overflow: hidden; }
+  .stat-cell { background: var(--bg2); padding: 1.5rem; text-align: center; }
+  .stat-big { font-family: var(--display); font-size: 1.8rem; font-weight: 800; color: var(--teal); display: block; }
+  .stat-big.amber { color: var(--amber); }
+  .stat-desc { font-family: var(--mono); font-size: 10px; color: var(--text-faint); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; display: block; }
+
+  .tab-nav { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 3rem; overflow-x: auto; }
+  .tab-btn { font-family: var(--mono); font-size: 12px; padding: 14px 24px; color: var(--text-faint); background: none; border: none; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+  .tab-btn:hover { color: var(--text-muted); }
+  .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .story-block { max-width: 720px; }
+  .story-block p { color: var(--text-muted); line-height: 1.9; margin-bottom: 1.25rem; }
+  .story-block p strong { color: var(--text); font-weight: 500; }
+  .story-block h3 { font-family: var(--display); font-size: 1.3rem; font-weight: 700; margin: 2.5rem 0 1rem; color: var(--text); }
+  .callout { padding: 1.25rem 1.5rem; border-left: 2px solid var(--teal); background: var(--teal-glow); border-radius: 0 4px 4px 0; margin: 1.5rem 0; font-family: var(--mono); font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+  .callout.amber { border-color: var(--amber); background: var(--amber-dim); }
+  .callout.red { border-color: var(--red); background: var(--red-dim); }
+
+  /* SHEET ARCHITECTURE */
+  .sheet-arch { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 2rem 0; }
+  @media (max-width:700px) { .sheet-arch { grid-template-columns: 1fr; } }
+  .sheet-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem; transition: border-color 0.3s; }
+  .sheet-card:hover { border-color: var(--border-bright); }
+  .sheet-card-name { font-family: var(--mono); font-size: 11px; color: var(--teal); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .sheet-card-title { font-family: var(--display); font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .sheet-card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; }
+
+  /* STEPS */
+  .step-list { display: flex; flex-direction: column; gap: 2.5rem; }
+  .step { display: grid; grid-template-columns: 48px 1fr; gap: 1.5rem; position: relative; }
+  .step:not(:last-child)::after { content: ""; position: absolute; left: 23px; top: 56px; bottom: -1.5rem; width: 1px; background: var(--border); }
+  .step-num { width: 48px; height: 48px; border-radius: 4px; background: var(--teal-dim); border: 1px solid var(--border-bright); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 1.1rem; font-weight: 800; color: var(--teal); flex-shrink: 0; }
+  .step-body h4 { font-family: var(--display); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .step-body p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 0.75rem; }
+  .ctag { display: inline-block; font-family: var(--mono); font-size: 9px; padding: 3px 8px; border-radius: 2px; background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(200,255,0,0.15); letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px; margin-bottom: 8px; }
+  .ctag.amber { background: var(--amber-dim); color: var(--amber); border-color: rgba(245,158,11,0.2); }
+  .ctag.blue { background: var(--blue-dim); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
+
+  /* FORMULA BLOCKS */
+  .formula-block { margin: 1rem 0 1.5rem; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .formula-header { background: var(--bg3); padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .formula-label { font-family: var(--mono); font-size: 10px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; }
+  .formula-copy { font-family: var(--mono); font-size: 10px; color: var(--teal); background: none; border: 1px solid var(--border-bright); border-radius: 2px; cursor: pointer; padding: 2px 8px; transition: background 0.2s; }
+  .formula-copy:hover { background: var(--teal-dim); }
+  .formula-body { background: var(--bg4); padding: 1.25rem 1.5rem; overflow-x: auto; }
+  .formula-body pre { font-family: var(--mono); font-size: 0.8rem; line-height: 1.85; color: var(--teal); white-space: pre; }
+  .formula-explain { font-family: var(--mono); font-size: 0.78rem; color: var(--text-faint); padding: 10px 1.5rem 1.25rem; border-top: 1px solid var(--border); line-height: 1.7; }
+  .fn-blue { color: #60a5fa; } .fn-amber { color: var(--amber); }
+
+  /* DATA SECTION */
+  .chart-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1.75rem; margin-bottom: 2rem; }
+  .chart-label { font-family: var(--mono); font-size: 10px; color: var(--text-faint); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+  .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+  .insight-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem; transition: border-color 0.3s; }
+  .insight-card:hover { border-color: var(--border-bright); }
+  .insight-card-label { font-family: var(--mono); font-size: 10px; color: var(--text-faint); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .insight-card-title { font-family: var(--display); font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; }
+  .insight-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+  .bar-chart { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-name { min-width: 90px; color: var(--text-muted); font-size: 0.75rem; font-family: var(--mono); }
+  .bar-track { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; width: 0; transition: width 1.4s cubic-bezier(0.16,1,0.3,1); }
+  .bar-fill.teal { background: var(--teal); }
+  .bar-fill.amber { background: var(--amber); }
+  .bar-fill.red { background: var(--red); }
+  .bar-val { font-family: var(--mono); font-size: 10px; color: var(--text-faint); min-width: 45px; text-align: right; }
+
+  /* SITE TABLE */
+  .site-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.85rem; }
+  .site-table th { font-family: var(--mono); font-size: 9px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  .site-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text-muted); font-family: var(--mono); font-size: 11px; }
+  .site-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .site-table .status-on { color: var(--teal); }
+  .site-table .status-off { color: var(--red); }
+  .site-table .status-warn { color: var(--amber); }
+  .tat-bar-inline { display: inline-block; width: 60px; height: 4px; background: var(--bg3); border-radius: 2px; vertical-align: middle; margin-right: 6px; overflow: hidden; }
+  .tat-bar-inline-fill { height: 100%; border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+
+  .highlight-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem; margin-bottom: 2rem; }
+  .highlight-box-label { font-family: var(--mono); font-size: 10px; color: var(--teal); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
+  .highlight-list { display: flex; flex-direction: column; gap: 12px; }
+  .highlight-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+  .highlight-item::before { content: ""; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); margin-top: 7px; flex-shrink: 0; }
+  .highlight-item strong { color: var(--text); font-weight: 500; }
+
+  .skill-takeaway { background: var(--bg2); border: 1px solid var(--border-bright); border-radius: 4px; padding: 1.75rem; margin-top: 3rem; }
+  .skill-takeaway-label { font-family: var(--mono); font-size: 10px; color: var(--teal); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.75rem; }
+  .skill-tag { font-family: var(--mono); font-size: 10px; padding: 4px 10px; background: var(--bg3); border: 1px solid var(--border); color: var(--text-muted); border-radius: 2px; }
+
+  @media (max-width: 700px) {
+    .page-wrap { padding: 80px 1.25rem 60px; }
+    nav { padding: 0 1.25rem; }
+    .proj-title { font-size: clamp(1.8rem, 8vw, 3rem); }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+    .site-table { font-size: 10px; }
+    .sheet-arch { grid-template-columns: 1fr; }
+    .step { grid-template-columns: 36px 1fr; gap: 1rem; }
+    .step-num { width: 36px; height: 36px; font-size: 0.9rem; }
+    .tab-btn { padding: 12px 16px; font-size: 11px; }
+    .insights-grid { grid-template-columns: 1fr; }
+  }
+/* PAGE FADE IN */
+  .page-wrap{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease;}
+  .page-wrap.loaded{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Yusuf.T</a>
+  <a class="nav-back" href="index.html" onclick="event.preventDefault();smoothBack()" aria-label="Back to portfolio">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Back to portfolio
+  </a>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="proj-breadcrumb">Projects <span>/</span> Excel Dashboard · Healthcare</div>
+  <h1 class="proj-title">Lab Operations <span>Dashboard</span></h1>
+  <p class="proj-subtitle">Nine sites, six departments, 12,465 tests tracked in one Excel file with dynamic filtering, no macros, no VBA, no pivot wizardry. Just SUMIFS and AVERAGEIFS applied consistently across a multi-sheet architecture that any team member can use and maintain.</p>
+  <div class="proj-meta">
+    <span class="meta-pill pill-teal">Excel Dashboard</span>
+    <span class="meta-pill pill-amber">SUMIFS / AVERAGEIFS</span>
+    <span class="meta-pill pill-blue">Multi-site Analytics</span>
+    <span class="meta-pill pill-green">Healthcare Operations</span>
+    <span class="meta-pill pill-purple">Dynamic Filtering</span>
+  </div>
+  <a class="gh-btn" href="https://github.com/Yusuf-Tiamiyu" target="_blank" rel="noopener">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    View on GitHub
+  </a>
+
+  <div class="stat-strip">
+    <div class="stat-cell"><span class="stat-big" data-count="9">0</span><span class="stat-desc">Lab sites</span></div>
+    <div class="stat-cell"><span class="stat-big" data-count="6">0</span><span class="stat-desc">Departments</span></div>
+    <div class="stat-cell"><span class="stat-big" data-count="12465">0</span><span class="stat-desc">Tests tracked</span></div>
+    <div class="stat-cell"><span class="stat-big amber">86.8%</span><span class="stat-desc">Network avg TAT</span></div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('story', this)">The Problem</button>
+    <button class="tab-btn" onclick="switchTab('arch', this)">Architecture</button>
+    <button class="tab-btn" onclick="switchTab('findings', this)">Findings</button>
+  </div>
+
+  <!-- TAB 1: STORY -->
+  <div class="tab-panel active" id="panel-story">
+    <div class="story-block">
+      <h3>No central view of anything</h3>
+      <p style="font-family:var(--mono);font-size:0.8rem;color:var(--text-faint);padding:8px 12px;border-left:2px solid var(--border);margin-bottom:1rem;">Built for a multi-site diagnostic laboratory. All data shown here has been anonymised. Site names, staff counts, and test volumes are real but identifying details have been removed.</p>
+      <p>Before this dashboard existed, getting a network-wide view of lab performance meant calling each site individually, collecting spreadsheets, and assembling numbers by hand. Nine sites. Six departments. Every manager seeing only their own numbers. No one seeing the full picture.</p>
+      <p>By the time anything surfaced, it was usually already affecting patients. A TAT issue at Site F might be obvious to the Site F manager, but invisible to anyone trying to make network-wide decisions. The data existed at every site. The <strong>visibility didn't exist anywhere</strong>.</p>
+      <div class="callout red">Site F had both the lowest TAT percentage and the worst staffing gap (−9 people). That correlation only became visible once the data was in one place.</div>
+      <h3>Why one Excel file, not a database</h3>
+      <p>I chose Excel deliberately. The team doesn't have a data analyst on-site, IT support is limited, and the tool needs to survive a handover. Anything that requires a specialist to maintain is a liability in this environment.</p>
+      <p>The goal: <strong>one file, four sheets, everything computable from a filter change</strong>. Select a month, site, and department in the SELECTIONS sheet, every KPI on the DASHBOARD recalculates instantly. No macros. No code. No callbacks to me when something breaks.</p>
+      <div class="callout">In a healthcare setting where IT support is limited, robustness matters more than cleverness. Anything that requires a specialist to maintain is a liability. The best tool is the one the team can actually use forever.</div>
+      <h3>What the dashboard shows</h3>
+      <p>Four KPIs across the top (total tests, unique REQs, TAT % vs target, staff adequacy), then two breakdowns: performance by site and performance by department. Switch the filter, all numbers change. The connection between sites, departments, and staffing levels became visible for the first time.</p>
+      <div class="callout amber"><strong>Only Site C hit the 90% TAT target.</strong> The other 8 sites were consistently below, some by only 1-2%, others by 6-7%. Granularity like that requires a working multi-site aggregation system, not a phone call.</div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ARCHITECTURE -->
+  <div class="tab-panel" id="panel-arch">
+
+    <div class="callout" style="margin-bottom:2rem;">Four sheets. Each with one job. Nothing shared unnecessarily. Everything connected through formulas that respond to a single filter cell.</div>
+
+    <div class="sheet-arch">
+      <div class="sheet-card">
+        <div class="sheet-card-name">Sheet 1</div>
+        <div class="sheet-card-title">📋 DATA ENTRY</div>
+        <div class="sheet-card-desc">Where raw data lives. One row per week, per site, per department: tests run, unique REQs, TAT %, staff data, analyzer status. Anyone can add rows, structure enforced by headers and column validation.</div>
+      </div>
+      <div class="sheet-card">
+        <div class="sheet-card-name">Sheet 2</div>
+        <div class="sheet-card-title">⚙️ PIVOT DATA</div>
+        <div class="sheet-card-desc">Pre-computed organisation-level totals. Background reference layer, not filtered. Used when the DASHBOARD needs all-time values that don't change with SELECTIONS filters. Prevents formula complexity on the dashboard sheet.</div>
+      </div>
+      <div class="sheet-card">
+        <div class="sheet-card-name">Sheet 3</div>
+        <div class="sheet-card-title">🎛️ SELECTIONS</div>
+        <div class="sheet-card-desc">The filter control panel. Change Year, Month, Week, Site, Department, that's it. Every formula on the DASHBOARD references these cells. One cell changes, everything recalculates. Zero clicks, zero macros.</div>
+      </div>
+      <div class="sheet-card">
+        <div class="sheet-card-name">Sheet 4</div>
+        <div class="sheet-card-title">📊 DASHBOARD</div>
+        <div class="sheet-card-desc">The output layer. Four KPI cells, two tables (by site and by department), analyzer register, staffing status. Every number is a SUMIFS or AVERAGEIFS formula pulling from DATA ENTRY, filtered by SELECTIONS. Nothing is hardcoded.</div>
+      </div>
+    </div>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Filtered KPIs, SUMIFS with multiple criteria</h4>
+          <span class="ctag">SUMIFS</span><span class="ctag amber">Multi-criteria</span>
+          <p>The total tests KPI sums only the rows matching the selected year, month, week, site, and department, simultaneously. Five criteria applied in a single formula. Change any SELECTIONS cell and the total updates instantly.</p>
+          <div class="formula-block">
+            <div class="formula-header"><span class="formula-label">Excel formula — Total Tests (Dashboard KPI)</span><button class="formula-copy" onclick="copyFormula(this)">Copy</button></div>
+            <div class="formula-body"><pre>=<span class="fn-blue">SUMIFS</span>(
+    'DATA ENTRY'!F:F,         <span class="fn-amber">-- sum column: Tests Run</span>
+    'DATA ENTRY'!A:A, SELECTIONS!B2,  <span class="fn-amber">-- Year filter</span>
+    'DATA ENTRY'!B:B, SELECTIONS!B3,  <span class="fn-amber">-- Month filter</span>
+    'DATA ENTRY'!C:C, SELECTIONS!B4,  <span class="fn-amber">-- Week filter</span>
+    'DATA ENTRY'!D:D, SELECTIONS!B5,  <span class="fn-amber">-- Site filter</span>
+    'DATA ENTRY'!E:E, SELECTIONS!B6   <span class="fn-amber">-- Dept filter</span>
+)</pre></div>
+            <div class="formula-explain">When Site = "All Sites" and Dept = "All Departments", the wildcard (*) ensures all rows match. One formula handles both filtered and unfiltered views.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>TAT %, AVERAGEIFS with the same logic</h4>
+          <span class="ctag blue">AVERAGEIFS</span>
+          <p>TAT % is an average, not a sum, but the same multi-criteria filter logic applies. AVERAGEIFS averages only the rows matching the current SELECTIONS. The 90% target comparison is done directly in the cell for colour-coded conditional formatting.</p>
+          <div class="formula-block">
+            <div class="formula-header"><span class="formula-label">Excel formula — Network TAT % (Dashboard KPI)</span><button class="formula-copy" onclick="copyFormula(this)">Copy</button></div>
+            <div class="formula-body"><pre>=<span class="fn-blue">AVERAGEIFS</span>(
+    'DATA ENTRY'!H:H,         <span class="fn-amber">-- avg column: TAT %</span>
+    'DATA ENTRY'!A:A, SELECTIONS!B2,
+    'DATA ENTRY'!B:B, SELECTIONS!B3,
+    'DATA ENTRY'!C:C, SELECTIONS!B4,
+    'DATA ENTRY'!D:D, SELECTIONS!B5,
+    'DATA ENTRY'!E:E, SELECTIONS!B6
+)</pre></div>
+            <div class="formula-explain">Conditional formatting rule: if result &lt; 0.9 (90%), the cell highlights amber/red. If ≥ 90%, it highlights green. Visual feedback without any manual checking.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Site-by-site breakdown table</h4>
+          <span class="ctag">SUMIFS</span><span class="ctag blue">AVERAGEIFS</span><span class="ctag amber">COUNTIFS</span>
+          <p>The site table uses the same formulas as the KPI row, but hardcodes the site name in one of the criteria, while still respecting all the other SELECTIONS filters. This means you can filter by month <em>and</em> get every site's numbers at once.</p>
+          <div class="formula-block">
+            <div class="formula-header"><span class="formula-label">Excel formula — Site A row (Tests column)</span><button class="formula-copy" onclick="copyFormula(this)">Copy</button></div>
+            <div class="formula-body"><pre>=<span class="fn-blue">SUMIFS</span>(
+    'DATA ENTRY'!F:F,
+    'DATA ENTRY'!A:A, SELECTIONS!B2,  <span class="fn-amber">-- Year</span>
+    'DATA ENTRY'!B:B, SELECTIONS!B3,  <span class="fn-amber">-- Month</span>
+    'DATA ENTRY'!C:C, SELECTIONS!B4,  <span class="fn-amber">-- Week</span>
+    'DATA ENTRY'!D:D, <span class="fn-blue">"Site A"</span>,        <span class="fn-amber">-- hardcoded site</span>
+    'DATA ENTRY'!E:E, SELECTIONS!B6   <span class="fn-amber">-- Dept filter still applies</span>
+)</pre></div>
+            <div class="formula-explain">Each site row locks its own name in the 4th criterion while keeping all others dynamic. Copy the formula down the table and change "Site A" to "Site B" etc. The department filter still applies across all rows.</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem;">
+            <span class="skill-tag">SUMIFS</span>
+            <span class="skill-tag">AVERAGEIFS</span>
+            <span class="skill-tag">COUNTIFS</span>
+            <span class="skill-tag">Dynamic filtering</span>
+            <span class="skill-tag">Multi-sheet linking</span>
+            <span class="skill-tag">Conditional formatting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FINDINGS -->
+  <div class="tab-panel" id="panel-findings">
+
+    <div class="chart-wrap">
+      <div class="chart-label">
+        <span>TAT % by site, January 2026 vs 90% target</span>
+        <span style="color:var(--teal);font-size:9px;">Real data</span>
+      </div>
+      <div style="position: relative; height: 280px;"><canvas id="labops-chart"></canvas></div>
+    </div>
+
+    <!-- Site detail table -->
+    <div class="chart-wrap" style="padding: 1.5rem; overflow-x: auto;">
+      <div class="chart-label" style="margin-bottom: 1rem;">Site performance breakdown</div>
+      <table class="site-table" id="site-table">
+        <thead>
+          <tr>
+            <th>Site</th><th>Tests</th><th>REQs</th><th>TAT %</th><th>Staff Gap</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Site A</td><td>1,532</td><td>761</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(200,255,0,0.6);" data-w="98"></div></div>88.2%</td><td style="color:var(--teal);">+1</td><td class="status-warn">⚠ Below</td></tr>
+          <tr><td>Site B</td><td>1,468</td><td>1,321</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(239,68,68,0.7);" data-w="94"></div></div>85.2%</td><td style="color:var(--red);">−3</td><td class="status-off">⚠ Below</td></tr>
+          <tr><td>Site C</td><td>1,232</td><td>1,144</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(200,255,0,0.9);" data-w="100"></div></div>90.3%</td><td style="color:var(--red);">−6</td><td class="status-on">✓ On Target</td></tr>
+          <tr><td>Site D</td><td>1,519</td><td>1,205</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(239,68,68,0.7);" data-w="94"></div></div>85.0%</td><td style="color:var(--red);">−5</td><td class="status-off">⚠ Below</td></tr>
+          <tr><td>Site E</td><td>1,633</td><td>1,815</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(200,255,0,0.5);" data-w="95"></div></div>86.0%</td><td style="color:var(--red);">−5</td><td class="status-warn">⚠ Below</td></tr>
+          <tr><td>Site F</td><td>1,148</td><td>1,711</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(239,68,68,0.7);" data-w="94"></div></div>84.8%</td><td style="color:var(--red);">−9</td><td class="status-off">⚠ Below</td></tr>
+          <tr><td>Site G</td><td>1,053</td><td>1,263</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(200,255,0,0.6);" data-w="99"></div></div>89.0%</td><td style="color:var(--red);">−6</td><td class="status-warn">⚠ Below</td></tr>
+          <tr><td>Site H</td><td>1,341</td><td>1,362</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(200,255,0,0.7);" data-w="99"></div></div>88.8%</td><td style="color:var(--red);">−8</td><td class="status-warn">⚠ Below</td></tr>
+          <tr><td>Site I</td><td>1,539</td><td>1,017</td><td><div class="tat-bar-inline"><div class="tat-bar-inline-fill" style="background:rgba(239,68,68,0.7);" data-w="93"></div></div>83.7%</td><td style="color:var(--teal);">+2</td><td class="status-off">⚠ Below</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-card-label">By Department, TAT %</div>
+        <div class="insight-card-title">Toxicology consistently lowest</div>
+        <div class="bar-chart" style="margin-top:0.5rem;">
+          <div class="bar-row"><span class="bar-name">Hematology</span><div class="bar-track"><div class="bar-fill teal" data-w="98"></div></div><span class="bar-val">88.3%</span></div>
+          <div class="bar-row"><span class="bar-name">Cardiac Mkrs</span><div class="bar-track"><div class="bar-fill teal" data-w="98"></div></div><span class="bar-val">88.2%</span></div>
+          <div class="bar-row"><span class="bar-name">Chemistry</span><div class="bar-track"><div class="bar-fill teal" data-w="97"></div></div><span class="bar-val">87.9%</span></div>
+          <div class="bar-row"><span class="bar-name">Serology</span><div class="bar-track"><div class="bar-fill amber" data-w="95"></div></div><span class="bar-val">86.2%</span></div>
+          <div class="bar-row"><span class="bar-name">Endocrinol.</span><div class="bar-track"><div class="bar-fill amber" data-w="94"></div></div><span class="bar-val">85.6%</span></div>
+          <div class="bar-row"><span class="bar-name">Toxicology</span><div class="bar-track"><div class="bar-fill red" data-w="93"></div></div><span class="bar-val">84.4%</span></div>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-card-label">Staffing gaps across network</div>
+        <div class="insight-card-title">52% adequacy, 26 depts short</div>
+        <p>Most sites are running understaffed. The dashboard makes this visible at a glance: the staff adequacy KPI shows what percentage of department-rows meet the 6-staff target.</p>
+        <div style="margin-top:1rem;padding:1rem;background:var(--bg3);border-radius:4px;text-align:center;">
+          <div style="font-family:var(--display);font-size:2rem;font-weight:800;color:var(--amber);">52%</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--text-faint);letter-spacing:0.08em;">STAFFED ADEQUATELY</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--red);margin-top:4px;">26 departments short · 58 staff total gap</div>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-card-label">Analyzer fleet, all 18 units</div>
+        <div class="insight-card-title">100% functional, January 2026</div>
+        <p>The dashboard includes a full analyzer register per site, status (Functional / Downtime / For Repair) and availability % vs the 90% uptime target. Filters apply so you can check a specific site's equipment status.</p>
+        <div style="display:flex;gap:1rem;margin-top:1rem;">
+          <div style="text-align:center;flex:1;"><div style="font-family:var(--display);font-size:1.6rem;font-weight:800;color:var(--teal);">18</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-faint);">Functional ✓</div></div>
+          <div style="text-align:center;flex:1;"><div style="font-family:var(--display);font-size:1.6rem;font-weight:800;color:var(--text-faint);">0</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-faint);">Downtime ↓</div></div>
+          <div style="text-align:center;flex:1;"><div style="font-family:var(--display);font-size:1.6rem;font-weight:800;color:var(--text-faint);">0</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-faint);">For Repair 🔧</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <div class="highlight-box-label">⭐ What this revealed</div>
+      <div class="highlight-list">
+        <div class="highlight-item"><strong>Site C is the only site hitting the 90% target</strong>, and it's running with a staffing gap of −6. That means staffing alone doesn't explain TAT performance. The data opens the right questions.</div>
+        <div class="highlight-item"><strong>Site F correlation:</strong> lowest TAT (84.8%) and the worst staffing gap (−9 people). That connection was invisible until both datasets were in one place, now it's on the dashboard every week.</div>
+        <div class="highlight-item"><strong>Toxicology underperforms across all sites</strong>, not just at one. That's a process issue, not a site issue. A phone-call-and-spreadsheet system would never have surfaced that pattern.</div>
+        <div class="highlight-item"><strong>Network average sits at 86.8%</strong>, 3.2 percentage points below the 90% target. The dashboard quantifies the gap. Now management has a number to report against and a breakdown to explain it.</div>
+      </div>
+    </div>
+
+    <div class="skill-takeaway">
+      <div class="skill-takeaway-label">Excel Skills Demonstrated</div>
+      <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:0.75rem;">This project shows what multi-criteria SUMIFS architecture can do at scale, turning raw weekly lab data into a live, filterable operational dashboard with zero macros and zero specialist maintenance required.</p>
+      <div class="skill-tags">
+        <span class="skill-tag">SUMIFS</span>
+        <span class="skill-tag">AVERAGEIFS</span>
+        <span class="skill-tag">COUNTIFS</span>
+        <span class="skill-tag">Dynamic filtering</span>
+        <span class="skill-tag">Multi-sheet architecture</span>
+        <span class="skill-tag">Conditional formatting</span>
+        <span class="skill-tag">KPI dashboard design</span>
+        <span class="skill-tag">Data validation</span>
+        <span class="skill-tag">Macro-free automation</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'findings') { setTimeout(initFindings, 100); }
+}
+
+function copyFormula(btn) {
+  var text = btn.closest('.formula-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text);
+  btn.textContent = 'Copied!';
+  setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+}
+
+var findingsInited = false;
+var labChart = null;
+function initFindings() {
+  if (findingsInited) return;
+  findingsInited = true;
+
+  // Animate bar charts
+  document.querySelectorAll('#panel-findings .bar-fill').forEach(function(bar) {
+    bar.style.width = bar.dataset.w + '%';
+  });
+
+  // Animate inline TAT bars
+  document.querySelectorAll('.tat-bar-inline-fill').forEach(function(bar) {
+    bar.style.width = bar.dataset.w + '%';
+  });
+
+  // Build chart
+  var ctx = document.getElementById('labops-chart');
+  if (!ctx) return;
+  var sites = ['Site A','Site B','Site C','Site D','Site E','Site F','Site G','Site H','Site I'];
+  var vals = [88.2,85.2,90.3,85,86,84.8,89,88.8,83.7];
+  labChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sites,
+      datasets: [{
+        label: 'TAT %',
+        data: vals,
+        backgroundColor: vals.map(function(v) {
+          return v >= 90 ? 'rgba(200,255,0,0.85)' : v >= 87 ? 'rgba(200,255,0,0.45)' : 'rgba(239,68,68,0.75)';
+        }),
+        borderRadius: 3,
+        borderSkipped: false
+      },{
+        label: '90% Target',
+        data: Array(9).fill(90),
+        type: 'line',
+        borderColor: 'rgba(255,255,255,0.2)',
+        borderDash: [5,5],
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#0e0e1a', borderColor: 'rgba(255,255,255,0.07)', borderWidth: 1, titleColor: '#e8edf5', bodyColor: '#7a8ea8', titleFont: { family: "'IBM Plex Mono'", size: 10 }, bodyFont: { family: "'IBM Plex Mono'", size: 10 } }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#7a8ea8', font: { family: "'IBM Plex Mono'", size: 10 } } },
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, min: 78, max: 95, ticks: { color: '#7a8ea8', font: { family: "'IBM Plex Mono'", size: 10 }, callback: function(v) { return v + '%'; } } }
+      }
+    }
+  });
+}
+
+// Animate stat counters
+var counted = false;
+var statObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting && !counted) {
+      counted = true;
+      document.querySelectorAll('.stat-big[data-count]').forEach(function(el) {
+        var target = parseInt(el.dataset.count), start = null;
+        function step(ts) {
+          if (!start) start = ts;
+          var pr = Math.min((ts - start) / 1600, 1);
+          var ease = 1 - Math.pow(1 - pr, 3);
+          el.textContent = Math.round(target * ease).toLocaleString();
+          if (pr < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    }
+  });
+}, { threshold: 0.5 });
+var strip = document.querySelector('.stat-strip');
+if (strip) statObs.observe(strip);
+</script>
+<script>
+function smoothBack(){var pw=document.querySelector(".page-wrap");pw.style.transition="opacity .3s ease,transform .3s ease";pw.style.opacity="0";pw.style.transform="translateY(16px)";setTimeout(function(){location.href="index.html";},320);}
+window.addEventListener("DOMContentLoaded",function(){
+  setTimeout(function(){document.querySelector(".page-wrap").classList.add("loaded");},30);
+});
+</script>
+</body>
+</html>

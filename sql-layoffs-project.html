@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Layoffs SQL Project — Yusuf Tiamiyu</title>
+<title>World Layoffs SQL Project, Yusuf Tiamiyu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -65,7 +65,8 @@
   .tab-btn:hover { color: var(--text-muted); }
   .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
   .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+  .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
   /* STORY */
   .story-block { max-width: 720px; }
@@ -144,6 +145,13 @@
   .skill-tag { font-family: var(--mono); font-size: 10px; padding: 4px 12px; border-radius: 2px; background: var(--bg3); color: var(--text-muted); border: 1px solid var(--border); letter-spacing: 0.05em; }
 
   @media (max-width: 700px) {
+    .page-wrap { padding: 80px 1.25rem 60px; }
+    nav { padding: 0 1.25rem; }
+    .proj-title { font-size: clamp(1.8rem, 8vw, 3rem); }
+    .step { grid-template-columns: 36px 1fr; gap: 1rem; }
+    .tab-btn { padding: 12px 16px; font-size: 11px; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
     .stat-strip { grid-template-columns: repeat(2, 1fr); }
     .step { grid-template-columns: 36px 1fr; gap: 1rem; }
     .tab-btn { padding: 12px 16px; font-size: 11px; }
@@ -232,13 +240,16 @@
   }
 
   ::selection { background: var(--teal-dim); color: var(--teal); }
+/* PAGE FADE IN */
+  .page-wrap{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease;}
+  .page-wrap.loaded{opacity:1;transform:translateY(0);}
 </style>
 </head>
 <body>
 
 <nav>
   <a href="index.html" class="nav-logo">YUSUF.T</a>
-  <a href="index.html#projects" class="nav-back">&larr; Back to Portfolio</a>
+  <a href="index.html" onclick="event.preventDefault();smoothBack()" class="nav-back">&larr; Back to Portfolio</a>
 </nav>
 
 <div class="page-wrap">
@@ -786,6 +797,12 @@ var statObs = new IntersectionObserver(function(entries) {
 }, { threshold: 0.5 });
 var strip = document.querySelector('.stat-strip');
 if (strip) statObs.observe(strip);
+</script>
+<script>
+function smoothBack(){var pw=document.querySelector(".page-wrap");pw.style.transition="opacity .3s ease,transform .3s ease";pw.style.opacity="0";pw.style.transform="translateY(16px)";setTimeout(function(){location.href="index.html";},320);}
+window.addEventListener("DOMContentLoaded",function(){
+  setTimeout(function(){document.querySelector(".page-wrap").classList.add("loaded");},30);
+});
 </script>
 </body>
 </html>
