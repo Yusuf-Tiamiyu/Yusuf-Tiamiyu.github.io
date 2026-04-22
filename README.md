@@ -2,15 +2,13 @@
 
 **Data Analyst · Cerba Lancet Nigeria · Lagos**
 
-Live portfolio: [yusuf-tiamiyu.github.io](https://yusuf-tiamiyu.github.io)
+Live site: [yusuf-tiamiyu.github.io](https://yusuf-tiamiyu.github.io)
 
 ---
 
-## About
+Two years doing data analytics in healthcare, specifically at one of West Africa's larger diagnostic lab networks. The numbers here aren't abstract — they connect to patient care, clinician decisions, and whether results reach doctors in time or don't.
 
-Two years of data analytics experience in healthcare and clinical research. Based in Lagos, working at one of West Africa's leading diagnostic laboratory networks — where the numbers aren't abstract, they affect patient care.
-
-This portfolio covers SQL data cleaning and exploration, Excel dashboard design, and a full-stack Flask web application built for real clinical use.
+This portfolio covers everything from a full five-stage data pipeline I built and deployed in production, to SQL data cleaning and exploration projects, Excel dashboards used in live operational settings, and a Tableau analysis. The work ranges from "I automated something that was costing people a full day every week" to "I wanted to understand this dataset properly, so here's what I found."
 
 ---
 
@@ -18,117 +16,147 @@ This portfolio covers SQL data cleaning and exploration, Excel dashboard design,
 
 | # | Project | Tools | Domain |
 |---|---------|-------|--------|
-| 01 | [TAT Dashboard Web App](#01-tat-dashboard-web-app) | Python, Flask, MySQL, HTML/JS | Healthcare Analytics |
-| 02 | [Lab Operations Dashboard](#02-lab-operations-dashboard) | Excel, SUMIFS, Dynamic Filtering | Lab Operations |
-| 03 | [Inventory Reorder Tracker](#03-inventory-reorder-tracker) | Excel, Conditional Logic | Supply Chain |
-| 04 | [COVID-19 Data Exploration](#04-covid-19-data-exploration) | MS SQL Server, CTEs, Window Functions | Public Health |
-| 05 | [World Layoffs Data Cleaning](#05-world-layoffs-data-cleaning) | MySQL, ROW_NUMBER, STR_TO_DATE | Data Engineering |
-| 06 | [World Layoffs EDA](#06-world-layoffs-eda) | MySQL, DENSE_RANK, Rolling Totals | Exploratory Analysis |
-| 07 | [Sales Estimates (Advanced SQL)](#07-sales-estimates-with-recursive-sql) | MySQL, Recursive CTEs, LAG/LEAD | Advanced SQL |
+| 01 | [TAT Dashboard — Full Pipeline](#01-tat-dashboard--full-pipeline) | Excel · Python · Pandas · Flask · MySQL · HTML/JS | Healthcare Analytics |
+| 02 | [Lab Operations Dashboard](#02-lab-operations-dashboard) | Excel · SUMIFS · Dynamic Filtering | Lab Operations |
+| 03 | [Inventory Reorder Tracker](#03-inventory-reorder-tracker) | Excel · Conditional Logic | Supply Chain |
+| 04 | [COVID-19 Data Exploration](#04-covid-19-data-exploration) | MS SQL Server · CTEs · Window Functions | Public Health |
+| 05 | [World Layoffs Data Cleaning](#05-world-layoffs-data-cleaning) | MySQL · ROW_NUMBER · STR_TO_DATE | Data Engineering |
+| 06 | [World Layoffs EDA](#06-world-layoffs-eda) | MySQL · DENSE_RANK · Rolling Totals | Exploratory Analysis |
+| 07 | [Sales Estimates — Advanced SQL](#07-sales-estimates--advanced-sql) | MySQL · Recursive CTEs · LAG/LEAD | Advanced SQL |
+| 08 | [Bike Sales Dashboard](#08-bike-sales-dashboard) | Excel · Pivot Tables · Nested IF | Sales Analytics |
+| 09 | [2016 Seattle Airbnb Analysis](#09-2016-seattle-airbnb-analysis) | Tableau · Data Joining · Geospatial | Property Analytics |
 
 ---
 
 ## Project Details
 
-### 01. TAT Dashboard Web App
-**Tools:** Python · Flask · MySQL · HTML/CSS/JS · Railway
+### 01. TAT Dashboard — Full Pipeline
+**Tools:** Excel · Python · Pandas · Flask · MySQL · HTML/CSS/JS · Railway  
+**Status:** Deployed and in daily clinical use  
+*Data anonymised for public display*
 
-A full-stack web application tracking laboratory Turnaround Time (TAT) performance in real time. Built entirely from scratch — database schema, REST API endpoints, and frontend UI — and deployed for actual operational use at Cerba Lancet Nigeria.
+TAT is Turnaround Time — the gap between when a lab sample is logged and when a verified result is ready for the requesting doctor. When I joined, the organisation's average TAT compliance was hovering between 50 and 55 percent across nine sites. Some sites were sitting at 40. The process for tracking it: download data from the LIS at the end of the week, manually organise it in Excel, email it around. By the time anyone read it, the problems it described were already five days old.
 
-Key technical work:
-- Designed a MySQL schema to store test entry timestamps and TAT outcomes
-- Built a Python/Flask REST API with a type-safety layer handling all MySQL types (Decimal, datetime, bytes) to prevent JSON serialisation errors
-- Frontend dashboard with filterable weekly views, KPI cards, and department breakdowns
-- Deployed on Railway; used by lab supervisors for daily operational decisions
+This project replaced that with a five-stage pipeline:
 
-*Note: Company-identifying details and specific metrics have been anonymised for public display.*
+**Stage 1 — LIS Export and Excel Prep.** The Lab Information System exports a flat text file. I open it in Excel, use Text to Columns to separate the fields, then join the date and time columns (EntDate + EntTime, TestVerDate + TestVerTime) and convert them from the LIS text format to proper Excel datetimes using a formula: `=DATE(2000+MID(D2,7,2),MID(D2,4,2),LEFT(D2,2))+TIME(MID(D2,10,2),RIGHT(D2,2),0)`. Then deduplication, remove blanks, and the raw data is ready.
+
+**Stage 2 — Reference_Times Sheet.** The original process had someone manually review the test name column to remove irrelevant entries and standardise naming. I replaced that with a master reference table I built and maintain: every valid test name, its standard TAT in hours, and its department. That last column — department — was something the organisation wasn't tracking at all before. Once it existed, failures could be traced to Chemistry or Haematology or Serology specifically, not just "Site X had a bad week."
+
+**Stage 3 — Python Automation.** With the Reference_Times sheet as input, a Pandas script handles everything that was previously manual: filtering to known tests, VLOOKUP-style dict lookups for department and standard TAT, vectorised TAT calculation, Pass/Fail flagging, site name mapping from PerfSite codes, and a colour-coded Excel output with fail severity grading. What used to take a full working day now runs in about two minutes.
+
+**Stage 4 — MySQL and Flask.** The Python script solved the speed problem but didn't solve the history problem. I designed a MySQL schema to store every record from every weekly upload, then built a Flask REST API with 13 endpoints covering weekly and monthly views, daily trend breakdowns, shift analysis, department drill-downs, and a failed requisition log. The frontend is plain HTML, CSS, and JavaScript. One thing I had to solve early: MySQL returns Decimal and datetime objects that Python's JSON encoder doesn't understand. I wrote a type-safety layer that converts every value before it touches `jsonify()`.
+
+**Stage 5 — Deployed.** After approval from senior management, deployed on Railway. Lab supervisors check it during daily operational calls. The question shifted from "how did last week go" to "what is happening right now and where."
 
 ---
 
 ### 02. Lab Operations Dashboard
-**Tools:** Excel · SUMIFS · AVERAGEIFS · COUNTIFS · Dynamic Filtering
+**Tools:** Excel · SUMIFS · AVERAGEIFS · COUNTIFS · Dynamic Filtering  
+*Anonymised for public display*
 
-An Excel-based multi-site dashboard tracking four core KPIs: Total Tests Run, Unique Requisition Numbers, TAT % vs 90% target, and Staff Adequacy. All KPIs update dynamically based on filter selections (Year / Month / Week / Site / Department).
+An Excel dashboard for lab managers to track four core KPIs across all sites: total tests run, unique patient requisition numbers, TAT percentage against the 90% target, and staff adequacy. All four update instantly when you change any of the five filters (year, month, week, site, department).
 
-Key design decisions:
-- Separate DASHBOARD, DATA ENTRY, PIVOT DATA, and SELECTIONS sheets — managers see results without touching raw data
-- Week-over-week directional comparisons (▲/▼/►) auto-calculate for every KPI
-- PIVOT DATA sheet holds all-time org-wide totals so main dashboard formulas only compute filtered views — keeps calculation fast at scale
-
-*Note: Anonymised for public display.*
+Design choices: four sheets kept completely separate — DASHBOARD (what managers see), DATA ENTRY (where weekly records go), PIVOT DATA (all-time totals in the background), and SELECTIONS (the filter control). Every KPI card has an automatic week-over-week directional comparison. No manual calculations anywhere in the manager-facing view.
 
 ---
 
 ### 03. Inventory Reorder Tracker
-**Tools:** Excel · SUMIFS · COUNTIFS · INDEX/MATCH · MAXIFS
+**Tools:** Excel · SUMIFS · COUNTIFS · INDEX/MATCH · MAXIFS  
+*Anonymised for public display*
 
-A laboratory inventory management system tracking 100+ lab supplies. Automatically flags items below reorder threshold (REORDER NOW / OK), projects months of stock remaining at current usage rate, and provides a monthly issuance summary by department.
+A system for tracking 100+ lab supplies. The core logic: management policy requires a two-month stock buffer, so the reorder alert fires automatically when current quantity drops to the reorder level. The status column calculates itself — no manual input, no checking every row. There's also a months-of-stock-remaining projection and a monthly issuance log by department pulled via SUMIFS.
 
-Key formula work:
-- Status auto-flags: `=IF(CurrentQty<=ReorderLevel, "REORDER NOW", "OK")`
-- Months of stock: `=ROUND(CurrentQty/AvgMonthlyUsage, 1)`
-- Monthly summary uses SUMIFS + COUNTIFS + INDEX/MATCH/MAXIFS to pull issuance data by period without any manual refresh
-
-*Note: Anonymised for public display.*
+Before this, procurement was reactive — orders went out after stockout, not before. The system gave enough visibility to order in advance.
 
 ---
 
 ### 04. COVID-19 Data Exploration
 **Tools:** MS SQL Server · Joins · CTEs · Temp Tables · Window Functions · Views
 
-SQL exploration of the global COVID-19 dataset (deaths + vaccinations). Analysis covers death rates by country over time, infection rates as % of population, continental death counts, and rolling vaccination coverage computed with window functions.
+SQL exploration of the global COVID-19 dataset (deaths and vaccinations). The analysis covers death rates by country over time, infection rates as a percentage of population, continental death counts, and rolling vaccination totals computed with window functions. I also created a View so the results could be consumed downstream in Tableau without rerunning the query.
 
-Skills demonstrated: Joins, CTEs, temp tables, aggregate functions, window functions (SUM OVER PARTITION BY), CONVERT for type casting, CREATE VIEW for downstream visualisation.
+The finding I kept coming back to: countries with relatively low case counts sometimes had death rates that exceeded large, well-reported nations. The per-capita view tells a different story from the absolute totals.
 
 ---
 
 ### 05. World Layoffs Data Cleaning
 **Tools:** MySQL · ROW_NUMBER · STR_TO_DATE · TRIM · Self-Join · Staging Tables
 
-A four-phase SQL data cleaning pipeline on the Kaggle world layoffs dataset:
-1. **Deduplication** — ROW_NUMBER OVER PARTITION to flag and remove exact duplicates via staging table
-2. **Standardisation** — Consolidated Crypto/CryptoCurrency/Crypto Currency variants, stripped trailing periods from country names, converted text dates to proper DATE type with STR_TO_DATE
-3. **Null handling** — Self-join to populate missing industry values from other rows of the same company where possible
-4. **Dead weight removal** — Dropped rows where both total_laid_off and percentage_laid_off were null (no analytical value)
+A four-phase cleaning pipeline on the Kaggle world layoffs dataset. I ran everything in a staging table so the raw data was never touched.
+
+1. **Deduplication** — ROW_NUMBER OVER PARTITION to flag duplicates. MySQL doesn't let you DELETE directly from a CTE, so I copied to a second staging table with the row_num column included, deleted from there.
+2. **Standardisation** — Three different spellings of "Crypto", trailing periods on country names, date fields stored as text in mm/dd/yyyy format. Fixed all of it.
+3. **Null handling** — Self-join to populate missing industry values from other rows of the same company. This worked for almost everyone. Bally's had no other row to pull from and stayed null.
+4. **Dead weight removal** — Rows where both total_laid_off and percentage_laid_off were null have no analytical value. Dropped.
 
 ---
 
 ### 06. World Layoffs EDA
 **Tools:** MySQL · DENSE_RANK · Rolling Window Functions · GROUP BY · CTEs
 
-Exploratory analysis of the cleaned layoffs dataset. Key analyses:
-- Companies that laid off 100% of staff, ranked by funding raised (Quibi: ~$2B raised, zero staff remaining)
-- Top 3 companies by total layoffs per year using nested CTEs and DENSE_RANK
-- Layoffs by industry, location, country, and funding stage
-- Rolling monthly total of all layoffs from dataset start to end
+Exploratory analysis built directly on the cleaned dataset from Project 05. I started with the extremes: companies that laid off 100% of their workforce, ordered by funding raised. Quibi raised roughly $2 billion and went to zero.
+
+The harder analysis: top 3 companies by total layoffs per year. That requires two nested CTEs and DENSE_RANK. Then rolling monthly totals using SUM OVER ORDER BY to show cumulative momentum rather than just period-by-period numbers.
+
+2022 was the worst year by a significant margin. The acceleration in the rolling total from mid-2022 is something you completely miss looking at monthly figures in isolation.
 
 ---
 
-### 07. Sales Estimates with Recursive SQL
+### 07. Sales Estimates — Advanced SQL
 **Tools:** MySQL · Recursive CTEs · UNION / UNION ALL · LAG · LEAD · COALESCE · CAST
 
-A structured demonstration of 12 advanced SQL concepts in sequence, building from basic table creation through to intelligent gap-filling with window functions. The problem: a sales table with missing dates. The solution: a recursive CTE to generate a complete date series, left-joined to actual sales, with COALESCE + LAG/LEAD to estimate missing values using neighbouring data points.
+Started from a real frustration: generating a complete date series with UNION ALL means one line per date. For a full year that's 365 lines. I started reading about recursive CTEs, which let you define an anchor row and have the query call itself, adding one day per iteration until a termination condition fires.
+
+The full project chains 12 SQL concepts in sequence, building from table creation through to intelligent gap-filling. The problem: a sales table with missing dates. The solution: recursive CTE generates the complete date range, left-joined to actual sales, with COALESCE + LAG/LEAD to fill gaps using neighbouring data points rather than a global average.
+
+For the two missing dates in the sample dataset, the global average gives the same estimate for both. The LAG/LEAD approach gives different estimates for each, accounting for the trend visible in the surrounding data.
 
 ---
 
-## Skills Summary
+### 08. Bike Sales Dashboard
+**Tools:** Excel · Pivot Tables · Nested IF · Slicers · COUNTIF · AVERAGEIF
 
-**SQL:** MySQL · MS SQL Server · CTEs · Window Functions · Recursive CTEs · Joins · Subqueries · Aggregate Functions · Views · Temp Tables · Data Cleaning
+Started from a tutorial dataset by Alex Freeberg. His version demonstrated the mechanics. I wanted to see what more careful analysis of the same data would surface.
 
-**Excel:** SUMIFS · AVERAGEIFS · COUNTIFS · INDEX/MATCH · MAXIFS · Conditional Formatting · Dynamic Filtering · Dashboard Design · Pivot Tables
+After cleaning (26 duplicates removed, full word replacements for abbreviated columns, nested IF for age brackets), I built five purchase-rate analyses: by age bracket, by region, by commute distance, by gender, and by marital status.
 
-**Python:** Flask · REST APIs · MySQL Connector · Pandas · JSON handling
+The finding worth noting: the commute distance chart is not a straight line. Purchase rate dips at 1-2 miles, peaks at 2-5 miles (58.6%), then drops sharply. The 2-5 mile range is where a bike is genuinely useful for daily commuting. The gender analysis showed men and women buying at nearly identical rates, but male buyers average $4,350 more in income — so women are making this purchase at a meaningfully lower income level.
 
-**Domain:** Healthcare Analytics · Clinical Research · Laboratory Operations · Supply Chain · Turnaround Time Analysis · KPI Design
+---
+
+### 09. 2016 Seattle Airbnb Analysis
+**Tools:** Tableau · Data Joining · Calendar Analysis · Geospatial Visualisation  
+[View on Tableau Public](https://public.tableau.com/app/profile/yusuf.tiamiyu/viz/2016AirbnbDatasetSummary/Dashboard1)
+
+Started from another Alex Freeberg tutorial, built my own version framed around a single question: if you were about to list a property on Airbnb in Seattle, what would the data tell you?
+
+The dataset has 3,818 listings and over a million calendar rows. I joined Listings and Calendar in Tableau Public, excluded Reviews (not relevant to the question), and built a dashboard covering bedroom demand, pricing by location, monthly revenue seasonality, and room type split.
+
+The most useful single finding: 1-bedroom listings dominate supply at 70% of all properties, but the jump from 1 to 2 bedrooms nearly doubles the average nightly rate from $96 to $174. The geographic pricing map shows central Seattle commanding a 70% premium over the dataset average. July is peak pricing. December is peak total revenue.
+
+---
+
+## Skills
+
+**SQL:** MySQL · MS SQL Server · CTEs · Recursive CTEs · Window Functions · Joins · Subqueries · Aggregate Functions · Views · Staging Tables · Data Cleaning
+
+**Excel:** SUMIFS · AVERAGEIFS · COUNTIFS · INDEX/MATCH · MAXIFS · Nested IF · Pivot Tables · Slicers · Dynamic Filtering · Dashboard Design · Conditional Formatting
+
+**Python:** Flask · Pandas · REST APIs · MySQL Connector · NumPy · JSON handling · openpyxl
+
+**BI Tools:** Tableau · Tableau Public · Dashboard Design · Geospatial Visualisation
+
+**Domain:** Healthcare Analytics · Clinical Research · Lab Operations · Supply Chain · TAT Analysis · KPI Design
 
 ---
 
 ## Contact
 
-- **Email:** tiamiyuyusufademola@gmail.com 
+- **Email:** tiamiyuyusufademola@gmail.com
 - **LinkedIn:** [linkedin.com/in/yusuf-tiamiyu-demola](https://linkedin.com/in/yusuf-tiamiyu-demola)
 - **Location:** Lagos, Nigeria
 
 ---
 
-*Data at Cerba Lancet Nigeria projects have been anonymised to remove company-identifying details, patient data, and specific operational metrics before public posting.*
+*All Cerba Lancet Nigeria projects have been anonymised. Patient data, site-identifying details, and specific operational metrics have been removed before public display.*
