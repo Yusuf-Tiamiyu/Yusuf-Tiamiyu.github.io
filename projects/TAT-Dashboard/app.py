@@ -9,8 +9,8 @@ CORS(app)
 
 DB_HOST     = 'localhost'
 DB_USER     = 'root'
-DB_PASSWORD = 'TyA@170531098'   # ← change this if needed
-DB_NAME     = 'tat_dashboard'
+DB_PASSWORD = '*****'   # ← change this if needed
+DB_NAME     = '*****'
 
 # ─── DB ───────────────────────────────────────────────────────────────────────
 def get_db():
