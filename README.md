@@ -2,7 +2,7 @@
 
 **Data Analyst · Cerba Lancet Nigeria · Lagos**
 
-Live portfolio: [yusuftiamiyu.github.io](https://yusuftiamiyu.github.io) *(update with your actual URL)*
+Live portfolio: [yusuftiamiyu.github.io](https://yusuf-tiamiyu.github.io) *(update with your actual URL)*
 
 ---
 
