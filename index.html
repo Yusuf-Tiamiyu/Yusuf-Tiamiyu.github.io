@@ -26,10 +26,17 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:16px;text-size-adjust:100%}
+/* GPU compositing layers for sections that animate */
+#hero,#about,#sk,#projects,#process,#contact{isolation:isolate;}
+/* Prevent layout thrash from off-screen sections */
+#about,#sk,#projects,#process,#contact{content-visibility:auto;contain-intrinsic-size:0 600px;}
+/* Smoother canvas on retina */
+canvas{image-rendering:pixelated;}
 body{
   background:var(--void);color:var(--cream);font-family:var(--f);
   line-height:1.65;overflow-x:hidden;cursor:none;
   -webkit-font-smoothing:antialiased;overscroll-behavior:none;
+  text-rendering:optimizeSpeed;
 }
 
 /* =================================================================
@@ -106,7 +113,6 @@ nav.scrolled{
   position:absolute;right:0;top:0;
   width:55%;height:100%;
   object-fit:cover;object-position:center top;
-  will-change:transform;
   filter:contrast(1.05) brightness(.92);
 }
 /* Warm gold color grade over photo */
@@ -130,7 +136,7 @@ nav.scrolled{
 }
 #particles{
   position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.5;
-  contain:strict;will-change:transform;
+  contain:strict;
 }
 .hero-grid{
   position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.5;
@@ -271,8 +277,8 @@ nav.scrolled{
 }
 
 /* Reveal */
-.rise{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);will-change:opacity,transform}
-.rise.on{opacity:1;transform:translateY(0);will-change:auto}
+.rise{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.4,0,.2,1),transform .65s cubic-bezier(.4,0,.2,1)}
+.rise.on{opacity:1;transform:translateY(0)}
 .rise-left{opacity:0;transform:translateX(-30px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
 .rise-left.on{opacity:1;transform:translateX(0)}
 
@@ -405,16 +411,14 @@ nav.scrolled{
   scroll-snap-align:start;position:relative;overflow:hidden;
   cursor:none;
   display:flex;flex-direction:column;border:1px solid var(--line2);
-  transition:border-color .3s,box-shadow .3s;
-  transform-style:preserve-3d;
-  will-change:transform;
+  transition:border-color .3s,box-shadow .3s,transform .3s;
 }
 .pc::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(200,146,58,.06),transparent 60%);
   opacity:0;transition:opacity .3s;z-index:0;
 }
-.pc:hover{border-color:rgba(200,146,58,.3);box-shadow:0 24px 64px rgba(0,0,0,.6)}
+.pc:hover{border-color:rgba(200,146,58,.3);box-shadow:0 20px 48px rgba(0,0,0,.5);transform-style:preserve-3d;}
 .pc:hover::before{opacity:1}
 .pc.ft{width:520px}
 .pc-top{
@@ -565,8 +569,10 @@ footer a:hover{color:var(--gold)}
   position:fixed;top:0;right:0;bottom:0;width:min(820px,100vw);
   background:var(--void2);border-left:1px solid var(--line);
   z-index:1001;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
   transform:translateX(100%);
-  transition:transform .45s cubic-bezier(.4,0,.2,1);
+  transition:transform .42s cubic-bezier(.4,0,.2,1);
   will-change:transform;
 }
 .mdl.open{transform:translateX(0)}
@@ -627,7 +633,7 @@ footer a:hover{color:var(--gold)}
   font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;
   text-transform:uppercase;color:var(--cream3);margin-bottom:1.25rem;
 }
-.chbox canvas{max-height:240px}
+.chbox canvas{max-height:260px;min-height:200px;height:220px;display:block;width:100%!important;}
 .stags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.35rem 0}
 .stat-card{
@@ -671,7 +677,11 @@ footer a:hover{color:var(--gold)}
   .hero-photo img{width:52%;object-position:55% top}
 }
 @media(max-width:1024px){
-  .sk-grid{grid-template-columns:1fr 1fr}
+  .sk-grid{
+    grid-template-columns:1fr 1fr;
+    /* span 2 on BI Tools card: use full width on 2-col */
+  }
+  .sk-cat-wide{grid-column:span 2}
   .proc-grid{grid-template-columns:1fr 1fr}
   .ps:nth-child(2){border-right:none}
   .ps:nth-child(3){border-top:1px solid var(--line)}
@@ -685,7 +695,22 @@ footer a:hover{color:var(--gold)}
   #projects{padding:5rem 0 3rem}
   .about-inner{grid-template-columns:1fr;gap:2.5rem}
   .about-watermark{display:none}
-  .sk-grid{grid-template-columns:1fr}
+  .sk-grid{
+    grid-template-columns:1fr;
+    gap:1px;
+    /* Reset the border-as-gap trick - causes bleed on mobile */
+    background:var(--line2);
+    border:none;
+    border-radius:4px;
+    overflow:hidden;
+  }
+  /* Remove inline span 2 on mobile - override with class */
+  .sk-cat-wide{grid-column:span 1!important}
+  .sk-cat{
+    border-bottom:1px solid var(--line2);
+    padding:1.5rem;
+  }
+  .sk-cat:last-child{border-bottom:none}
   .proc-grid{grid-template-columns:1fr}
   .ps{border-right:none;border-bottom:1px solid var(--line)}
   .ps:last-child{border-bottom:none}
@@ -708,7 +733,8 @@ footer a:hover{color:var(--gold)}
 @media(max-width:480px){
   .hero-name{font-size:2.4rem}
   .pc{width:82vw}.pc.ft{width:85vw}
-  .sk-cat{padding:1.5rem}
+  .sk-cat{padding:1.25rem}
+  .sk-cat-num{font-size:2.2rem}
   .mbody{padding:1.25rem 1rem}
   .stat-row{grid-template-columns:1fr}
 }
@@ -717,36 +743,47 @@ footer a:hover{color:var(--gold)}
 ::-webkit-scrollbar-thumb{background:rgba(200,146,58,.3);border-radius:2px}
 
 
-/* Floating orbs - CSS only, no JS */
+/* Floating orbs - promoted to own layer */
 @keyframes floatOrb{
-  0%,100%{transform:translate(0,0) scale(1)}
-  33%{transform:translate(20px,-15px) scale(1.05)}
-  66%{transform:translate(-10px,20px) scale(.97)}
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  33%{transform:translate3d(20px,-15px,0) scale(1.05)}
+  66%{transform:translate3d(-10px,20px,0) scale(.97)}
 }
-#about::before{animation:floatOrb 18s ease-in-out infinite}
-#about::after{animation:floatOrb 24s ease-in-out infinite reverse}
+#about::before{animation:floatOrb 18s ease-in-out infinite;will-change:transform}
+#about::after{animation:floatOrb 24s ease-in-out infinite reverse;will-change:transform}
 
-/* Process scan line */
+/* Process scan line - contained to section */
 @keyframes scanLine{
   from{transform:translateY(-100%)}
   to{transform:translateY(100vh)}
 }
+.proc-bg{contain:paint;}
 .proc-bg::after{
   content:'';position:absolute;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(200,146,58,.15),transparent);
   animation:scanLine 8s linear infinite;
-  pointer-events:none;
+  pointer-events:none;will-change:transform;
 }
 
-/* Hero grid subtle pulse */
+/* Hero grid subtle pulse - opacity only, cheap */
 @keyframes gridPulse{
-  0%,100%{opacity:.45}
-  50%{opacity:.7}
+  0%,100%{opacity:.42}
+  50%{opacity:.65}
 }
-.hero-grid{animation:gridPulse 6s ease-in-out infinite}
+.hero-grid{animation:gridPulse 7s ease-in-out infinite}
 
-/* Marquee hover pause */
+/* Marquee - promoted layer */
+.marquee-track{will-change:transform}
 .marquee-strip:hover .marquee-track{animation-play-state:paused}
+
+/* sk-mesh - cheaper animation */
+.sk-mesh{will-change:opacity}
+
+/* Contact pulse - opacity only */
+.contact-bg{will-change:opacity}
+
+/* Spinner - own layer */
+.contact-rings svg{will-change:transform}
 
 /* Card preview charts - consistent dark bg */
 .cprev{background:rgba(9,8,7,.8)}
@@ -757,6 +794,26 @@ footer a:hover{color:var(--gold)}
 /* Process card hover - gold left border reveal */
 .ps{transition:background .25s,border-left-color .25s;border-left:2px solid transparent}
 .ps:hover{border-left-color:var(--gold)}
+
+/* Respect reduced-motion preference */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+  .marquee-track{animation:none}
+  html{scroll-behavior:auto}
+}
+
+/* Mobile: disable expensive background animations */
+@media(max-width:768px){
+  #about::before,#about::after{animation:none}
+  .proc-bg::after{animation:none}
+  .hero-grid{animation:none}
+  .contact-rings{display:none}
+  .sk-mesh{animation:none}
+}
 </style>
 </head>
 <body>
@@ -908,7 +965,7 @@ footer a:hover{color:var(--gold)}
           <span class="sk-pill">Supply Chain</span><span class="sk-pill">Dashboard Design</span>
         </div>
       </div>
-      <div class="sk-cat rise" style="grid-column:span 2">
+      <div class="sk-cat sk-cat-wide rise" style="grid-column:span 2">
         <div class="sk-cat-num">05</div>
         <div class="sk-cat-name">BI Tools &amp; Visualisation</div>
         <div class="sk-cat-count">1 of 9 projects</div>
@@ -942,11 +999,11 @@ footer a:hover{color:var(--gold)}
         <div class="cprev cprev-lg"><canvas id="cTAT" style="max-height:82px"></canvas></div>
         <div class="pc-body">
           <h3 class="pc-title">TAT Dashboard Web Application</h3>
-          <p class="pc-desc">Full-stack app tracking lab test turnaround across multiple sites. Flask backend, MySQL database, custom REST API. Live in clinical use.</p>
-          <div class="pc-tags"><span class="tag tp">Python/Flask</span><span class="tag tp">MySQL</span><span class="tag td">REST API</span><span class="tag th">Healthcare</span><span class="tag ta">Anonymised</span></div>
+          <p class="pc-desc">End-to-end pipeline: LIS export &rarr; Excel data prep &rarr; Python automation &rarr; MySQL &rarr; Flask web app. Replaced a full-day manual process. Deployed and in daily clinical use.</p>
+          <div class="pc-tags"><span class="tag te">Excel</span><span class="tag tp">Python/Flask</span><span class="tag tp">Pandas</span><span class="tag tp">MySQL</span><span class="tag td">REST API</span><span class="tag th">Healthcare</span><span class="tag ta">Deployed</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://github.com/yusuftiamiyu" target="_blank" onclick="event.stopPropagation()">GitHub</a>
+          <span class="pc-link" style="color:var(--cream3);cursor:default">Deployed Internally</span>
           <a class="pc-link primary" onclick="openM('tat');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -960,7 +1017,7 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag te">Excel</span><span class="tag te">SUMIFS</span><span class="tag th">Healthcare</span><span class="tag ta">Anonymised</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://github.com/yusuftiamiyu" target="_blank" onclick="event.stopPropagation()">GitHub</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Lab-Operations-Dashboard" target="_blank" onclick="event.stopPropagation()">GitHub</a>
           <a class="pc-link primary" onclick="openM('labops');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -974,7 +1031,7 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag te">Excel</span><span class="tag te">INDEX/MATCH</span><span class="tag th">Supply Chain</span><span class="tag ta">Anonymised</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://github.com/yusuftiamiyu" target="_blank" onclick="event.stopPropagation()">GitHub</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Inventory-Reorder-Tracker" target="_blank" onclick="event.stopPropagation()">GitHub</a>
           <a class="pc-link primary" onclick="openM('inventory');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -988,7 +1045,7 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag ts">MS SQL Server</span><span class="tag ts">CTEs</span><span class="tag ts">Window Functions</span><span class="tag ts">Views</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://github.com/yusuftiamiyu/COVID-19-Data-Exploration" target="_blank" onclick="event.stopPropagation()">GitHub</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/COVID-19-Data-Exploration" target="_blank" onclick="event.stopPropagation()">GitHub</a>
           <a class="pc-link primary" onclick="openM('covid');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -1002,7 +1059,7 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag ts">MySQL</span><span class="tag ts">ROW_NUMBER</span><span class="tag ts">STR_TO_DATE</span><span class="tag ts">Self-Join</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://github.com/yusuftiamiyu/World-Layoffs-Data-Cleaning" target="_blank" onclick="event.stopPropagation()">GitHub</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/World-Layoffs-Data-Cleaning" target="_blank" onclick="event.stopPropagation()">GitHub</a>
           <a class="pc-link primary" onclick="openM('cleaning');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -1016,7 +1073,7 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag ts">MySQL</span><span class="tag ts">DENSE_RANK</span><span class="tag ts">Nested CTEs</span><span class="tag ts">GROUP BY</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://github.com/yusuftiamiyu/World-Layoffs-EDA" target="_blank" onclick="event.stopPropagation()">GitHub</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/World-Layoffs-EDA" target="_blank" onclick="event.stopPropagation()">GitHub</a>
           <a class="pc-link primary" onclick="openM('eda');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -1030,7 +1087,7 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag ts">MySQL</span><span class="tag ts">Recursive CTE</span><span class="tag ts">LAG/LEAD</span><span class="tag ts">COALESCE</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://github.com/yusuftiamiyu/Sales-Estimates-SQL" target="_blank" onclick="event.stopPropagation()">GitHub</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Sales-Gap-Estimation" target="_blank" onclick="event.stopPropagation()">GitHub</a>
           <a class="pc-link primary" onclick="openM('sales');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -1044,7 +1101,7 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag te">Excel</span><span class="tag te">Pivot Tables</span><span class="tag te">Nested IF</span><span class="tag te">Slicers</span><span class="tag th">Sales Analytics</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://github.com/yusuftiamiyu" target="_blank" onclick="event.stopPropagation()">GitHub</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Bike-Sales-Dashboard" target="_blank" onclick="event.stopPropagation()">GitHub</a>
           <a class="pc-link primary" onclick="openM('bike');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -1058,7 +1115,7 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag td">Tableau</span><span class="tag te">Data Joining</span><span class="tag te">Geospatial</span><span class="tag tp">Price Analysis</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link" href="https://public.tableau.com/app/profile/yusuf.tiamiyu/viz/2016AirbnbDatasetSummary/Dashboard1" target="_blank" onclick="event.stopPropagation()">Tableau Public</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Airbnb-2016-EDA" target="_blank" onclick="event.stopPropagation()">GitHub</a>
           <a class="pc-link primary" onclick="openM('airbnb');event.stopPropagation()">Full Case Study</a>
         </div>
       </div>
@@ -1130,7 +1187,7 @@ footer a:hover{color:var(--gold)}
     </div>
     <div class="contact-links rise">
       <a class="contact-link" href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a>
-      <a class="contact-link" href="https://github.com/yusuftiamiyu" target="_blank">github.com/yusuftiamiyu</a>
+      <a class="contact-link" href="https://github.com/Yusuf-Tiamiyu" target="_blank">github.com/Yusuf-Tiamiyu</a>
     </div>
   </div>
 </section>
@@ -1140,7 +1197,7 @@ footer a:hover{color:var(--gold)}
   <div style="display:flex;gap:2rem">
     <a href="mailto:tiamiyuyusufademola@gmail.com">Email</a>
     <a href="https://www.linkedin.com/in/yusuf-tiamiyu-demola" target="_blank">LinkedIn</a>
-    <a href="https://github.com/yusuftiamiyu" target="_blank">GitHub</a>
+    <a href="https://github.com/Yusuf-Tiamiyu" target="_blank">GitHub</a>
   </div>
 </footer>
 
@@ -1156,61 +1213,67 @@ footer a:hover{color:var(--gold)}
 
 <script>
 
-/* CURSOR - magnetic effect */
+/* PERF: detect mobile once */
+var IS_MOBILE=window.innerWidth<768||('ontouchstart' in window);
+
+/* CURSOR - magnetic effect - disabled on touch devices */
 var CUR=document.getElementById('cur'),TRAIL=document.getElementById('curTrail');
-var mx=0,my=0,tx=0,ty=0;
-CUR.style.top='0';CUR.style.left='0';
-TRAIL.style.top='0';TRAIL.style.left='0';
-document.addEventListener('mousemove',function(e){
-  mx=e.clientX;my=e.clientY;
-  CUR.style.transform='translate3d('+(mx-3)+'px,'+(my-3)+'px,0)';
-},{passive:true});
-(function curLoop(){
-  tx+=(mx-tx)*.1;ty+=(my-ty)*.1;
-  TRAIL.style.transform='translate3d('+(tx-18)+'px,'+(ty-18)+'px,0)';
-  requestAnimationFrame(curLoop);
-})();
-
-/* Magnetic hover on interactive elements */
-document.querySelectorAll('a,button,.pc,.sk-pill').forEach(function(el){
-  el.addEventListener('mouseenter',function(){
-    CUR.classList.add('hovering');
-    TRAIL.classList.add('hovering');
+if(!IS_MOBILE){
+  var mx=0,my=0,tx=0,ty=0;
+  CUR.style.top='0';CUR.style.left='0';
+  TRAIL.style.top='0';TRAIL.style.left='0';
+  document.addEventListener('mousemove',function(e){
+    mx=e.clientX;my=e.clientY;
+    CUR.style.transform='translate3d('+(mx-3)+'px,'+(my-3)+'px,0)';
+  },{passive:true});
+  (function curLoop(){
+    tx+=(mx-tx)*.12;ty+=(my-ty)*.12;
+    TRAIL.style.transform='translate3d('+(tx-18)+'px,'+(ty-18)+'px,0)';
+    requestAnimationFrame(curLoop);
+  })();
+  document.querySelectorAll('a,button,.pc,.sk-pill').forEach(function(el){
+    el.addEventListener('mouseenter',function(){CUR.classList.add('hovering');TRAIL.classList.add('hovering');});
+    el.addEventListener('mouseleave',function(){CUR.classList.remove('hovering');TRAIL.classList.remove('hovering');});
   });
-  el.addEventListener('mouseleave',function(){
-    CUR.classList.remove('hovering');
-    TRAIL.classList.remove('hovering');
-  });
-});
+} else {
+  /* Hide cursor on touch */
+  if(CUR) CUR.style.display='none';
+  if(TRAIL) TRAIL.style.display='none';
+  document.body.style.cursor='auto';
+}
 
-/* NAV SCROLL */
-var nav=document.getElementById('nav');
+/* NAV SCROLL - throttled */
+var nav=document.getElementById('nav'),navTick=false;
 window.addEventListener('scroll',function(){
-  if(window.scrollY>60) nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
+  if(navTick) return;
+  navTick=true;
+  requestAnimationFrame(function(){
+    nav.classList.toggle('scrolled',window.scrollY>60);
+    navTick=false;
+  });
 },{passive:true});
 
-/* SECTION REVEAL */
+/* SECTION REVEAL - batch with single observer */
 var ro=new IntersectionObserver(function(entries){
-  entries.forEach(function(e,i){
+  entries.forEach(function(e){
     if(e.isIntersecting){
-      var delay=Math.min(i*60,240);
-      setTimeout(function(){e.target.classList.add('on');},delay);
+      e.target.classList.add('on');
+      ro.unobserve(e.target);
     }
   });
-},{threshold:.05,rootMargin:'0px 0px -40px 0px'});
+},{threshold:.06,rootMargin:'0px 0px -30px 0px'});
 document.querySelectorAll('.rise,.rise-left').forEach(function(el){ro.observe(el);});
 
 /* COUNTERS */
 var co=new IntersectionObserver(function(entries){
   entries.forEach(function(e){
     if(!e.isIntersecting) return;
-    var el=e.target,t=+el.dataset.target,c=0,inc=t/45;
+    var el=e.target,t=+el.dataset.target,c=0,inc=t/40;
     var tm=setInterval(function(){
       c+=inc;
       if(c>=t){el.textContent=t;clearInterval(tm);}
       else el.textContent=Math.floor(c);
-    },28);
+    },30);
     co.unobserve(el);
   });
 },{threshold:.6});
@@ -1228,55 +1291,59 @@ document.querySelectorAll('[data-target]').forEach(function(el){co.observe(el);}
     var out='';
     for(var i=0;i<final.length;i++){
       if(final[i]===' '){out+=' ';continue;}
-      if(frame/totalFrames > i/final.length){
-        out+=final[i];
-      } else {
-        out+=chars[Math.floor(Math.random()*chars.length)];
-      }
+      if(frame/totalFrames > i/final.length){out+=final[i];}
+      else{out+=chars[Math.floor(Math.random()*chars.length)];}
     }
     el.textContent=out;
     frame++;
     if(frame<=totalFrames) requestAnimationFrame(scramble);
     else{el.textContent=final;done=true;}
   }
-  /* Start after hero name animation plays */
   setTimeout(scramble,500);
 })();
 
-/* SCROLL PARALLAX on hero photo */
-(function(){
-  var img=document.querySelector('.hero-photo img');
-  if(!img) return;
-  var ticking=false;
-  window.addEventListener('scroll',function(){
-    if(ticking) return;
-    requestAnimationFrame(function(){
-      var s=window.scrollY;
-      if(s<window.innerHeight){
-        img.style.transform='translateY('+(s*0.28)+'px)';
-      }
-      ticking=false;
-    });
-    ticking=true;
-  },{passive:true});
-})();
+/* SCROLL PARALLAX on hero photo - only on desktop, reduced intensity */
+if(!IS_MOBILE){
+  (function(){
+    var img=document.querySelector('.hero-photo img:first-child');
+    if(!img) return;
+    var ticking=false;
+    window.addEventListener('scroll',function(){
+      if(ticking) return;
+      requestAnimationFrame(function(){
+        var s=window.scrollY;
+        if(s<window.innerHeight){
+          img.style.transform='translateY('+(s*0.2)+'px)';
+        }
+        ticking=false;
+      });
+      ticking=true;
+    },{passive:true});
+  })();
+}
 
-/* HERO PARTICLE SYSTEM - optimised */
+/* HERO PARTICLE SYSTEM - reduced count, lower fps cap on mobile */
 (function(){
   var canvas=document.getElementById('particles');
   if(!canvas) return;
   var ctx=canvas.getContext('2d');
   var W=0,H=0,pts=[],running=true,rafId=null;
-  var DIST=110,DIST2=DIST*DIST,COUNT=35;
+  /* Fewer particles on mobile - less GPU work */
+  var COUNT=IS_MOBILE?14:22;
+  var DIST=IS_MOBILE?80:100,DIST2=DIST*DIST;
+  var lastFrame=0,FPS_CAP=IS_MOBILE?20:60;
   function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
   resize();
-  window.addEventListener('resize',function(){resize();},{passive:true});
+  var resizeTm;
+  window.addEventListener('resize',function(){clearTimeout(resizeTm);resizeTm=setTimeout(resize,200);},{passive:true});
   for(var i=0;i<COUNT;i++){
-    pts.push({x:Math.random()*1200,y:Math.random()*700,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,r:Math.random()*.9+.3,a:Math.random()*.55+.2});
+    pts.push({x:Math.random()*1200,y:Math.random()*700,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:Math.random()*.8+.3,a:Math.random()*.45+.15});
   }
-  function draw(){
+  function draw(now){
     if(!running){rafId=null;return;}
     rafId=requestAnimationFrame(draw);
+    if(now-lastFrame < 1000/FPS_CAP) return;
+    lastFrame=now;
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle='#c8923a';
     for(var i=0;i<COUNT;i++){
@@ -1287,13 +1354,15 @@ document.querySelectorAll('[data-target]').forEach(function(el){co.observe(el);}
       ctx.globalAlpha=p.a;
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill();
     }
-    ctx.strokeStyle='#c8923a';ctx.lineWidth=.5;
-    for(var i=0;i<COUNT-1;i++){
-      for(var j=i+1;j<COUNT;j++){
-        var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d2=dx*dx+dy*dy;
-        if(d2<DIST2){
-          ctx.globalAlpha=.11*(1-d2/DIST2);
-          ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();
+    if(!IS_MOBILE){
+      ctx.strokeStyle='#c8923a';ctx.lineWidth=.4;
+      for(var i=0;i<COUNT-1;i++){
+        for(var j=i+1;j<COUNT;j++){
+          var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d2=dx*dx+dy*dy;
+          if(d2<DIST2){
+            ctx.globalAlpha=.09*(1-d2/DIST2);
+            ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();
+          }
         }
       }
     }
@@ -1301,37 +1370,40 @@ document.querySelectorAll('[data-target]').forEach(function(el){co.observe(el);}
   }
   var obs=new IntersectionObserver(function(entries){
     running=entries[0].isIntersecting;
-    if(running&&!rafId) draw();
+    if(running&&!rafId) rafId=requestAnimationFrame(draw);
   },{threshold:0});
   obs.observe(document.getElementById('hero'));
-  draw();
+  rafId=requestAnimationFrame(draw);
 })();
 
-/* PROJECTS DATA-LINES BACKGROUND - optimised */
+/* PROJECTS DATA-LINES BACKGROUND - fewer lines, lower fps on mobile */
 (function(){
   var canvas=document.getElementById('dataLines');
   if(!canvas) return;
   var ctx=canvas.getContext('2d');
-  var W=0,H=0,running=true,rafId=null,COUNT=10;
-  var lines=[];
+  var W=0,H=0,running=true,rafId=null;
+  var COUNT=IS_MOBILE?4:8;
+  var lines=[],lastFrame=0,FPS_CAP=IS_MOBILE?15:40;
   function resize(){
     var sect=document.getElementById('projects');
     if(!sect) return;
     W=canvas.width=sect.offsetWidth;H=canvas.height=sect.offsetHeight;
     for(var i=0;i<lines.length;i++) lines[i].grad=null;
   }
-  for(var i=0;i<COUNT;i++){lines.push({y:Math.random()*700+80,speed:Math.random()*.22+.06,w:Math.random()*100+50,x:Math.random()*1400,a:Math.random()*.35+.08,grad:null});}
+  for(var i=0;i<COUNT;i++){lines.push({y:Math.random()*700+80,speed:Math.random()*.18+.05,w:Math.random()*100+50,x:Math.random()*1400,a:Math.random()*.3+.07,grad:null});}
   resize();
   var rt;
-  window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(resize,150);},{passive:true});
-  function draw(){
+  window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(resize,200);},{passive:true});
+  function draw(now){
     if(!running){rafId=null;return;}
     rafId=requestAnimationFrame(draw);
+    if(now-lastFrame < 1000/FPS_CAP) return;
+    lastFrame=now;
     ctx.clearRect(0,0,W,H);ctx.lineWidth=1;
     for(var i=0;i<COUNT;i++){
       var l=lines[i];l.x+=l.speed;
       if(l.x>W+l.w) l.x=-l.w;
-      if(!l.grad||l.x%80<1){
+      if(!l.grad){
         l.grad=ctx.createLinearGradient(l.x-l.w,0,l.x+l.w,0);
         l.grad.addColorStop(0,'rgba(200,146,58,0)');
         l.grad.addColorStop(.5,'rgba(200,146,58,'+l.a+')');
@@ -1343,64 +1415,73 @@ document.querySelectorAll('[data-target]').forEach(function(el){co.observe(el);}
   }
   var obs=new IntersectionObserver(function(entries){
     running=entries[0].isIntersecting;
-    if(running&&!rafId) draw();
+    if(running&&!rafId) rafId=requestAnimationFrame(draw);
   },{threshold:0});
   var sect=document.getElementById('projects');
   if(sect) obs.observe(sect);
-  draw();
+  rafId=requestAnimationFrame(draw);
 })();
 
-/* PROJECT CARD 3D TILT */
-(function(){
+/* PROJECT CARD 3D TILT - desktop only, throttled */
+if(!IS_MOBILE){
   document.querySelectorAll('.pc').forEach(function(card){
+    var tiltRaf=null;
     card.addEventListener('mousemove',function(e){
-      var r=card.getBoundingClientRect();
-      var cx=r.left+r.width/2,cy=r.top+r.height/2;
-      var dx=(e.clientX-cx)/r.width,dy=(e.clientY-cy)/r.height;
-      card.style.transform='perspective(900px) rotateY('+(dx*8)+'deg) rotateX('+(-dy*6)+'deg) translateZ(4px)';
+      if(tiltRaf) return;
+      tiltRaf=requestAnimationFrame(function(){
+        var r=card.getBoundingClientRect();
+        var dx=(e.clientX-(r.left+r.width/2))/r.width;
+        var dy=(e.clientY-(r.top+r.height/2))/r.height;
+        card.style.transform='perspective(900px) rotateY('+(dx*7)+'deg) rotateX('+(-dy*5)+'deg) translateZ(4px)';
+        tiltRaf=null;
+      });
     });
     card.addEventListener('mouseleave',function(){
+      if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
+      card.style.transition='transform .45s cubic-bezier(.4,0,.2,1)';
       card.style.transform='perspective(900px) rotateY(0deg) rotateX(0deg) translateZ(0)';
-      card.style.transition='transform .5s cubic-bezier(.4,0,.2,1)';
-      setTimeout(function(){card.style.transition='';},500);
+      setTimeout(function(){card.style.transition='';},450);
     });
   });
-})();
+}
 
-/* HORIZONTAL SCROLL DOTS */
+/* HORIZONTAL SCROLL DOTS - passive, throttled */
 (function(){
   var wrap=document.getElementById('projScroll');
   var dots=document.querySelectorAll('.sdot');
   if(!wrap||!dots.length) return;
+  var dotTick=false;
   wrap.addEventListener('scroll',function(){
-    var max=wrap.scrollWidth-wrap.clientWidth;
-    var pct=max>0?wrap.scrollLeft/max:0;
-    var active=Math.round(pct*(dots.length-1));
-    dots.forEach(function(d,i){d.classList.toggle('active',i===active);});
+    if(dotTick) return;
+    dotTick=true;
+    requestAnimationFrame(function(){
+      var max=wrap.scrollWidth-wrap.clientWidth;
+      var active=max>0?Math.round((wrap.scrollLeft/max)*(dots.length-1)):0;
+      dots.forEach(function(d,i){d.classList.toggle('active',i===active);});
+      dotTick=false;
+    });
   },{passive:true});
 })();
 
-/* ABOUT BACKGROUND PARALLAX */
-(function(){
-  var about=document.getElementById('about');
-  if(!about) return;
-  var svg=about.querySelector('.about-bg svg');
-  var watermark=about.querySelector('.about-watermark');
-  var ticking=false;
-  function update(){
-    var rect=about.getBoundingClientRect();
-    var prog=1-(rect.top/(window.innerHeight*.8));
-    if(svg) svg.style.opacity=Math.min(.1,Math.max(.04,prog*.07))+'';
-    if(watermark){
-      var shift=rect.top*0.15;
-      watermark.style.transform='translateY(calc(-50% + '+shift+'px))';
+/* ABOUT BACKGROUND PARALLAX - desktop only */
+if(!IS_MOBILE){
+  (function(){
+    var about=document.getElementById('about');
+    if(!about) return;
+    var watermark=about.querySelector('.about-watermark');
+    var ticking=false;
+    function update(){
+      if(watermark){
+        var shift=about.getBoundingClientRect().top*0.12;
+        watermark.style.transform='translateY(calc(-50% + '+shift+'px))';
+      }
+      ticking=false;
     }
-    ticking=false;
-  }
-  window.addEventListener('scroll',function(){
-    if(!ticking){requestAnimationFrame(update);ticking=true;}
-  },{passive:true});
-})();
+    window.addEventListener('scroll',function(){
+      if(!ticking){requestAnimationFrame(update);ticking=true;}
+    },{passive:true});
+  })();
+}
 
 
 /* CHART COLORS */
@@ -1622,50 +1703,169 @@ function SEC(title,body){
    ================================================================ */
 
 function bodyTAT(){
-  return SEC('Why This Existed',
+  return SEC('What TAT Actually Is',
     STATROW([
-      {val:'5+',lbl:'Lab Sites Monitored',cls:'blue'},
-      {val:'90%',lbl:'TAT Target',cls:'green'},
-      {val:'Weekly',lbl:'Data Refresh Cycle (Before)',cls:'red'}
+      {val:'9',lbl:'Sites Monitored',cls:'blue'},
+      {val:'90%',lbl:'Pass Rate Target',cls:'green'},
+      {val:'~50%',lbl:'Org-Wide Rate Before',cls:'red'}
     ])+
-    '<p>TAT stands for Turnaround Time. In a diagnostic lab, it is the gap between when a test sample arrives and when the result reaches the doctor. Every unnecessary hour of delay is an hour a clinician is waiting to make a treatment decision.</p>'+
-    '<p>At Cerba Lancet Nigeria, tracking TAT across multiple sites and departments was done manually. Someone pulled numbers from the lab system, pasted them into a spreadsheet, and sent it around at the end of the week. By the time anyone read it, the problems it described were already four days old. I wanted to change that.</p>'+
-    ANNOT('The Core Problem','Before this dashboard, a lab manager finding out about a Monday TAT failure would hear about it on Friday. Five days of continued failure before a correction could be made.')
+    '<p>TAT stands for Turnaround Time. In a diagnostic lab it is the gap between when a sample is logged and when the verified result is available for the requesting clinician. Every hour over target is an hour a doctor is waiting to act. At scale across nine sites, those hours add up into something the organisation had to take seriously.</p>'+
+    '<p>When I joined, the organisation\'s average TAT compliance was hovering between 50 and 55 percent. Some sites were down at 40. That means more tests were failing the target than passing it. This was not a staffing problem or a skills problem. It was an information problem. Nobody knew precisely where the failures were happening or why, because by the time the weekly numbers came together, the week that caused them was already gone.</p>'+
+    ANNOT('The Process Before','Data downloaded from the LIS on Friday. Manually organised over several hours. Emailed around. By the time anyone read it, a Monday failure had been running uncorrected for five days.')
   )+
-  SEC('How I Built It',
-    '<p>The backend is Python and Flask. I designed the MySQL schema myself, wrote every API endpoint, and built the frontend in plain HTML, CSS, and JavaScript. Data flows from the lab system into MySQL via Excel uploads the app processes automatically.</p>'+
-    '<p>One early problem: MySQL returns types that Python\'s JSON encoder does not understand. Decimal columns, datetime fields, bytes from certain drivers. Every time one of those hit the serialiser, the API crashed. I wrote a type-safety layer that runs before any value touches JSON.</p>'+
-    CW('Python - type-safety layer (app.py)',
-      CM('# Convert any MySQL type to a JSON-safe Python scalar')+'\n'+
+  SEC('Stage 1 — Getting the Data Out',
+    '<p>The Lab Information System exports data as a flat text file. Not a CSV. Not a structured table. One long column with all the fields compressed together, separated inconsistently. Step one was always the same: open in Excel, go to Data tab, Text to Columns, manually pick the delimiter, pull everything apart into usable columns.</p>'+
+    '<p>The columns that matter most are EntDate and EntTime (when the sample was logged) and TestVerDate and TestVerTime (when the result was verified). They always came out as separate columns, which is a problem because you need the full datetime as a single value to calculate a time difference. So I joined them: EntDate + EntTime into one column, TestVerDate + TestVerTime into another.</p>'+
+    '<p>But they were still text strings at that point. The LIS exports dates in dd/mm/yy format and times as HHMM with no separator. To turn them into something Excel could do arithmetic on, I wrote this formula:</p>'+
+    CW('Excel - Convert LIS text format to proper datetime',
+      CM('// EntDate & EntTime columns joined and converted')+'\n'+
+      '=DATE(2000+MID(D2,7,2), MID(D2,4,2), LEFT(D2,2))\n'+
+      ' + TIME(MID(D2,10,2), RIGHT(D2,2), 0)\n\n'+
+      CM('// Same formula applied to TestVerDate & TestVerTime column')+'\n'+
+      CM('// Result: proper Excel datetime, ready for subtraction')
+    )+
+    '<p>After that: remove blank rows, deduplicate on requisition number and test name, and the raw data was ready to work with.</p>'
+  )+
+  SEC('Stage 2 — The Reference Timesheet',
+    '<p>The original process had someone who knew the test catalogue sit down and manually go through the test name column. They would delete test names that were irrelevant, fix test names that were entered incorrectly, and standardise inconsistent naming. This took time and depended entirely on one person\'s institutional knowledge.</p>'+
+    '<p>I replaced that with a Reference_Times sheet. This is a master table I built and maintain that has three things for every valid test the organisation runs: the exact test name (standardised), the standard TAT for that test in hours, and the department that test belongs to. It became the single source of truth.</p>'+
+    STATROW([
+      {val:'3',lbl:'Columns in Reference Sheet',cls:'amber'},
+      {val:'0',lbl:'Manual Reviews Still Needed',cls:'green'},
+      {val:'9',lbl:'Sites, Departments Auto-Matched',cls:'blue'}
+    ])+
+    '<p>The department column was something the organisation was not tracking before. Once it existed, the dashboard could tell you not just which site was failing TAT, but which department at that site was driving the failure. Chemistry. Haematology. Serology. That level of detail changed what managers could actually do about a problem.</p>'+
+    CW('Excel - VLOOKUP equivalent (Python later replaces this)',
+      CM('// Standard TAT for this test')+'\n'+
+      '=VLOOKUP([@[Test Name]], Reference_Times, 2, FALSE)\n\n'+
+      CM('// Department for this test')+'\n'+
+      '=VLOOKUP([@[Test Name]], Reference_Times, 3, FALSE)\n\n'+
+      CM('// TAT calculation: actual vs standard')+'\n'+
+      '=([TestVerDate & TestVerTime] - [EntDate & EntTime]) * 24\n\n'+
+      CM('// Pass/Fail flag')+'\n'+
+      '=IF([@[TAT (hours)]] <= [@[Standard TAT]], "Pass", "Fail")'
+    )
+  )+
+  SEC('Stage 3 — Python Replaces the Manual Steps',
+    '<p>With Excel the process still took most of a day per weekly cycle. Nine sites means nine pivot tables, nine sets of charts, nine site-specific summaries. Everything manual, everything repetitive. I started prototyping in Jupyter to see how much of it I could automate.</p>'+
+    '<p>The Python script takes the cleaned Excel file as input. Pandas reads both sheets, the Reference_Times dictionary lookup replaces VLOOKUP, TAT is calculated in a single vectorised operation, and Pass/Fail is assigned with numpy.where. Site names are mapped from PerfSite codes automatically. The script outputs a colour-coded Excel file with fail severity grading and a site compliance summary table.</p>'+
+    CW('Python - TAT calculation and Pass/Fail (analysis.py)',
+      CM('# Load both sheets')+'\n'+
+      KW('df_raw')+' = pd.read_excel(raw_file, sheet_name='+ST("'TAT Data'")+') \n'+
+      KW('df_ref')+' = pd.read_excel(raw_file, sheet_name='+ST("'Reference_Times'")+') \n\n'+
+      CM('# Build reference dict: test_name -> {TAT, dept}')+'\n'+
+      KW('ref_dict')+' = df_ref.set_index('+ST("'Test Name'")+')[[\n'+
+      '    '+ST("'TAT (hours)'")+', '+ST("'Dept.'")+'\n'+
+      ']].to_dict(orient='+ST("'index'")+') \n\n'+
+      CM('# Filter raw data to only known tests, add dept + standard TAT')+'\n'+
+      'df_raw = df_raw[df_raw['+ST("'Test Name'")+'].isin(ref_dict)] \n'+
+      'df_raw[['+ST("'Department'")+', '+ST("'Standard TAT (hours)'")+']'+'] = \\\n'+
+      '    df_raw['+ST("'Test Name'")+'].'+FN('apply')+'('+KW('lambda')+' x: pd.Series(\n'+
+      '        (ref_dict[x]['+ST("'Dept.'")+'], ref_dict[x]['+ST("'TAT (hours)'")+']) \n'+
+      '    )) \n\n'+
+      CM('# Calculate actual TAT in hours (vectorised)')+'\n'+
+      "df_raw['TAT (hours)'] = (\n"+
+      "    df_raw['TestVerDate & TestVerTime'] -\n"+
+      "    df_raw['EntDate & EntTime']\n"+
+      ').dt.total_seconds() / 3600 \n\n'+
+      CM('# Pass/Fail flag')+'\n'+
+      "df_raw['TAT Status'] = np.where(\n"+
+      "    df_raw['TAT (hours)'] <= df_raw['Standard TAT (hours)'],\n"+
+      "    'Pass', 'Fail'\n"+
+      ')'
+    )+
+    CW('Python - Site compliance summary (analysis.py)',
+      CM('# Group by site, count pass/fail, compute percentages')+'\n'+
+      "site_compliance = df_raw.groupby('Site Names')['TAT Status']\\\n"+
+      "    .value_counts().unstack(fill_value=0).reset_index()\n"+
+      "site_compliance['Total Tests'] = site_compliance[['Pass','Fail']].sum(axis=1)\n"+
+      "site_compliance['Pass %'] = (\n"+
+      "    site_compliance['Pass'] / site_compliance['Total Tests'] * 100\n"+
+      ').round(2)'
+    )+
+    '<p>What used to take a full day now runs in about two minutes. The output is a properly formatted Excel file with conditional colour coding: green for Pass, amber for failures within one hour of target, red for failures more than one hour over. Lab managers can read the colour before they read a number.</p>'+
+    CHBOX('Site TAT Compliance - representative output (Analysed data)','tatSiteChart')
+  )+
+  SEC('Stage 4 — MySQL + Flask Web App',
+    '<p>The Python script was a major improvement but it still produced a new file every week with no historical record. Two questions kept coming up: how does this week compare to last month? Is this site getting better or worse over time? A flat file cannot answer those questions. A database can.</p>'+
+    '<p>I designed the MySQL schema to store every record from every weekly upload in a single table, with a week_id column that groups each upload. Once the historical data is there, you can query any time range.</p>'+
+    CW('SQL - tat_dashboard schema (setup.sql)',
+      KW('CREATE TABLE')+' tat_data (\n'+
+      '    id                  '+KW('INT')+' AUTO_INCREMENT PRIMARY KEY,\n'+
+      '    week_id             '+KW('VARCHAR')+'(20)    NOT NULL,      '+CM('-- YYYY-MM-DD of first record')+'\n'+
+      '    req_number          '+KW('VARCHAR')+'(100),\n'+
+      '    site_name           '+KW('VARCHAR')+'(100),\n'+
+      '    department          '+KW('VARCHAR')+'(100),\n'+
+      '    test_name           '+KW('VARCHAR')+'(255),\n'+
+      '    entry_datetime      '+KW('DATETIME')+',\n'+
+      '    verify_datetime     '+KW('DATETIME')+',\n'+
+      '    tat_status          '+KW('VARCHAR')+'(10),            '+CM('-- Pass or Fail')+'\n'+
+      '    tat_minutes         '+KW('DECIMAL')+'(10,2),          '+CM('-- actual TAT')+'\n'+
+      '    target_tat_minutes  '+KW('DECIMAL')+'(10,2),          '+CM('-- standard TAT')+'\n'+
+      '    uploaded_at         '+KW('TIMESTAMP')+' DEFAULT CURRENT_TIMESTAMP,\n'+
+      '    '+KW('INDEX')+' idx_week_id (week_id),\n'+
+      '    '+KW('INDEX')+' idx_site    (site_name),\n'+
+      '    '+KW('INDEX')+' idx_dept    (department),\n'+
+      '    '+KW('INDEX')+' idx_entry   (entry_datetime)\n'+
+      ');'
+    )+
+    '<p>The Flask app has 13 REST API endpoints. Weekly and monthly views, daily trend breakdowns, shift analysis, department drill-downs, and a failed requisition log that lets managers see specific test names and requisition numbers that missed target. The frontend is plain HTML, CSS, and JavaScript. No framework, no template engine.</p>'+
+    CW('Python - type-safety layer for MySQL serialisation (app.py)',
+      CM('# MySQL returns types JSON cannot handle: Decimal, datetime, bytes')+'\n'+
+      CM('# This layer runs before any value touches jsonify()')+'\n'+
       KW('def')+' '+FN('_s')+'(v):\n'+
-      '    '+KW('if')+' v '+KW('is None')+':                          '+KW('return')+' '+NM('0')+'\n'+
+      '    '+KW('if')+' v '+KW('is None')+':                         '+KW('return')+' '+NM('0')+'\n'+
       '    '+KW('if isinstance')+'(v, decimal.Decimal):\n'+
       '        f = '+FN('float')+'(v)\n'+
       '        '+KW('return int')+'(f) '+KW('if')+' f == '+FN('int')+'(f) '+KW('else')+' '+FN('round')+'(f, '+NM('4')+')\n'+
       '    '+KW('if isinstance')+'(v, datetime.datetime): '+KW('return')+' v.'+FN('strftime')+'('+ST("'%Y-%m-%dT%H:%M:%S'")+')\n'+
       '    '+KW('if isinstance')+'(v, datetime.date):     '+KW('return')+' v.'+FN('strftime')+'('+ST("'%Y-%m-%d'")+')\n'+
-      '    '+KW('return')+' v'
+      '    '+KW('if isinstance')+'(v, (bytes, bytearray)):'+KW('return')+' v.'+FN('decode')+'('+ST("'utf-8'")+', errors='+ST("'replace'")+')\n'+
+      '    '+KW('return')+' v\n\n'+
+      KW('def')+' '+FN('clean')+'(rows):\n'+
+      '    '+KW('return')+' [{k: '+FN('_s')+'(v) '+KW('for')+' k,v '+KW('in')+' row.items()} '+KW('for')+' row '+KW('in')+' (rows '+KW('or')+' [])]'
     )+
-    CW('SQL - week data aggregation (app.py)',
-      KW('SELECT')+'  site_name,\n        department,\n'+
-      '        '+FN('COUNT')+'(*) '+KW('AS')+' total,\n'+
-      '        '+FN('SUM')+'(tat_status='+ST("'Pass'")+') '+KW('AS')+' pass_c,\n'+
+    CW('SQL - weekly performance by site and department (app.py)',
+      KW('SELECT')+'  site_name, department,\n'+
+      '        '+FN('COUNT')+'(*)                      '+KW('AS')+' total,\n'+
+      '        '+FN('SUM')+'(tat_status='+ST("'Pass'")+')       '+KW('AS')+' pass_c,\n'+
       '        '+FN('ROUND')+'('+FN('AVG')+'(tat_minutes), '+NM('1')+') '+KW('AS')+' avg_tat\n'+
-      KW('FROM')+'    tat_data\n'+KW('WHERE')+'   week_id = '+NM('%s')+'\n'+
+      KW('FROM')+'    tat_data\n'+
+      KW('WHERE')+'   week_id = '+NM('%s')+'\n'+
       KW('GROUP BY')+' site_name, department'
-    )
+    )+
+    CHBOX('Pass Rate by Shift Period - representative data','tatShiftChart')+
+    FIND('The shift breakdown chart was something lab managers asked for after the first version went live. The Handover shift (2pm to 4pm) consistently showed the lowest pass rate across multiple sites. That pointed at a handover process gap, not a department problem. Without timestamped data you cannot see that distinction at all.')
   )+
-  SEC('What the Data Showed',
-    CHBOX('TAT Pass Rate by Site vs 90% Target (representative data)','tatSiteChart')+
-    FIND('Specific departments were consistently missing the 90% target and the pattern clustered in the handover shift between morning and afternoon. That finding did not exist in the weekly spreadsheet. It came from having timestamped data and something that could slice it.')+
-    CHBOX('Pass Rate by Shift Period (representative data)','tatShiftChart')+
-    '<p>The shift breakdown chart was a later addition that lab managers specifically asked for. The Handover shift (2pm-4pm) consistently shows the lowest pass rate  -  pointing at a communication gap between morning and afternoon teams, not a staffing problem. Without granular time data, that diagnosis would not have been possible.</p>'+
-    '<p>The app went live on Railway and supervisors started using it for daily operational calls. The gap between "I built a dashboard" and "people actually rely on this thing" is the one I am most proud of crossing.</p>'
+  SEC('Stage 5 — What the Dashboard Actually Shows',
+    '<p>After testing locally I got sign-off from senior management and deployed on Railway. The app has been live since. Lab supervisors check it during daily operational calls. The question is no longer "how did last week go" but "what is happening and where."</p>'+
+    STATROW([
+      {val:'13',lbl:'REST API Endpoints',cls:'blue'},
+      {val:'9',lbl:'Sites on the Dashboard',cls:'amber'},
+      {val:'70%+',lbl:'Org-Wide TAT Rate Now',cls:'green'}
+    ])+
+    '<p>Since the dashboard has been deployed, viewers of this portfolio cannot interact with the live version. The charts below are representative of what supervisors actually see each week — the same structure, similar data patterns, with identifying details removed.</p>'+
+    CHBOX('Overall TAT Pass vs Fail — weekly snapshot','tatPieChart')+
+    '<p>The top-level view. One number that answers whether the organisation is above or below target for the week. At its worst before this process existed, the overall rate sat at 50 to 55 percent. It now consistently runs above 70 percent, with four sites regularly clearing 90.</p>'+
+    CHBOX('Site-by-Site Pass Rate vs 90% Target','tatSiteChart')+
+    FIND('Four sites now consistently clear the 90% target. The three that sit between 50 and 80 percent have their own identifiable patterns when you drill into the department view — specific departments at specific sites, not a site-wide problem.')+
+    CHBOX('Daily Performance Trend — Tests Logged vs TAT Pass Rate','tatDailyChart')+
+    '<p>One of the most useful views for operational decisions. If Monday is consistently the worst day across multiple sites, that is probably a volume problem: high sample intake after the weekend combined with the same staffing levels. If Wednesday is bad at one site and fine at others, that is something happening at that specific site.</p>'+
+    CHBOX('Pass Rate by Shift Period','tatShiftChart')+
+    FIND('The Handover shift (2pm to 4pm) consistently shows the lowest pass rate across multiple sites. Without this chart, that pattern was invisible. The instinct was to blame staffing levels or test complexity. The data pointed at the handover process itself.')+
+    CHBOX('Average TAT by Department vs Standard (hours)','tatDeptAvgChart')+
+    '<p>This chart shows the average actual TAT for each department against the standard. Departments that track close to or below the standard line are consistently passing. Departments that consistently run over it are the ones surfacing in the failed requisition log. Chemistry running 0.8 hours over standard looks small but across hundreds of tests per week it is a significant number of failures.</p>'+
+    CHBOX('Top 5 Sites by Test Volume — Weekly','tatTopSitesChart')+
+    '<p>Volume distribution matters because a site logging 800 tests with 85% compliance is performing differently from a site logging 200 tests with 85% compliance. The dashboard shows both dimensions together.</p>'+
+    CHBOX('Before vs After — Org-Wide TAT Compliance','tatImpactChart')+
+    FIND('Before the pipeline: compliance hovered between 50 and 55 percent. Some sites were below 40. After: the organisation consistently runs above 70 percent. Four sites hold above 90. The rest are above 50. The data did not change. The visibility of it did.')+
+    ANNOT('On what this project actually is','This is not just a Flask app or just an Excel sheet or just a Python script. It is a pipeline. The Excel knowledge, the domain understanding of what the Reference_Times sheet needs to contain, the Python automation, the SQL schema design, and the web app are all one thing. Any of those pieces missing and the whole thing stops working.')
   )+
-  SEC('What I Learned',
-    '<p>The first version tried to do everything. Charts for every metric, filters for every dimension, three pages of options nobody asked for. The version that got deployed did three things extremely well and left everything else out. Scope discipline is harder than the coding but it is what makes something actually get used.</p>'+
-    STAGS(['Python','Flask','MySQL','REST API','HTML/CSS/JS','Railway','Healthcare Analytics'])+
-  SEC('What I Took From This','<p>The part that mattered most was not the dashboard itself. It was the first time someone opened it during an operational call and it already had the answer they needed. That gap between building something and having people actually rely on it is larger than it sounds.</p>'+'<p>Building the type-safety layer taught me something I now apply everywhere: never assume a value is what it looks like. MySQL returns Decimal objects where you expected floats, datetime objects where you expected strings. The serialiser crash is silent in development and catastrophic in production. Defensive coding on data types is not paranoia. It is correct.</p>'+'<p>I also learned that the first version of anything is always too big. The deployed version did three things well and left everything else out. That edit was harder than writing the code, but it is what made the difference between a tool people use and a tool people ignore.</p>')
+  SEC('What I Took From This',
+    '<p>The Reference_Times sheet is the part I am most proud of, which probably sounds strange. It is just a lookup table. But before it existed, the entire process depended on one person\'s memory of the test catalogue. After it existed, that knowledge was encoded somewhere that anyone could check and Python could query. Turning implicit institutional knowledge into explicit structured data is genuinely useful work, and it does not get credited enough.</p>'+
+    '<p>The type-safety layer in the Flask app came from a production crash. MySQL silently returns Decimal objects where you think you are getting floats, and datetime objects where you think you are getting strings. The serialiser fails and takes the API with it. Writing defensive code around data types is not interesting work but it is the difference between an app that runs and one that breaks in front of users.</p>'+
+    '<p>I also had to learn to talk to lab managers before I could build anything useful for them. I sat with managers at every site, asked what questions they needed the dashboard to answer, and built for those questions. The shift breakdown chart only exists because someone asked for it. The failed requisition log only exists because someone described exactly what they needed to investigate a complaint. The tool is better because I talked to the people who would use it.</p>'+
+    STAGS(['Excel','Python','Pandas','Flask','MySQL','REST API','HTML/CSS/JS','Railway','Healthcare Analytics','Data Cleaning'])
   );
 }
 
@@ -2233,15 +2433,15 @@ function bodyAirbnb(){
 }
 
 var MDATA={
-  tat:{eye:'Project 01 - Full-Stack Web App',t:'TAT Dashboard',anon:true,gh:'https://github.com/yusuftiamiyu',title:'TAT Dashboard Web Application',sub:'Built from zero. Flask backend, MySQL database, vanilla HTML/CSS/JS. No templates. A real clinical problem that needed a real solution.',body:bodyTAT},
-  labops:{eye:'Project 02 - Excel Dashboard',t:'Lab Operations Dashboard',anon:true,gh:'https://github.com/yusuftiamiyu',title:'Lab Operations Dashboard',sub:'A multi-site Excel dashboard monitoring four core KPIs. Dynamic filtering by year, month, week, site and department. No manual calculation ever required.',body:bodyLabops},
-  inventory:{eye:'Project 03 - Excel System',t:'Inventory Reorder Tracker',anon:true,gh:'https://github.com/yusuftiamiyu',title:'Inventory Reorder Tracker',sub:'An Excel inventory management system for lab supplies. Auto-flags reorder alerts, projects months of stock remaining, maintains a full issuance audit trail.',body:bodyInventory},
-  covid:{eye:'Project 04 - SQL Data Exploration',t:'COVID-19 Exploration',anon:false,gh:'https://github.com/yusuftiamiyu/COVID-19-Data-Exploration',title:'COVID-19 Global Data Exploration',sub:'A SQL exploration of global COVID-19 death and vaccination data using MS SQL Server. Making the pandemic numbers graspable by asking specific, answerable questions.',body:bodyCovid},
-  cleaning:{eye:'Project 05 - Data Cleaning',t:'World Layoffs Data Cleaning',anon:false,gh:'https://github.com/yusuftiamiyu/World-Layoffs-Data-Cleaning',title:'World Layoffs Data Cleaning',sub:'A four-phase SQL cleaning pipeline on the Kaggle world layoffs dataset. Before any analysis can happen, the data has to be trustworthy.',body:bodyCleaning},
-  eda:{eye:'Project 06 - Exploratory Analysis',t:'World Layoffs EDA',anon:false,gh:'https://github.com/yusuftiamiyu/World-Layoffs-EDA',title:'World Layoffs Exploratory Data Analysis',sub:'Built directly on the cleaned dataset from Project 05. I went in with no fixed agenda, just questions I was genuinely curious about.',body:bodyEDA},
-  sales:{eye:'Project 07 - Advanced SQL',t:'Sales Gap Estimation',anon:false,gh:'https://github.com/yusuftiamiyu/Sales-Estimates-SQL',title:'Sales Gap Estimation with Advanced SQL',sub:'Started from real frustration with UNION ALL for date generation. That problem led to recursive CTEs. Then curiosity about intelligent null filling led to LAG and LEAD.',body:bodySales},
-  bike:{eye:'Project 08 - Excel Dashboard',t:'Bike Sales Dashboard',anon:false,gh:'https://github.com/yusuftiamiyu',title:'Bike Sales Dashboard',sub:'Started from a YouTube tutorial by Alex Freeberg. His version was demonstrative. I wanted to see what more careful exploration of the same dataset would actually surface.',body:bodyBike},
-  airbnb:{eye:'Project 09 - Tableau Dashboard',t:'2016 Airbnb EDA',anon:false,gh:'https://github.com/yusuftiamiyu',tableau:'https://public.tableau.com/app/profile/yusuf.tiamiyu/viz/2016AirbnbDatasetSummary/Dashboard1',title:'2016 Seattle Airbnb Data Exploration',sub:'If you were about to list a property on Airbnb in Seattle, what would you need to know? That question drove every chart in this dashboard. 3,818 listings. 1 million+ calendar rows. Built in Tableau.',body:bodyAirbnb}
+  tat:{eye:'Project 01 - Full-Stack Pipeline',t:'TAT Dashboard',anon:true,gh:null,title:'TAT Dashboard Web Application',sub:'Five-stage pipeline: LIS data extraction, Excel prep and standardisation, Python/Pandas automation, MySQL storage, Flask web app deployed on Railway. What used to take a full day of manual work now takes minutes. Used in daily clinical operations.',body:bodyTAT},
+  labops:{eye:'Project 02 - Excel Dashboard',t:'Lab Operations Dashboard',anon:true,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Lab-Operations-Dashboard',title:'Lab Operations Dashboard',sub:'A multi-site Excel dashboard monitoring four core KPIs. Dynamic filtering by year, month, week, site and department. No manual calculation ever required.',body:bodyLabops},
+  inventory:{eye:'Project 03 - Excel System',t:'Inventory Reorder Tracker',anon:true,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Inventory-Reorder-Tracker',title:'Inventory Reorder Tracker',sub:'An Excel inventory management system for lab supplies. Auto-flags reorder alerts, projects months of stock remaining, maintains a full issuance audit trail.',body:bodyInventory},
+  covid:{eye:'Project 04 - SQL Data Exploration',t:'COVID-19 Exploration',anon:false,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/COVID-19-Data-Exploration',title:'COVID-19 Global Data Exploration',sub:'A SQL exploration of global COVID-19 death and vaccination data using MS SQL Server. Making the pandemic numbers graspable by asking specific, answerable questions.',body:bodyCovid},
+  cleaning:{eye:'Project 05 - Data Cleaning',t:'World Layoffs Data Cleaning',anon:false,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/World-Layoffs-Data-Cleaning',title:'World Layoffs Data Cleaning',sub:'A four-phase SQL cleaning pipeline on the Kaggle world layoffs dataset. Before any analysis can happen, the data has to be trustworthy.',body:bodyCleaning},
+  eda:{eye:'Project 06 - Exploratory Analysis',t:'World Layoffs EDA',anon:false,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/World-Layoffs-EDA',title:'World Layoffs Exploratory Data Analysis',sub:'Built directly on the cleaned dataset from Project 05. I went in with no fixed agenda, just questions I was genuinely curious about.',body:bodyEDA},
+  sales:{eye:'Project 07 - Advanced SQL',t:'Sales Gap Estimation',anon:false,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Sales-Gap-Estimation',title:'Sales Gap Estimation with Advanced SQL',sub:'Started from real frustration with UNION ALL for date generation. That problem led to recursive CTEs. Then curiosity about intelligent null filling led to LAG and LEAD.',body:bodySales},
+  bike:{eye:'Project 08 - Excel Dashboard',t:'Bike Sales Dashboard',anon:false,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Bike-Sales-Dashboard',title:'Bike Sales Dashboard',sub:'Started from a YouTube tutorial by Alex Freeberg. His version was demonstrative. I wanted to see what more careful exploration of the same dataset would actually surface.',body:bodyBike},
+  airbnb:{eye:'Project 09 - Tableau Dashboard',t:'2016 Airbnb EDA',anon:false,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Airbnb-2016-EDA',tableau:'https://public.tableau.com/app/profile/yusuf.tiamiyu/viz/2016AirbnbDatasetSummary/Dashboard1',title:'2016 Seattle Airbnb Data Exploration',sub:'If you were about to list a property on Airbnb in Seattle, what would you need to know? That question drove every chart in this dashboard. 3,818 listings. 1 million+ calendar rows. Built in Tableau.',body:bodyAirbnb}
 };
 
 function openM(id){
@@ -2251,7 +2451,9 @@ function openM(id){
   var h='';
   if(p.anon) h+='<div class="anon">&#x26A0; Anonymised &#x2014; real clinical data with identifying details removed</div>';
   h+='<div class="mhero"><h2>'+p.title+'</h2><p>'+p.sub+'</p></div>';
-  h+='<div class="mlks"><a class="btn bp" href="'+p.gh+'" target="_blank" style="font-size:.82rem">View on GitHub</a>';
+  h+='<div class="mlks">';
+  if(p.gh) h+='<a class="btn bp" href="'+p.gh+'" target="_blank" style="font-size:.82rem">View on GitHub</a>';
+  else h+='<span class="btn bp" style="font-size:.82rem;opacity:.45;cursor:default;background:transparent;border:1px solid rgba(200,146,58,.2);color:var(--cream3)">Deployed Internally</span>';
   if(p.tableau) h+='<a class="btn btn-primary" href="'+p.tableau+'" target="_blank" style="font-size:.82rem;background:#e8a84a;color:#0e0c0b">View on Tableau Public</a>';
   h+='<a class="btn bs" href="#contact" onclick="closeM()" style="font-size:.82rem">Discuss This Project</a></div>';
   h+=p.body();
@@ -2259,7 +2461,8 @@ function openM(id){
   document.getElementById('mdl').classList.add('open');
   document.getElementById('mbk').classList.add('open');
   document.body.style.overflow='hidden';
-  setTimeout(function(){renderM(id);},130);
+  /* Wait for modal slide-in + DOM paint before rendering charts */
+  setTimeout(function(){renderM(id);},320);
 }
 function closeM(){
   document.getElementById('mdl').classList.remove('open');
@@ -2293,36 +2496,163 @@ function mChart(id,type,data,opts){
 
 function renderM(id){
   if(id==='tat'){
-    mChart('tatSiteChart','bar',{
-      labels:['V.I','Itire','Ikeja','Ibadan','Abuja','Port Harcourt'],
-      datasets:[
-        {label:'Pass %',data:[91,86,93,88,79,84],backgroundColor:'#c8923aCC',borderRadius:5,borderSkipped:false,stack:'s'},
-        {label:'Fail %',data:[9,14,7,12,21,16],backgroundColor:K.re+'77',borderRadius:5,borderSkipped:false,stack:'s'}
-      ]
-    },{
-      scales:{
-        x:{stacked:true,grid:{display:false},ticks:{color:'#8b949e',font:{size:11}}},
-        y:{stacked:true,max:100,grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:function(v){return v+'%';},color:'#8b949e',font:{size:10}}}
+    var TICK={color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"}};
+    var GRID={color:'rgba(200,146,58,.07)'};
+
+    /* 1. Overall Pass vs Fail doughnut */
+    var el1=document.getElementById('tatPieChart');
+    if(el1){new Chart(el1.getContext('2d'),{
+      type:'doughnut',
+      data:{labels:['Pass','Fail'],datasets:[{data:[74,26],backgroundColor:['#c8923aCC','#c43c3c99'],borderWidth:3,borderColor:'#161311',hoverOffset:8}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+        plugins:{legend:{display:true,position:'bottom',labels:{color:'#8a7a6a',font:{size:12,family:"'JetBrains Mono'"},boxWidth:12,padding:14}},
+          tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.parsed+'%';}}}}}
+    });}
+
+    /* 2. Site pass rate - stacked bar, NO annotation plugin */
+    var el2=document.getElementById('tatSiteChart');
+    if(el2){new Chart(el2.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:['V.I','Itire','Ikeja','Ibadan','Abuja','P.Harcourt','Warri','Ilorin','Cedacrest'],
+        datasets:[
+          {label:'Pass %',data:[93,88,95,72,91,76,83,68,74],backgroundColor:'#c8923aCC',borderRadius:3,borderSkipped:false,stack:'s'},
+          {label:'Fail %',data:[7,12,5,28,9,24,17,32,26],backgroundColor:'#c43c3c88',borderRadius:3,borderSkipped:false,stack:'s'}
+        ]
       },
-      plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:11},boxWidth:12}}}
-    });
-    /* TAT by shift  -  morning vs handover vs afternoon */
-    mChart('tatShiftChart','bar',{
-      labels:['Morning (8am-2pm)','Handover (2pm-4pm)','Afternoon (4pm-8pm)','Night (8pm-8am)'],
-      datasets:[{
-        label:'Pass Rate %',
-        data:[94,71,88,82],
-        backgroundColor:['#4a9e6aCC','#c43c3cCC','#c8923aCC','#a05c2aCC'],
-        borderRadius:6,borderSkipped:false
-      }]
-    },{
-      indexAxis:'y',
-      scales:{
-        x:{min:50,max:100,grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:function(v){return v+'%';},color:'#8b949e',font:{size:10}}},
-        y:{grid:{display:false},ticks:{color:'#c9d1d9',font:{size:10}}}
+      options:{responsive:true,maintainAspectRatio:false,
+        scales:{
+          x:{stacked:true,grid:{display:false},border:{color:'transparent'},ticks:TICK},
+          y:{stacked:true,max:100,grid:GRID,border:{color:'transparent'},ticks:{callback:function(v){return v+'%';},color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"}}}
+        },
+        plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:11,family:"'JetBrains Mono'"},boxWidth:12,padding:10}},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y+'%';}}}}
+      }
+    });}
+
+    /* 3. Daily trend - mixed bar + line, dual y-axis */
+    var el3=document.getElementById('tatDailyChart');
+    if(el3){new Chart(el3.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets:[
+          {type:'bar',label:'Tests Logged',data:[420,385,398,410,390,180,95],
+            backgroundColor:'rgba(200,146,58,0.18)',borderColor:'rgba(200,146,58,0.35)',
+            borderWidth:1,yAxisID:'y',borderRadius:3,order:2},
+          {type:'line',label:'Pass Rate %',data:[71,78,80,76,82,88,85],
+            borderColor:'#c8923a',backgroundColor:'transparent',
+            tension:.4,pointRadius:5,pointBackgroundColor:'#c8923a',
+            pointBorderColor:'#0e0c0b',pointBorderWidth:2,borderWidth:2,yAxisID:'y1',order:1}
+        ]
       },
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.parsed.x+'% pass rate';}}}}
-    });
+      options:{responsive:true,maintainAspectRatio:false,
+        scales:{
+          x:{grid:{display:false},border:{color:'transparent'},ticks:TICK},
+          y:{position:'left',grid:GRID,border:{color:'transparent'},
+            ticks:{color:'#8b949e',font:{size:9,family:"'JetBrains Mono'"}},
+            title:{display:true,text:'Tests',color:'#6e6560',font:{size:9}}},
+          y1:{position:'right',min:50,max:100,grid:{display:false},border:{color:'transparent'},
+            ticks:{callback:function(v){return v+'%';},color:'#8b949e',font:{size:9,family:"'JetBrains Mono'"}},
+            title:{display:true,text:'Pass %',color:'#6e6560',font:{size:9}}}
+        },
+        plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"},boxWidth:10,padding:10}},
+          tooltip:{mode:'index',intersect:false}}
+      }
+    });}
+
+    /* 4. Shift breakdown - horizontal bar */
+    var el4=document.getElementById('tatShiftChart');
+    if(el4){new Chart(el4.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:['Morning (8am-2pm)','Handover (2pm-4pm)','Afternoon (4pm-8pm)','Night (8pm-8am)'],
+        datasets:[{
+          label:'Pass Rate %',
+          data:[86,64,81,79],
+          backgroundColor:['#4a9e6aCC','#c43c3cCC','#c8923aCC','#a05c2aCC'],
+          borderRadius:5,borderSkipped:false
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+        scales:{
+          x:{min:50,max:100,grid:GRID,border:{color:'transparent'},
+            ticks:{callback:function(v){return v+'%';},color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"}}},
+          y:{grid:{display:false},border:{color:'transparent'},ticks:{color:'#c9d1d9',font:{size:10,family:"'JetBrains Mono'"}}}
+        },
+        plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){return ctx.parsed.x+'% pass rate';}}}}
+      }
+    });}
+
+    /* 5. Avg TAT vs standard by department */
+    var el5=document.getElementById('tatDeptAvgChart');
+    if(el5){new Chart(el5.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:['Chemistry','Haematology','Serology','Endocrinology','Cardiac','Micro','Histology'],
+        datasets:[
+          {label:'Avg Actual TAT (hrs)',data:[3.2,1.8,2.9,5.4,4.1,18.6,36.2],
+            backgroundColor:'#c8923aCC',borderRadius:4,borderSkipped:false},
+          {label:'Standard TAT (hrs)',data:[2.5,1.5,2.5,4.0,3.5,24.0,48.0],
+            backgroundColor:'rgba(200,146,58,0.15)',borderRadius:4,borderSkipped:false,
+            borderWidth:1,borderColor:'rgba(200,146,58,0.5)'}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        scales:{
+          x:{grid:{display:false},border:{color:'transparent'},ticks:{color:'#8b949e',font:{size:9,family:"'JetBrains Mono'"},maxRotation:0}},
+          y:{grid:GRID,border:{color:'transparent'},ticks:{callback:function(v){return v+'h';},color:'#8b949e',font:{size:9,family:"'JetBrains Mono'"}}}
+        },
+        plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"},boxWidth:10,padding:10}},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y+'h';}}}}
+      }
+    });}
+
+    /* 6. Top sites by test volume */
+    var el6=document.getElementById('tatTopSitesChart');
+    if(el6){new Chart(el6.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:['Ikeja','V.I','Abuja','Ibadan','Itire'],
+        datasets:[{
+          label:'Tests This Week',
+          data:[842,718,631,584,490],
+          backgroundColor:['#c8923aCC','#e8a84aBB','#a05c2aBB','#f0bf70AA','#6e6560AA'],
+          borderRadius:5,borderSkipped:false
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        scales:{
+          x:{grid:{display:false},border:{color:'transparent'},ticks:{color:'#c9d1d9',font:{size:11,family:"'JetBrains Mono'"}}},
+          y:{grid:GRID,border:{color:'transparent'},ticks:{callback:function(v){return v.toLocaleString();},color:'#8b949e',font:{size:9,family:"'JetBrains Mono'"}}}
+        },
+        plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){return ctx.parsed.y.toLocaleString()+' tests';}}}}
+      }
+    });}
+
+    /* 7. Before vs After impact */
+    var el7=document.getElementById('tatImpactChart');
+    if(el7){new Chart(el7.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:['Before (Manual)','After (Pipeline)'],
+        datasets:[
+          {label:'Org Average',data:[52,74],backgroundColor:['#c43c3c99','#4a9e6aCC'],borderRadius:5,borderSkipped:false},
+          {label:'Best Sites',data:[80,95],backgroundColor:['#c43c3c44','#4a9e6a55'],borderRadius:5,borderSkipped:false},
+          {label:'Worst Sites',data:[40,52],backgroundColor:['#c43c3c33','#4a9e6a33'],borderRadius:5,borderSkipped:false}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        scales:{
+          x:{grid:{display:false},border:{color:'transparent'},ticks:{color:'#c9d1d9',font:{size:11,family:"'JetBrains Mono'",weight:'600'}}},
+          y:{min:0,max:100,grid:GRID,border:{color:'transparent'},ticks:{callback:function(v){return v+'%';},color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"}}}
+        },
+        plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"},boxWidth:10,padding:10}},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y+'%';}}}}
+      }
+    });}
   }
   if(id==='labops'){
     mChart('labopsChart','radar',{labels:['Chemistry','Haematology','Serology','Cardiac Markers','Endocrinology','Toxicology'],datasets:[{label:'Site A',data:[93,90,93,82,89,82],borderColor:'#c8923a',backgroundColor:'rgba(200,146,58,.15)',pointBackgroundColor:'#c8923a'},{label:'Site B',data:[93,80,84,90,80,84],borderColor:'#4a9e6a',backgroundColor:'rgba(74,158,106,.12)',pointBackgroundColor:'#4a9e6a'},{label:'Site C',data:[90,95,91,91,85,90],borderColor:'#a05c2a',backgroundColor:'rgba(160,92,42,.12)',pointBackgroundColor:'#a05c2a'}]},{scales:{r:{min:70,max:100,ticks:{stepSize:10,backdropColor:'transparent',color:'#6e7681',font:{size:8}},pointLabels:{color:'#c9d1d9',font:{size:10}},grid:{color:'rgba(255,255,255,0.06)'},angleLines:{color:'rgba(255,255,255,0.06)'}}},plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:10},boxWidth:10}}}});
