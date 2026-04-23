@@ -1784,7 +1784,7 @@ function bodyTAT(){
       ').round(2)'
     )+
     '<p>What used to take a full day now runs in about two minutes. The output is a properly formatted Excel file with conditional colour coding: green for Pass, amber for failures within one hour of target, red for failures more than one hour over. Lab managers can read the colour before they read a number.</p>'+
-    CHBOX('Site TAT Compliance - representative output (Analysed data)','tatSiteChart')
+    CHBOX('Site TAT Compliance - representative output (Analysed data)','tatSiteChart2')
   )+
   SEC('Stage 4 — MySQL + Flask Web App',
     '<p>The Python script was a major improvement but it still produced a new file every week with no historical record. Two questions kept coming up: how does this week compare to last month? Is this site getting better or worse over time? A flat file cannot answer those questions. A database can.</p>'+
@@ -1834,7 +1834,7 @@ function bodyTAT(){
       KW('WHERE')+'   week_id = '+NM('%s')+'\n'+
       KW('GROUP BY')+' site_name, department'
     )+
-    CHBOX('Pass Rate by Shift Period - representative data','tatShiftChart')+
+    CHBOX('Pass Rate by Shift Period - representative data','tatShiftChart2')+
     FIND('The shift breakdown chart was something lab managers asked for after the first version went live. The Handover shift (2pm to 4pm) consistently showed the lowest pass rate across multiple sites. That pointed at a handover process gap, not a department problem. Without timestamped data you cannot see that distinction at all.')
   )+
   SEC('Stage 5 — What the Dashboard Actually Shows',
@@ -2651,6 +2651,51 @@ function renderM(id){
         },
         plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"},boxWidth:10,padding:10}},
           tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y+'%';}}}}
+      }
+    });}
+
+    /* tatSiteChart2 - Stage 3 duplicate: same data as el2 */
+    var el2b=document.getElementById('tatSiteChart2');
+    if(el2b){new Chart(el2b.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:['V.I','Itire','Ikeja','Ibadan','Abuja','P.Harcourt','Warri','Ilorin','Cedacrest'],
+        datasets:[
+          {label:'Pass %',data:[93,88,95,72,91,76,83,68,74],backgroundColor:'#c8923aCC',borderRadius:3,borderSkipped:false,stack:'s'},
+          {label:'Fail %',data:[7,12,5,28,9,24,17,32,26],backgroundColor:'#c43c3c88',borderRadius:3,borderSkipped:false,stack:'s'}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        scales:{
+          x:{stacked:true,grid:{display:false},border:{color:'transparent'},ticks:{color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"}}},
+          y:{stacked:true,max:100,grid:{color:'rgba(200,146,58,.07)'},border:{color:'transparent'},ticks:{callback:function(v){return v+'%';},color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"}}}
+        },
+        plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:11,family:"'JetBrains Mono'"},boxWidth:12,padding:10}},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y+'%';}}}}
+      }
+    });}
+
+    /* tatShiftChart2 - Stage 4 duplicate: same data as el4 */
+    var el4b=document.getElementById('tatShiftChart2');
+    if(el4b){new Chart(el4b.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:['Morning (8am-2pm)','Handover (2pm-4pm)','Afternoon (4pm-8pm)','Night (8pm-8am)'],
+        datasets:[{
+          label:'Pass Rate %',
+          data:[86,64,81,79],
+          backgroundColor:['#4a9e6aCC','#c43c3cCC','#c8923aCC','#a05c2aCC'],
+          borderRadius:5,borderSkipped:false
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+        scales:{
+          x:{min:50,max:100,grid:{color:'rgba(200,146,58,.07)'},border:{color:'transparent'},
+            ticks:{callback:function(v){return v+'%';},color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"}}},
+          y:{grid:{display:false},border:{color:'transparent'},ticks:{color:'#c9d1d9',font:{size:10,family:"'JetBrains Mono'"}}}
+        },
+        plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){return ctx.parsed.x+'% pass rate';}}}}
       }
     });}
   }
