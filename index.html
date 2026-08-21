@@ -1203,9 +1203,9 @@ footer a:hover{color:var(--gold)}
         <div class="pc-top"><div class="pc-num">01</div><div class="pc-badge">Live &amp; Deployed</div></div>
         <div class="cprev cprev-lg"><canvas id="cTAT"></canvas></div>
         <div class="pc-body">
-          <h3 class="pc-title">TAT Dashboard Web Application</h3>
-          <p class="pc-desc">End-to-end pipeline: LIS export &rarr; Excel data prep &rarr; Python automation &rarr; MySQL &rarr; Flask REST API. Lifted TAT compliance from ~50% to 70%+ across 9 sites. In daily clinical use.</p>
-          <div class="pc-tags"><span class="tag te">Excel</span><span class="tag tp">Python/Flask</span><span class="tag tp">Pandas</span><span class="tag tp">MySQL</span><span class="tag td">REST API</span><span class="tag th">Healthcare</span><span class="tag ta">Deployed</span></div>
+          <h3 class="pc-title">TAT Analytics Platform</h3>
+          <p class="pc-desc">Rebuilt from the ground up: React/Supabase platform replacing an earlier MySQL/Flask version. Row-level filtering across site, department and TAT type, security hardening, and analytics (breach Pareto, shift&times;site heatmap) built to answer specific operational questions. In daily clinical use across 9 sites.</p>
+          <div class="pc-tags"><span class="tag tp">React</span><span class="tag tp">Supabase/Postgres</span><span class="tag td">Row-Level Security</span><span class="tag tp">Framer Motion</span><span class="tag th">Healthcare</span><span class="tag ta">Deployed</span></div>
         </div>
         <div class="pc-foot">
           <span class="pc-link" style="color:var(--cream3);cursor:default">Internal Deployment</span>
@@ -2200,7 +2200,7 @@ function bodyTAT(){
     '<p>What used to take a full day now runs in about two minutes. The output is a properly formatted Excel file with conditional colour coding: green for Pass, amber for failures within one hour of target, red for failures more than one hour over. Lab managers can read the colour before they read a number.</p>'+
     CHBOX('Site TAT Compliance - representative output (Analysed data)','tatSiteChart2')
   )+
-  SEC('Stage 4 — MySQL + Flask Web App',
+  SEC('Stage 4 — V1: MySQL + Flask Web App',
     '<p>The Python script was a major improvement but it still produced a new file every week with no historical record. Two questions kept coming up: how does this week compare to last month? Is this site getting better or worse over time? A flat file cannot answer those questions. A database can.</p>'+
     '<p>I designed the MySQL schema to store every record from every weekly upload in a single table, with a week_id column that groups each upload. Once the historical data is there, you can query any time range.</p>'+
     CW('SQL - tat_dashboard schema (setup.sql)',
@@ -2249,13 +2249,50 @@ function bodyTAT(){
       KW('GROUP BY')+' site_name, department'
     )+
     CHBOX('Pass Rate by Shift Period - representative data','tatShiftChart2')+
-    FIND('The shift breakdown chart was something lab managers asked for after the first version went live. The Handover shift (2pm to 4pm) consistently showed the lowest pass rate across multiple sites. That pointed at a handover process gap, not a department problem. Without timestamped data you cannot see that distinction at all.')
+    FIND('The shift breakdown chart was something lab managers asked for after the first version went live. The Handover shift (2pm to 4pm) consistently showed the lowest pass rate across multiple sites. That pointed at a handover process gap, not a department problem. Without timestamped data you cannot see that distinction at all.')+
+    '<p>V1 ran for a good while and did what it was built to do. But two structural problems became impossible to ignore as more people relied on it. First, the frontend was hand-rolled HTML/CSS/JS with no consistent filtering model &mdash; site, department and TAT-type filters had each been bolted on separately, and getting them to agree with each other as more views were added turned into constant, fragile patchwork. Second, and more seriously: access control was a 4-digit PIN checked in the browser. That is not real security. The Supabase-equivalent of the anon key would have been just as exposed in a MySQL/Flask setup &mdash; the actual data was only as protected as the willingness of someone to not open devtools. For a system holding real (if anonymised here) clinical operations data, that was a genuine risk, not a nice-to-have fix.</p>'
   )+
-  SEC('Stage 5 — What the Dashboard Actually Shows',
-    '<p>After testing locally I got sign-off from senior management and deployed on Railway. The app has been live since. Lab supervisors check it during daily operational calls. The question is no longer "how did last week go" but "what is happening and where."</p>'+
+  SEC('Stage 5 — V2: Rebuilding on React and Supabase',
+    '<p>I rebuilt the whole platform: React and Vite on the frontend, Supabase (managed Postgres) on the backend, in place of Flask and MySQL. The Excel-parsing step that used to be a separate Python script now runs client-side in the browser at upload time &mdash; the same classification logic, just no longer a manual "run the script, then upload the output" step.</p>'+
+    CW('JavaScript - local vs shipped classification, done at upload time in the browser',
+      CM('// A test is "local" if it was performed at the same site it originated from')+'\\n'+
+      KW('const')+' isLocal = perfSite !== '+KW('null')+' && perfSite === origSite;\\n\\n'+
+      CM('// "Shipped" = physically transported elsewhere, i.e. it has a receipt timestamp')+'\\n'+
+      KW('const')+' isShipped = siteRecDate !== '+KW('null')+';'
+    )+
+    '<p>One global filter panel now drives every screen &mdash; Site, Department, and a View Mode toggle (Overall / Local / Shipped, since a shipped sample\'s clock legitimately starts later than a local one\'s). No page has its own separate filtering logic anymore; every chart reads from the same filtered dataset, which sounds obvious until you have shipped the version where it wasn\'t true.</p>'+
+    ANNOT('A real bug this surfaced','Weekly uploads sometimes span two calendar months (a week starting 26 June and ending 3 July, for example). The original bucketing logic assigned the *entire* week to whichever month the upload nominally started in &mdash; so July data sitting inside a late-June upload was invisible the moment someone filtered to July. The fix was to bucket every individual row by its own date, never by the week it happened to arrive in.')+
+    CW('JavaScript - row-level month bucketing (the actual fix)',
+      CM('// Every row is bucketed by ITS OWN date, never the week it was uploaded in')+'\\n'+
+      KW('const')+' rowMonth = row '+FN('=>')+' row.date ? row.date.'+FN('slice')+'(0, 7) : '+KW('null')+';'
+    )+
+    '<p>The most useful debugging story from this rebuild was a data-integrity chase, not a UI fix. I had added a "TAT Breach Pareto" chart &mdash; which tests are responsible for the most TAT breaches at a given site. A site manager flagged that the numbers looked far too low against the site\'s actual failed-test count. My first hypothesis was missing data (some rows lacking a verification timestamp or target). Rather than assert that, I asked for the real weekly export, replicated the dashboard\'s exact classification and TAT logic in Python against all ~29,000 raw rows, and tested the hypothesis directly &mdash; it was wrong. Every one of the failing tests in question had complete, valid data.</p>'+
+    '<p>That ruled out the theory but pointed at something else: the underlying batch of failing-test records for one week alone was pushing close to 9,600 rows, and the upload code was writing all of them to the database in a single unbatched request. Large uploads were silently failing to fully write while every smaller table in the same upload succeeded &mdash; which is exactly why the KPI cards looked right while one specific chart didn\'t.</p>'+
+    CW('JavaScript - chunked writes, the actual fix',
+      KW('const')+' CHUNK = '+NM('500')+';\\n'+
+      KW('for')+' ('+KW('let')+' i = '+NM('0')+'; i < rows.'+FN('length')+'; i += CHUNK) {\\n'+
+      '  '+KW('await')+' supabase.'+FN('from')+'(table)\\n'+
+      '    .'+FN('upsert')+'(rows.'+FN('slice')+'(i, i + CHUNK), { onConflict });\\n'+
+      '}'
+    )+
     STATROW([
-      {val:'13',lbl:'REST API Endpoints',cls:'blue'},
-      {val:'9',lbl:'Sites on the Dashboard',cls:'amber'},
+      {val:'~9,600',lbl:'Rows in one weekly batch write',cls:'red'},
+      {val:'500',lbl:'Rows per batch after the fix',cls:'green'},
+      {val:'29K+',lbl:'Real rows used to test (and disprove) my own hypothesis',cls:'blue'}
+    ])+
+    '<p>The security gap got the same treatment as the PIN problem it replaced: write access now requires a real authenticated account, enforced by row-level security policies at the database layer &mdash; not a value compared in the browser. Read access stays public by design (that\'s the whole point of a shared operational dashboard), but nobody can write to it without a real login.</p>'+
+    CW('SQL - row-level security, enforced by the database, not the frontend',
+      KW('create policy')+' '+ST('"authenticated write"')+' '+KW('on')+' weekly_kpi\\n'+
+      '  '+KW('for insert to')+' authenticated '+KW('with check')+' ('+KW('true')+');'
+    )+
+    '<p>Three new views came out of this rebuild, each because it answers a question the flat tables couldn\'t: a Site &times; Shift compliance heatmap (which site, which shift, at a glance &mdash; not just "which shift" averaged across every site), a daily compliance calendar for spotting weekday patterns within a month, and the breach Pareto above. Motion (Framer Motion) is used deliberately and sparingly &mdash; count-up KPIs, smooth filter transitions, `prefers-reduced-motion` respected throughout &mdash; because the brief was for it to communicate state changes, not decorate the screen.</p>'+
+    '<p>One smaller decision worth mentioning: the login screen originally described the system as a "live operational" pipeline. It isn\'t &mdash; data is compiled and uploaded once a week, not streamed in real time. I rewrote that copy to describe the system accurately. An interface should never imply a guarantee the underlying system doesn\'t actually make.</p>'
+  )+
+  SEC('Stage 6 — What the Dashboard Actually Shows',
+    '<p>After testing and sign-off from senior management, V2 went live in place of the original app. Lab supervisors check it during daily operational calls. The question is no longer "how did last week go" but "what is happening and where."</p>'+
+    STATROW([
+      {val:'9',lbl:'Sites on the Dashboard',cls:'blue'},
+      {val:'3',lbl:'Global Filters Driving Every Screen',cls:'amber'},
       {val:'70%+',lbl:'Org-Wide TAT Rate Now',cls:'green'}
     ])+
     '<p>Since the dashboard has been deployed, viewers of this portfolio cannot interact with the live version. The charts below are representative of what supervisors actually see each week — the same structure, similar data patterns, with identifying details removed.</p>'+
@@ -2269,17 +2306,21 @@ function bodyTAT(){
     FIND('The Handover shift (2pm to 4pm) consistently shows the lowest pass rate across multiple sites. Without this chart, that pattern was invisible. The instinct was to blame staffing levels or test complexity. The data pointed at the handover process itself.')+
     CHBOX('Average TAT by Department vs Standard (hours)','tatDeptAvgChart')+
     '<p>This chart shows the average actual TAT for each department against the standard. Departments that track close to or below the standard line are consistently passing. Departments that consistently run over it are the ones surfacing in the failed requisition log. Chemistry running 0.8 hours over standard looks small but across hundreds of tests per week it is a significant number of failures.</p>'+
+    CHBOX('TAT Breach Pareto — Which Tests Are Responsible','tatParetoChart')+
+    FIND('A department average can hide a lot. This chart ranks individual tests by breach count and overlays a cumulative-percentage line &mdash; the classic Pareto view. Some sites turn out to have one or two tests responsible for most of the problem, which is a fixable, narrow issue. Others show the breaches spread thinly across a dozen different tests, which usually means a process or transport issue rather than one bad assay.')+
     CHBOX('Top 5 Sites by Test Volume — Weekly','tatTopSitesChart')+
     '<p>Volume distribution matters because a site logging 800 tests with 85% compliance is performing differently from a site logging 200 tests with 85% compliance. The dashboard shows both dimensions together.</p>'+
     CHBOX('Before vs After — Org-Wide TAT Compliance','tatImpactChart')+
     FIND('Before the pipeline: compliance hovered between 50 and 55 percent. Some sites were below 40. After: the organisation consistently runs above 70 percent. Four sites hold above 90. The rest are above 50. The data did not change. The visibility of it did.')+
-    ANNOT('On what this project actually is','This is not just a Flask app or just an Excel sheet or just a Python script. It is a pipeline. The Excel knowledge, the domain understanding of what the Reference_Times sheet needs to contain, the Python automation, the SQL schema design, and the web app are all one thing. Any of those pieces missing and the whole thing stops working.')
+    ANNOT('On what this project actually is','This was never just one build. It is an Excel process, then a Python script, then a Flask app, then a full React/Supabase rebuild &mdash; the same underlying problem worked at three different levels of maturity as what the organisation needed became clearer. The domain understanding baked into the Reference_Times sheet mattered just as much in V2 as it did in the first Excel version. None of the pieces are disposable; each one is what made the next one possible.')
   )+
   SEC('What I Took From This',
     '<p>The Reference_Times sheet is the part I am most proud of, which probably sounds strange. It is just a lookup table. But before it existed, the entire process depended on one person\'s memory of the test catalogue. After it existed, that knowledge was encoded somewhere that anyone could check and Python could query. Turning implicit institutional knowledge into explicit structured data is genuinely useful work, and it does not get credited enough.</p>'+
     '<p>The type-safety layer in the Flask app came from a production crash. MySQL silently returns Decimal objects where you think you are getting floats, and datetime objects where you think you are getting strings. The serialiser fails and takes the API with it. Writing defensive code around data types is not interesting work but it is the difference between an app that runs and one that breaks in front of users.</p>'+
     '<p>I also had to learn to talk to lab managers before I could build anything useful for them. I sat with managers at every site, asked what questions they needed the dashboard to answer, and built for those questions. The shift breakdown chart only exists because someone asked for it. The failed requisition log only exists because someone described exactly what they needed to investigate a complaint. The tool is better because I talked to the people who would use it.</p>'+
-    STAGS(['Excel','Python','Pandas','Flask','MySQL','REST API','HTML/CSS/JS','Railway','Healthcare Analytics','Data Cleaning'])
+    '<p>The Pareto investigation from the V2 rebuild taught me something I keep coming back to: my first hypothesis for why the numbers looked wrong was plausible, reasonably argued, and completely wrong. I only found that out because I went and got the real 29,000-row export and tested it, instead of trusting my own reasoning. The actual cause &mdash; an unbatched write silently dropping rows &mdash; was nothing like my first guess. Being willing to be disproven by real data, on my own claim, is the same discipline as the TAT logic itself: don\'t report a number you haven\'t actually checked.</p>'+
+    '<p>The security gap in V1 was not a failure of effort, it was a failure of treating an "internal" tool as automatically low-risk. A PIN checked in the browser feels like access control right up until someone opens devtools. Real protection has to live at the layer the data actually sits behind &mdash; the database, not the interface in front of it. That is now a default assumption I carry into anything I build, not a one-off fix.</p>'+
+    STAGS(['React','Supabase','PostgreSQL','Row-Level Security','Framer Motion','Excel','Python','Pandas','Flask','MySQL','Healthcare Analytics','Data Cleaning'])
   );
 }
 
@@ -2847,7 +2888,7 @@ function bodyAirbnb(){
 }
 
 var MDATA={
-  tat:{eye:'Project 01 - Full-Stack Pipeline',t:'TAT Dashboard',anon:true,gh:null,title:'TAT Dashboard Web Application',sub:'Five-stage pipeline: LIS data extraction, Excel prep and standardisation, Python/Pandas automation, MySQL storage, Flask web app deployed on Railway. What used to take a full day of manual work now takes minutes. Used in daily clinical operations.',body:bodyTAT},
+  tat:{eye:'Project 01 - Full-Stack Pipeline, V1 to V2',t:'TAT Dashboard',anon:true,gh:null,title:'TAT Analytics Platform',sub:'What started as an Excel/Python pipeline became a Flask + MySQL web app, then a full rebuild on React and Supabase (Postgres). Same problem &mdash; TAT compliance across 9 sites &mdash; three iterations on how to actually answer it. Used in daily clinical operations.',body:bodyTAT},
   labops:{eye:'Project 02 - Excel Dashboard',t:'Lab Operations Dashboard',anon:true,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Lab-Operations-Dashboard',title:'Lab Operations Dashboard',sub:'A multi-site Excel dashboard monitoring four core KPIs. Dynamic filtering by year, month, week, site and department. No manual calculation ever required.',body:bodyLabops},
   inventory:{eye:'Project 03 - Excel System',t:'Inventory Reorder Tracker',anon:true,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/Inventory-Reorder-Tracker',title:'Inventory Reorder Tracker',sub:'An Excel inventory management system for lab supplies. Auto-flags reorder alerts, projects months of stock remaining, maintains a full issuance audit trail.',body:bodyInventory},
   covid:{eye:'Project 04 - SQL Data Exploration',t:'COVID-19 Exploration',anon:false,gh:'https://github.com/Yusuf-Tiamiyu/Yusuf-Tiamiyu.github.io/tree/main/projects/COVID-19-Data-Exploration',title:'COVID-19 Global Data Exploration',sub:'A SQL exploration of global COVID-19 death and vaccination data using MS SQL Server. Making the pandemic numbers graspable by asking specific, answerable questions.',body:bodyCovid},
@@ -3110,6 +3151,26 @@ function renderM(id){
         },
         plugins:{legend:{display:false},
           tooltip:{callbacks:{label:function(ctx){return ctx.parsed.x+'% pass rate';}}}}
+      }
+    });}
+
+    /* tatParetoChart - breach count bars + cumulative % line, representative data */
+    var el8=document.getElementById('tatParetoChart');
+    if(el8){new Chart(el8.getContext('2d'),{
+      data:{
+        labels:['Test A','Test B','Test C','Test D','Test E','Test F','+6 other tests'],
+        datasets:[
+          {type:'bar',label:'Breach count',data:[10,2,2,2,2,2,3],backgroundColor:'#c43c3c99',borderRadius:3,borderSkipped:false,yAxisID:'y'},
+          {type:'line',label:'Cumulative %',data:[40,48,56,64,72,80,100],borderColor:'#c8923a',backgroundColor:'#c8923a',pointRadius:4,tension:.3,yAxisID:'y1'}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        scales:{
+          x:{grid:{display:false},border:{color:'transparent'},ticks:{color:'#8b949e',font:{size:9,family:"'JetBrains Mono'"}}},
+          y:{position:'left',grid:{color:'rgba(200,146,58,.07)'},border:{color:'transparent'},ticks:{color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"}}},
+          y1:{position:'right',min:0,max:100,grid:{display:false},border:{color:'transparent'},ticks:{callback:function(v){return v+'%';},color:'#c8923a',font:{size:10,family:"'JetBrains Mono'"}}}
+        },
+        plugins:{legend:{display:true,position:'bottom',labels:{color:'#8b949e',font:{size:10,family:"'JetBrains Mono'"},boxWidth:10,padding:10}}}
       }
     });}
   }
