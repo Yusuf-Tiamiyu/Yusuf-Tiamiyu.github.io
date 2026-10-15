@@ -1,4 +1,6 @@
-
+-- SQL Project - Exploratory Data Analysis (World Layoffs)
+-- Learning exercise: follows Alex Freeberg's (Alex The Analyst) MySQL bootcamp.
+-- Runs on the layoffs_staging2 table produced by the Data Cleaning project.
 
 SELECT *
 FROM layoffs_staging2
@@ -66,21 +68,21 @@ LIMIT 5
 
 -- total laid off per year
 SELECT YEAR(`date`), SUM(total_laid_off) total_laid_off
-FROM layoff_staging
+FROM layoffs_staging2
 WHERE YEAR(`date`) IS NOT NULL
 GROUP BY YEAR(`date`)
 ORDER BY 1
 ;
 -- laid off per industry
 SELECT industry, SUM(total_laid_off)
-FROM layoff_staging
+FROM layoffs_staging2
 GROUP BY industry
 ORDER BY 2 desc
 ;                 
 
 -- stage of layoff
 SELECT stage, SUM(total_laid_off)
-FROM layoff_staging
+FROM layoffs_staging2
 GROUP BY stage
 ORDER BY 2 desc
 ;

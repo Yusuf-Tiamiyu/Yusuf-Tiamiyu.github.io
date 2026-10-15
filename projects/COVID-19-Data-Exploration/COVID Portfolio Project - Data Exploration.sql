@@ -3,6 +3,11 @@ Covid 19 Data Exploration
 
 Skills used: Joins, CTE's, Temp Tables, Windows Functions, Aggregate Functions, Creating Views, Converting Data Types
 
+Learning exercise: follows Alex Freeberg's (Alex The Analyst) SQL portfolio project.
+Fixes over the original: continent totals now sum each country's deaths
+(instead of taking the single largest country), rolling vaccinations use
+bigint to avoid overflow, and continent/World summary rows are excluded.
+
 */
 
 Select *
@@ -42,7 +47,7 @@ order by 1,2
 
 Select Location, Population, MAX(total_cases) as HighestInfectionCount,  Max((total_cases/population))*100 as PercentPopulationInfected
 From PortfolioProject..CovidDeaths
---Where location like '%states%'
+Where continent is not null
 Group by Location, Population
 order by PercentPopulationInfected desc
 
@@ -62,10 +67,16 @@ order by TotalDeathCount desc
 
 -- Showing contintents with the highest death count per population
 
-Select continent, MAX(cast(Total_deaths as int)) as TotalDeathCount
+-- total_deaths is cumulative, so take each country's latest (MAX) value first, then sum per continent
+With CountryDeaths as
+(
+Select continent, Location, MAX(cast(Total_deaths as int)) as CountryDeathCount
 From PortfolioProject..CovidDeaths
---Where location like '%states%'
-Where continent is not null 
+Where continent is not null
+Group by continent, Location
+)
+Select continent, SUM(CountryDeathCount) as TotalDeathCount
+From CountryDeaths
 Group by continent
 order by TotalDeathCount desc
 
@@ -86,7 +97,7 @@ order by 1,2
 -- Shows Percentage of Population that has recieved at least one Covid Vaccine
 
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+, SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
 From PortfolioProject..CovidDeaths dea
 Join PortfolioProject..CovidVaccinations vac
@@ -102,7 +113,7 @@ With PopvsVac (Continent, Location, Date, Population, New_Vaccinations, RollingP
 as
 (
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+, SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
 From PortfolioProject..CovidDeaths dea
 Join PortfolioProject..CovidVaccinations vac
@@ -131,13 +142,13 @@ RollingPeopleVaccinated numeric
 
 Insert into #PercentPopulationVaccinated
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+, SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
 From PortfolioProject..CovidDeaths dea
 Join PortfolioProject..CovidVaccinations vac
 	On dea.location = vac.location
 	and dea.date = vac.date
---where dea.continent is not null 
+where dea.continent is not null
 --order by 2,3
 
 Select *, (RollingPeopleVaccinated/Population)*100
@@ -150,7 +161,7 @@ From #PercentPopulationVaccinated
 
 Create View PercentPopulationVaccinated as
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+, SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
 From PortfolioProject..CovidDeaths dea
 Join PortfolioProject..CovidVaccinations vac

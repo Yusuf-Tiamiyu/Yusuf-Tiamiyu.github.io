@@ -6,7 +6,7 @@ Live site: [yusuf-tiamiyu.github.io](https://yusuf-tiamiyu.github.io)
 
 ---
 
-Two years doing data analytics in healthcare, specifically at one of West Africa's larger diagnostic lab networks. The numbers here aren't abstract — they connect to patient care, clinician decisions, and whether results reach doctors in time or don't.
+Nearly two years doing data analytics in healthcare, specifically at one of West Africa's larger diagnostic lab networks. The numbers here aren't abstract — they connect to patient care, clinician decisions, and whether results reach doctors in time or don't.
 
 This portfolio covers everything from a full five-stage data pipeline I built and deployed in production, to SQL data cleaning and exploration projects, Excel dashboards used in live operational settings, and a Tableau analysis. The work ranges from "I automated something that was costing people a full day every week" to "I wanted to understand this dataset properly, so here's what I found."
 
@@ -16,7 +16,7 @@ This portfolio covers everything from a full five-stage data pipeline I built an
 
 | # | Project | Tools | Domain |
 |---|---------|-------|--------|
-| 01 | [TAT Dashboard — Full Pipeline](#01-tat-dashboard--full-pipeline) | Excel · Python · Pandas · Flask · MySQL · HTML/JS | Healthcare Analytics |
+| 01 | [TAT Analytics Platform](#01-tat-analytics-platform) | Python · Pandas · MySQL · Flask (v1) → React · Supabase/Postgres (v2) | Healthcare Analytics |
 | 02 | [Lab Operations Dashboard](#02-lab-operations-dashboard) | Excel · SUMIFS · Dynamic Filtering | Lab Operations |
 | 03 | [Inventory Reorder Tracker](#03-inventory-reorder-tracker) | Excel · Conditional Logic | Supply Chain |
 | 04 | [COVID-19 Data Exploration](#04-covid-19-data-exploration) | MS SQL Server · CTEs · Window Functions | Public Health |
@@ -30,9 +30,10 @@ This portfolio covers everything from a full five-stage data pipeline I built an
 
 ## Project Details
 
-### 01. TAT Dashboard — Full Pipeline
-**Tools:** Excel · Python · Pandas · Flask · MySQL · HTML/CSS/JS · Railway  
-**Status:** Deployed and in daily clinical use  
+### 01. TAT Analytics Platform
+**Tools:** v1: Excel · Python · Pandas · Flask · MySQL · HTML/CSS/JS · Railway — v2: React · Supabase/Postgres · Row-Level Security  
+**Status:** Deployed and in daily clinical use across 9 sites  
+**Impact:** TAT compliance moved from ~50% to 70%+ · weekly reporting cut from a full working day to ~2 minutes · 20,000+ records processed weekly  
 *Data anonymised for public display*
 
 TAT is Turnaround Time — the gap between when a lab sample is logged and when a verified result is ready for the requesting doctor. When I joined, the organisation's average TAT compliance was hovering between 50 and 55 percent across nine sites. Some sites were sitting at 40. The process for tracking it: download data from the LIS at the end of the week, manually organise it in Excel, email it around. By the time anyone read it, the problems it described were already five days old.
@@ -48,6 +49,8 @@ This project replaced that with a five-stage pipeline:
 **Stage 4 — MySQL and Flask.** The Python script solved the speed problem but didn't solve the history problem. I designed a MySQL schema to store every record from every weekly upload, then built a Flask REST API with 13 endpoints covering weekly and monthly views, daily trend breakdowns, shift analysis, department drill-downs, and a failed requisition log. The frontend is plain HTML, CSS, and JavaScript. One thing I had to solve early: MySQL returns Decimal and datetime objects that Python's JSON encoder doesn't understand. I wrote a type-safety layer that converts every value before it touches `jsonify()`.
 
 **Stage 5 — Deployed.** After approval from senior management, deployed on Railway. Lab supervisors check it during daily operational calls. The question shifted from "how did last week go" to "what is happening right now and where."
+
+**v2 — Rebuilt on React and Supabase.** The Flask version proved the idea; the rebuild made it maintainable and secure. Data moved to Supabase/Postgres with row-level security so each user only sees the sites and departments they are responsible for, and the analytics grew to answer sharper operational questions: a breach Pareto (which tests cause most failures) and a shift × site heatmap (where and when failures cluster).
 
 ---
 
@@ -72,7 +75,8 @@ Before this, procurement was reactive — orders went out after stockout, not be
 ---
 
 ### 04. COVID-19 Data Exploration
-**Tools:** MS SQL Server · Joins · CTEs · Temp Tables · Window Functions · Views
+**Tools:** MS SQL Server · Joins · CTEs · Temp Tables · Window Functions · Views  
+*Learning exercise based on Alex Freeberg's (Alex The Analyst) SQL portfolio project. I fixed three issues in the original queries: continent totals (now summed per country rather than taking the largest single country), integer overflow on vaccination totals, and continent/World summary rows being counted as countries.*
 
 SQL exploration of the global COVID-19 dataset (deaths and vaccinations). The analysis covers death rates by country over time, infection rates as a percentage of population, continental death counts, and rolling vaccination totals computed with window functions. I also created a View so the results could be consumed downstream in Tableau without rerunning the query.
 
@@ -81,7 +85,8 @@ The finding I kept coming back to: countries with relatively low case counts som
 ---
 
 ### 05. World Layoffs Data Cleaning
-**Tools:** MySQL · ROW_NUMBER · STR_TO_DATE · TRIM · Self-Join · Staging Tables
+**Tools:** MySQL · ROW_NUMBER · STR_TO_DATE · TRIM · Self-Join · Staging Tables  
+*Learning exercise based on Alex Freeberg's (Alex The Analyst) MySQL bootcamp.*
 
 A four-phase cleaning pipeline on the Kaggle world layoffs dataset. I ran everything in a staging table so the raw data was never touched.
 
@@ -93,7 +98,8 @@ A four-phase cleaning pipeline on the Kaggle world layoffs dataset. I ran everyt
 ---
 
 ### 06. World Layoffs EDA
-**Tools:** MySQL · DENSE_RANK · Rolling Window Functions · GROUP BY · CTEs
+**Tools:** MySQL · DENSE_RANK · Rolling Window Functions · GROUP BY · CTEs  
+*Learning exercise based on Alex Freeberg's (Alex The Analyst) MySQL bootcamp.*
 
 Exploratory analysis built directly on the cleaned dataset from Project 05. I started with the extremes: companies that laid off 100% of their workforce, ordered by funding raised. Quibi raised roughly $2 billion and went to zero.
 
@@ -104,9 +110,10 @@ The harder analysis: top 3 companies by total layoffs per year. That requires tw
 ---
 
 ### 07. Sales Estimates — Advanced SQL
-**Tools:** MySQL · Recursive CTEs · UNION / UNION ALL · LAG · LEAD · COALESCE · CAST
+**Tools:** MySQL · Recursive CTEs · UNION / UNION ALL · LAG · LEAD · COALESCE · CAST  
+*Learning exercise based on Alice Zhao's "12 advanced SQL concepts" walkthrough.*
 
-Started from a real frustration: generating a complete date series with UNION ALL means one line per date. For a full year that's 365 lines. I started reading about recursive CTEs, which let you define an anchor row and have the query call itself, adding one day per iteration until a termination condition fires.
+What drew me to it was a real frustration: generating a complete date series with UNION ALL means one line per date. For a full year that's 365 lines. I started reading about recursive CTEs, which let you define an anchor row and have the query call itself, adding one day per iteration until a termination condition fires.
 
 The full project chains 12 SQL concepts in sequence, building from table creation through to intelligent gap-filling. The problem: a sales table with missing dates. The solution: recursive CTE generates the complete date range, left-joined to actual sales, with COALESCE + LAG/LEAD to fill gaps using neighbouring data points rather than a global average.
 

@@ -1,4 +1,5 @@
 -- SQL Project - Data Cleaning
+-- Learning exercise: follows Alex Freeberg's (Alex The Analyst) MySQL bootcamp.
 
 -- https://www.kaggle.com/datasets/swaptr/layoffs-2022
 

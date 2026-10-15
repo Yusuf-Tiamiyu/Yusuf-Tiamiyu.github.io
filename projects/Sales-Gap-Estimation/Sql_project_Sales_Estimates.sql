@@ -1,5 +1,8 @@
 /*
 Description: Create 2 tables and demo 12 advanced SQL concepts
+Learning exercise: based on Alice Zhao's "12 advanced SQL concepts" walkthrough.
+Note: window functions are ordered by date so LAG/LEAD always read the
+neighbouring days. Two missing days in a row would still return NULL.
 */
 -- Create Schema "sales estimate"
 
@@ -122,9 +125,9 @@ LEFT JOIN sales
 
 -- 8. introduce window functions [Window Functions]
 SELECT	dt, num_sales,
-		ROW_NUMBER() OVER() AS row_num,
-        LAG(num_sales) OVER() AS prior_row,
-        LEAD(num_sales) OVER() AS next_row
+		ROW_NUMBER() OVER(ORDER BY dt) AS row_num,
+        LAG(num_sales) OVER(ORDER BY dt) AS prior_row,
+        LEAD(num_sales) OVER(ORDER BY dt) AS next_row
 FROM	sales;
 
 -- 9. add on two window functions [Final Query]
@@ -137,7 +140,7 @@ WITH RECURSIVE cte AS ( SELECT CAST('2025-01-01' AS DATE) AS dt
 
 SELECT	cte.dt,
         COALESCE(sales.num_sales, ROUND(
-									(LAG(sales.num_sales) OVER() + LEAD(sales.num_sales) OVER())/2)
+									(LAG(sales.num_sales) OVER(ORDER BY cte.dt) + LEAD(sales.num_sales) OVER(ORDER BY cte.dt))/2)
 				) AS sales_estimate
 FROM cte 
 LEFT JOIN sales 
