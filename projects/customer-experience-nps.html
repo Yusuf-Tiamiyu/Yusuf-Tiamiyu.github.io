@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Turning customer feedback into action · Yusuf Tiamiyu</title>
+<meta name="description" content="A pipeline and dashboard that turn customer survey responses into scores, themes and a callback list for the customer-relations team.">
+<meta property="og:title" content="Turning customer feedback into action · Yusuf Tiamiyu">
+<meta property="og:description" content="A pipeline and dashboard that turn customer survey responses into scores, themes and a callback list for the customer-relations team.">
+<meta property="og:image" content="https://yusuf-tiamiyu.github.io/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yusuf-tiamiyu.github.io/projects/customer-experience-nps.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../">Yusuf Tiamiyu</a>
+  <a href="../#projects">← All projects</a>
+</header>
+<main>
+  <div class="eyebrow">At work · Customer experience</div>
+  <h1>Turning customer feedback into action</h1>
+  <p class="summary">A pipeline and dashboard that turn customer survey responses into scores, themes and a callback list for the customer-relations team.</p>
+  <p class="note">This page uses synthetic data: 1,350 invented responses for a fictional lab network. The real version runs every day on real responses, which can’t be published.</p>
+  <div class="stats"><div class="stat"><b>+6 → +31</b><span>recommend score before and after a callback programme</span></div><div class="stat"><b>−82</b><span>score from customers unhappy with urgent results</span></div><div class="stat"><b>51%, not 66%</b><span>of real complaints were actually resolved</span></div></div>
+
+  <h2>The problem</h2>
+  <p>The lab collects customer feedback through an online form: how likely people are to recommend it (0 to 10), how they rated each part of the service, and what went wrong.</p>
+  <p>The raw responses are messy. The same branch is typed many different ways, comments are full of &quot;Nil&quot; and &quot;N/A&quot;, and some people leave their phone number in a comment. The old dashboard had numbers that were easy to misread, and nothing told staff which unhappy customers to call back.</p>
+
+  <h2>What I did</h2>
+  <ul><li>Built a pipeline that cleans each new batch of responses automatically, matches every way of typing a branch name to the right branch, and sorts comments into themes such as delays, communication and billing.</li><li>Worked out the Net Promoter Score (the share of customers who would recommend the lab minus the share who wouldn’t) for every branch, month and type of customer.</li><li>Created a ranked callback list of unhappy customers who asked to be contacted. It stays on the team’s computer and is never published.</li><li>Added a safety check that stops the dashboard being published if any personal contact details would appear on it.</li></ul>
+  
+    <h2>What I found</h2>
+    
+    <h3>The callback programme worked</h3>
+    <figure><img src="../img/nps-by-quarter.png" alt="Net Promoter Score by quarter, low through 2025 and much higher from January 2026" loading="lazy"></figure>
+    <p>The score was +6 before January 2026, when the network started texting results and calling back unhappy customers, and +31 afterwards. Complaints about the call centre dropped from 17.6% to 5.8% of the customers who used it.</p>
+    <h3>Slow urgent results hurt the most</h3>
+    <figure><img src="../img/nps-by-touchpoint.png" alt="Score of customers satisfied versus not satisfied with each part of the service" loading="lazy"></figure>
+    <p>Customers who were unhappy with their urgent results gave a score of −82, against +43 from those who were happy with them. Six in ten of all unhappy customers were unhappy with urgent results, and delays are the most common theme in written comments.</p>
+    <h3>One branch and one customer group need attention</h3>
+    
+    <p>Ikorodu has the lowest score (+5); its customers were unhappy with urgent results twice as often as at other branches. Clinics that send samples in score the lab at +6, against +33 from walk-in patients.</p>
+    <h3>A headline number that wasn’t what it seemed</h3>
+    
+    <p>The form says 66% of complaints were &quot;adequately addressed&quot;. But half of those &quot;Yes&quot; answers came from people who had nothing to complain about. Among customers who actually had a complaint, 51% said it was addressed, up from 40% to 59% after the callback programme.</p>
+
+  <h2>What it means</h2>
+  <p class="outcome">My recommendation: fix urgent-results turnaround at Ikorodu first, keep the callback programme running, and only ask &quot;was your complaint addressed?&quot; to people who actually had a complaint, so the resolution figure is real.</p>
+
+  <section class="tech">
+    <h2>For technical readers</h2>
+    <p>Node.js (SheetJS, Chart.js) for the pipeline and dashboard; Python (pandas, matplotlib) for the synthetic data and analysis</p>
+    <div class="links"><a class="btn primary" href="https://yusuf-tiamiyu.github.io/nps-customer-experience/" target="_blank" rel="noopener">Open the live dashboard ↗</a><a class="btn" href="https://github.com/Yusuf-Tiamiyu/nps-customer-experience" target="_blank" rel="noopener">Technical write-up and code ↗</a></div>
+  </section>
+
+  <nav class="next" aria-label="More projects">
+    <a href="../#projects">← All projects</a>
+    <a href="covid-data-quality.html">Next: How far can daily COVID numbers be trusted? →</a>
+  </nav>
+</main>
+<footer>Yusuf Tiamiyu · Data analyst, Lagos · <a href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a></footer>
+</body>
+</html>

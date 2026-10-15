@@ -8,6 +8,7 @@ I'm a healthcare data analyst in Lagos. Each project has its own repository with
 |---|---|
 | Lab TAT analytics platform (React, Supabase) | [lab-tat-platform-demo](https://github.com/Yusuf-Tiamiyu/lab-tat-platform-demo) · [live demo](https://yusuf-tiamiyu.github.io/lab-tat-platform-demo/) |
 | What drives lab TAT breaches? (Python, statistics) | [lab-tat-breach-analysis](https://github.com/Yusuf-Tiamiyu/lab-tat-breach-analysis) |
+| Turning customer feedback into action (Node.js, Python) | [nps-customer-experience](https://github.com/Yusuf-Tiamiyu/nps-customer-experience) · [live dashboard](https://yusuf-tiamiyu.github.io/nps-customer-experience/) |
 | How far can daily COVID numbers be trusted? (MySQL) | [covid-reporting-gaps-sql](https://github.com/Yusuf-Tiamiyu/covid-reporting-gaps-sql) |
 | Tech layoffs 2020–2023 (MySQL) | [world-layoffs-sql](https://github.com/Yusuf-Tiamiyu/world-layoffs-sql) |
 | Lab operations dashboard (Excel) | [excel-lab-operations-dashboard](https://github.com/Yusuf-Tiamiyu/excel-lab-operations-dashboard) |
