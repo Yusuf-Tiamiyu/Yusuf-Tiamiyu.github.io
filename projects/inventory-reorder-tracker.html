@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventory reorder tracker · Yusuf Tiamiyu</title>
+<meta name="description" content="A tracker that warns the lab before supplies run out, not after.">
+<meta property="og:title" content="Inventory reorder tracker · Yusuf Tiamiyu">
+<meta property="og:description" content="A tracker that warns the lab before supplies run out, not after.">
+<meta property="og:image" content="https://yusuf-tiamiyu.github.io/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yusuf-tiamiyu.github.io/projects/inventory-reorder-tracker.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../">Yusuf Tiamiyu</a>
+  <a href="../#projects">← All projects</a>
+</header>
+<main>
+  <div class="eyebrow">At work · Excel</div>
+  <h1>Inventory reorder tracker</h1>
+  <p class="summary">A tracker that warns the lab before supplies run out, not after.</p>
+  
+  <div class="stats"><div class="stat"><b>1,578</b><span>consumables and reagents tracked</span></div><div class="stat"><b>2 months</b><span>of stock kept as a buffer</span></div><div class="stat"><b>Automatic</b><span>reorder flag on every item</span></div></div>
+
+  <h2>The problem</h2>
+  <p>Orders used to go out after an item had already run out. Checking stock was slow and nobody’s main job, so shortages were noticed too late.</p>
+
+  <h2>What I did</h2>
+  <ul><li>Listed every consumable and reagent with its current stock and how quickly it gets used.</li><li>Set each item’s reorder point at two months of use, the management policy, so there is time to order and receive a delivery before stock runs out.</li><li>Added a log of every item issued to each department, which keeps an audit trail and shows real usage.</li></ul>
+  
+
+  <h2>What changed</h2>
+  <p class="outcome">Procurement now orders before items run out instead of after.</p>
+
+  <section class="tech">
+    <h2>For technical readers</h2>
+    <p>Excel: IF, SUMIFS, INDEX/MATCH, MAXIFS, data validation. No macros.</p>
+    <div class="links"><a class="btn primary" href="https://github.com/Yusuf-Tiamiyu/excel-inventory-reorder-tracker" target="_blank" rel="noopener">Download the workbook and notes ↗</a></div>
+  </section>
+
+  <nav class="next" aria-label="More projects">
+    <a href="../#projects">← All projects</a>
+    <a href="tat-platform.html">Next: Lab turnaround-time platform →</a>
+  </nav>
+</main>
+<footer>Yusuf Tiamiyu · Data analyst, Lagos · <a href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a></footer>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech layoffs, 2020 to 2023 · Yusuf Tiamiyu</title>
+<meta name="description" content="I cleaned a public list of 2,361 tech layoff announcements and used it to answer five practical questions.">
+<meta property="og:title" content="Tech layoffs, 2020 to 2023 · Yusuf Tiamiyu">
+<meta property="og:description" content="I cleaned a public list of 2,361 tech layoff announcements and used it to answer five practical questions.">
+<meta property="og:image" content="https://yusuf-tiamiyu.github.io/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yusuf-tiamiyu.github.io/projects/tech-layoffs.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../">Yusuf Tiamiyu</a>
+  <a href="../#projects">← All projects</a>
+</header>
+<main>
+  <div class="eyebrow">Data cleaning and analysis</div>
+  <h1>Tech layoffs, 2020 to 2023</h1>
+  <p class="summary">I cleaned a public list of 2,361 tech layoff announcements and used it to answer five practical questions.</p>
+  
+  <div class="stats"><div class="stat"><b>2,361</b><span>layoff announcements cleaned and checked</span></div><div class="stat"><b>7×</b><span>more likely to close for early-stage startups</span></div><div class="stat"><b>3×</b><span>the size of the 2020 wave, in 2022 to 2023</span></div></div>
+
+  <h2>The problem</h2>
+  <p>Public datasets are messy. This one had duplicate rows, the same company spelled in different ways, missing industries, and dates stored as text.</p>
+  <p>Analysis on uncleaned data gives wrong answers, so the cleaning had to be careful, and every change had to be recorded so it could be checked.</p>
+
+  <h2>What I did</h2>
+  <ul><li>Removed duplicates, fixed spellings and filled in missing values only where it was safe, keeping a log of every change.</li><li>Ran checks to confirm the cleaned data made sense before analysing any of it.</li><li>Answered five questions: when layoffs peaked, which industries cut deepest, whether young startups were more likely to close, how often companies cut twice, and what happened in Nigeria.</li></ul>
+  
+    <h2>What I found</h2>
+    
+    <h3>The second wave was bigger</h3>
+    <figure><img src="../img/layoffs-monthly.png" alt="People laid off per month, with a much larger second wave from late 2022" loading="lazy"></figure>
+    <p>From September 2022 to March 2023, 212,744 people were laid off, three times as many as in the 2020 wave. January 2023 alone was larger than all of 2021.</p>
+    <h3>Young startups were most at risk</h3>
+    <figure><img src="../img/layoffs-shutdowns.png" alt="Share of layoffs that were full shutdowns, by funding stage" loading="lazy"></figure>
+    <p>Startups at the earliest funding stages were about seven times more likely to shut down completely than larger, later-stage companies.</p>
+    <h3>Big totals can mislead</h3>
+    
+    <p>Retail lost the second-most jobs, but only 4% of its workforce. Travel, crypto and fitness companies cut more than 20% of theirs. A big total often just means a big company.</p>
+    <h3>Nigeria</h3>
+    
+    <p>Nigeria had 15 recorded layoff events, 12 of them between September 2022 and March 2023. Jumia accounted for almost half of the reported total.</p>
+
+  <h2>What it means</h2>
+  <p class="outcome">Careful cleaning changes the answers. Matching companies by name alone would have merged three different companies called Bolt and given them the wrong industry.</p>
+
+  <section class="tech">
+    <h2>For technical readers</h2>
+    <p>MySQL (window functions, CTEs, data-quality checks), Python for the charts</p>
+    <div class="links"><a class="btn primary" href="https://github.com/Yusuf-Tiamiyu/world-layoffs-sql" target="_blank" rel="noopener">Technical write-up and SQL ↗</a></div>
+  </section>
+
+  <nav class="next" aria-label="More projects">
+    <a href="../#projects">← All projects</a>
+    <a href="lab-operations-dashboard.html">Next: Lab operations dashboard →</a>
+  </nav>
+</main>
+<footer>Yusuf Tiamiyu · Data analyst, Lagos · <a href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a></footer>
+</body>
+</html>

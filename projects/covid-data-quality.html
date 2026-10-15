@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How far can daily COVID numbers be trusted? · Yusuf Tiamiyu</title>
+<meta name="description" content="Before using a dataset, check it. I tested the daily COVID-19 figures for 208 countries and found problems that change what the numbers mean.">
+<meta property="og:title" content="How far can daily COVID numbers be trusted? · Yusuf Tiamiyu">
+<meta property="og:description" content="Before using a dataset, check it. I tested the daily COVID-19 figures for 208 countries and found problems that change what the numbers mean.">
+<meta property="og:image" content="https://yusuf-tiamiyu.github.io/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yusuf-tiamiyu.github.io/projects/covid-data-quality.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../">Yusuf Tiamiyu</a>
+  <a href="../#projects">← All projects</a>
+</header>
+<main>
+  <div class="eyebrow">Data quality · Public health</div>
+  <h1>How far can daily COVID numbers be trusted?</h1>
+  <p class="summary">Before using a dataset, check it. I tested the daily COVID-19 figures for 208 countries and found problems that change what the numbers mean.</p>
+  
+  <div class="stats"><div class="stat"><b>21 countries</b><span>reported cases in bursts, not daily</span></div><div class="stat"><b>26% fewer</b><span>cases reported on Sundays than Thursdays</span></div><div class="stat"><b>2× higher</b><span>apparent death rate where testing was thin</span></div></div>
+
+  <h2>The problem</h2>
+  <p>In 2020 and 2021, daily case counts drove headlines and government decisions. But a number on a dashboard is only as good as the way it was collected.</p>
+  <p>Some countries skipped days, some reported a week’s cases all at once, and some corrected earlier mistakes with negative numbers.</p>
+
+  <h2>What I did</h2>
+  <ul><li>Checked every country’s figures for missing days, impossible values and gaps in testing data.</li><li>Found the countries that reported in bursts and spread each burst back over the days it covered, without changing any country’s total.</li><li>Measured how much reporting dips at weekends, and how the amount of testing affects death rates.</li></ul>
+  
+    <h2>What I found</h2>
+    
+    <h3>Bursts hide the real trend</h3>
+    <figure><img src="../img/covid-batches.png" alt="Cameroon daily cases: tall single-day spikes versus a smooth line after spreading" loading="lazy"></figure>
+    <p>Cameroon reported zero cases on 65% of days, then large totals at once: 9,668 on 1 April 2021 after five days of zeros. The blue line spreads each report back over the days it covered, which shows the real daily trend.</p>
+    <h3>Weekends report less</h3>
+    <figure><img src="../img/covid-weekday.png" alt="Share of the week’s cases by weekday, lowest on Sunday and Monday" loading="lazy"></figure>
+    <p>Sundays and Mondays carry about a quarter fewer cases than Thursdays. Comparing one day with another without adjusting for this is misleading.</p>
+    <h3>Testing changes the death rate</h3>
+    
+    <p>Countries that tested least had an average death rate of 2.86% among confirmed cases, against 1.31% for those that tested most. Where testing is thin, mostly the severe cases get found, so the share who die looks higher.</p>
+    <h3>The vaccine gap</h3>
+    
+    <p>By 30 April 2021, 1% of Africans had had a first vaccine dose, against 21% of Europeans. Nigeria was at 0.58%.</p>
+
+  <h2>What it means</h2>
+  <p class="outcome">The same checks apply to any operational data, including hospital and lab reports: find out how the numbers were produced before drawing conclusions from them.</p>
+
+  <section class="tech">
+    <h2>For technical readers</h2>
+    <p>MySQL (recursive queries, window functions), Python for the charts</p>
+    <div class="links"><a class="btn primary" href="https://github.com/Yusuf-Tiamiyu/covid-reporting-gaps-sql" target="_blank" rel="noopener">Technical write-up and SQL ↗</a></div>
+  </section>
+
+  <nav class="next" aria-label="More projects">
+    <a href="../#projects">← All projects</a>
+    <a href="tech-layoffs.html">Next: Tech layoffs, 2020 to 2023 →</a>
+  </nav>
+</main>
+<footer>Yusuf Tiamiyu · Data analyst, Lagos · <a href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a></footer>
+</body>
+</html>

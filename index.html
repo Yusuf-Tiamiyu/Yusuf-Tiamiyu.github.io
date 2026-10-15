@@ -31,7 +31,7 @@
 :root{
   --void:#0e0c0b;--void2:#161311;--void3:#1e1a17;--void4:#272320;
   --gold:#c8923a;--gold2:#e8a84a;--gold3:#f0bf70;
-  --cream:#ede8df;--cream2:#b8b0a5;--cream3:#8f857d;
+  --cream:#ede8df;--cream2:#d6cfc4;--cream3:#b3aa9f;
   --red:#c43c3c;--green:#4a9e6a;
   --line:rgba(200,146,58,.12);--line2:rgba(200,146,58,.06);
   --r:8px;--r2:16px;
@@ -104,7 +104,7 @@ nav.scrolled{
 .nl:hover::after{transform:scaleX(1)}
 .nls{display:flex;gap:2.5rem;list-style:none;align-items:center}
 .nls a{
-  font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  font-size:.8rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
   color:var(--cream3);text-decoration:none;transition:color .2s;position:relative;
 }
 .nls a::after{
@@ -171,7 +171,7 @@ nav.scrolled{
 /* Eyebrow badge */
 .eyebrow{
   display:inline-flex;align-items:center;gap:.6rem;
-  font-family:var(--mono);font-size:.63rem;letter-spacing:.16em;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;
   color:var(--gold);text-transform:uppercase;
   background:rgba(200,146,58,.08);border:1px solid rgba(200,146,58,.22);
   padding:.32rem .9rem;border-radius:2px;margin-bottom:2.2rem;
@@ -235,7 +235,7 @@ nav.scrolled{
   color:var(--gold);line-height:1;letter-spacing:-.05em;
   text-shadow:0 0 40px rgba(200,146,58,.25);
 }
-.hstat .lbl{font-family:var(--mono);font-size:.57rem;letter-spacing:.13em;text-transform:uppercase;color:var(--cream3);margin-top:.35rem;}
+.hstat .lbl{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3);margin-top:.35rem;}
 
 /* Scroll hint */
 .scroll-hint{
@@ -243,7 +243,7 @@ nav.scrolled{
   z-index:3;display:flex;flex-direction:column;align-items:center;gap:.5rem;
   opacity:0;animation:fadeIn 1s 1.6s forwards;
 }
-.scroll-hint span{font-family:var(--mono);font-size:.52rem;letter-spacing:.16em;color:var(--cream3);text-transform:uppercase}
+.scroll-hint span{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;color:var(--cream3);text-transform:uppercase}
 .scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease-in-out infinite}
 
 /* =================================================================
@@ -270,7 +270,7 @@ nav.scrolled{
 }
 .marquee-track span::after{
   content:"*";font-style:normal;margin-left:2.5rem;
-  font-family:var(--mono);font-size:.65rem;vertical-align:middle;
+  font-family:var(--mono);font-size:.75rem;vertical-align:middle;
   color:rgba(14,12,11,.4);
 }
 .marquee-strip:hover .marquee-track{animation-play-state:paused}
@@ -279,7 +279,7 @@ nav.scrolled{
    SECTION COMMON
 ================================================================= */
 .section-label{
-  font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;
   text-transform:uppercase;color:var(--gold);
   display:flex;align-items:center;gap:.65rem;margin-bottom:.9rem;
 }
@@ -345,7 +345,7 @@ nav.scrolled{
 .akpi+.akpi{padding-left:1.5rem}
 .akpi:last-child{border-right:none}
 .akpi .av{font-family:var(--serif);font-size:2.1rem;font-weight:900;color:var(--gold);line-height:1;letter-spacing:-.04em}
-.akpi .al{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream3);margin-top:.3rem}
+.akpi .al{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3);margin-top:.3rem}
 .about-inner{
   position:relative;z-index:2;
   max-width:1200px;margin:0 auto;
@@ -358,7 +358,7 @@ nav.scrolled{
   color:var(--gold);line-height:1;letter-spacing:-.06em;margin:2.8rem 0 .5rem;
   text-shadow:0 0 60px rgba(200,146,58,.2);
 }
-.big-stat-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:var(--cream3)}
+.big-stat-label{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3)}
 .about-right p{font-size:1.05rem;color:var(--cream2);margin-bottom:1.4rem;line-height:1.85}
 .about-right p strong{color:var(--cream);font-weight:500}
 .about-right p em{color:var(--gold);font-style:normal}
@@ -407,10 +407,10 @@ nav.scrolled{
 }
 .sk-cat:hover .sk-cat-num{color:rgba(200,146,58,.28)}
 .sk-cat-name{font-size:.92rem;font-weight:600;color:var(--cream);margin-bottom:.35rem;letter-spacing:-.01em}
-.sk-cat-count{font-family:var(--mono);font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);margin-bottom:1.4rem}
+.sk-cat-count{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3);margin-bottom:1.4rem}
 .sk-pills{display:flex;flex-wrap:wrap;gap:.45rem}
 .sk-pill{
-  font-family:var(--mono);font-size:.57rem;letter-spacing:.04em;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;
   padding:.28rem .65rem;border:1px solid rgba(200,146,58,.16);
   color:var(--cream3);border-radius:2px;transition:all .2s var(--ease-out);cursor:default;
 }
@@ -445,7 +445,7 @@ nav.scrolled{
   position:relative;z-index:2;
 }
 .pf-btn{
-  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;
   padding:.4rem 1rem;border:1px solid var(--line);border-radius:2px;
   background:none;color:var(--cream3);cursor:pointer;
   transition:all .22s var(--ease-out);
@@ -502,7 +502,7 @@ nav.scrolled{
 }
 .pc:hover .pc-num{color:rgba(200,146,58,.18)}
 .pc-badge{
-  font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;
   color:var(--gold);background:rgba(200,146,58,.1);border:1px solid rgba(200,146,58,.24);
   padding:.28rem .7rem;border-radius:2px;
 }
@@ -523,7 +523,7 @@ nav.scrolled{
 .pc-title{font-family:var(--serif);font-size:1.25rem;font-weight:700;color:var(--cream);letter-spacing:-.02em;margin-bottom:.7rem;line-height:1.2}
 .pc-desc{font-size:.86rem;color:var(--cream2);line-height:1.72;margin-bottom:1.3rem;flex:1}
 .pc-tags{display:flex;flex-wrap:wrap;gap:.38rem;margin-bottom:1.5rem}
-.tag{font-family:var(--mono);font-size:.54rem;letter-spacing:.04em;padding:.24rem .58rem;border-radius:2px;border:1px solid;transition:all .2s var(--ease-out)}
+.tag{font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;padding:.24rem .58rem;border-radius:2px;border:1px solid;transition:all .2s var(--ease-out)}
 .tag:hover{transform:translateY(-1px)}
 .ts{color:#5aaa7a;border-color:rgba(90,170,122,.25);background:rgba(90,170,122,.06)}
 .te{color:#7aaad0;border-color:rgba(122,170,208,.25);background:rgba(122,170,208,.06)}
@@ -542,13 +542,13 @@ nav.scrolled{
 }
 .pc:hover .pc-foot{border-color:rgba(200,146,58,.15)}
 .pc-link{
-  font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;
   text-decoration:none;color:var(--cream3);transition:color .2s;
   display:flex;align-items:center;gap:.4rem;
 }
 .pc-link:hover{color:var(--gold)}
 .pc-link.primary{color:var(--gold);font-weight:500}
-.pc-link.primary::after{content:" →";font-size:.7rem;transition:transform .2s var(--ease-out)}
+.pc-link.primary::after{content:" →";font-size:.8rem;transition:transform .2s var(--ease-out)}
 .pc-link.primary:hover::after{transform:translateX(3px)}
 
 /* Project grid bottom strip */
@@ -557,8 +557,8 @@ nav.scrolled{
   display:flex;align-items:center;justify-content:space-between;
   position:relative;z-index:2;flex-wrap:wrap;gap:1rem;
 }
-.proj-grid-foot span{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream3)}
-.proj-hidden-count{font-family:var(--mono);font-size:.6rem;color:var(--cream3);letter-spacing:.08em}
+.proj-grid-foot span{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3)}
+.proj-hidden-count{font-family:var(--mono);font-size:.75rem;color:var(--cream3);letter-spacing:.08em}
 /* keep dots classes for compat */
 .scroll-dots{display:none}.sdot{}
 
@@ -607,7 +607,7 @@ nav.scrolled{
 }
 .ps:hover::before{color:rgba(200,146,58,.09)}
 .ps-num{
-  font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;
   color:var(--gold);text-transform:uppercase;margin-bottom:1.3rem;
   display:flex;align-items:center;gap:.5rem;
 }
@@ -644,8 +644,8 @@ nav.scrolled{
 }
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0}
 .form-group{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.1rem;position:relative}
-.form-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cream3);display:flex;align-items:center;justify-content:space-between}
-.form-error-msg{font-family:var(--mono);font-size:.54rem;color:var(--red);opacity:0;transition:opacity .2s}
+.form-label{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3);display:flex;align-items:center;justify-content:space-between}
+.form-error-msg{font-family:var(--mono);font-size:.75rem;color:var(--red);opacity:0;transition:opacity .2s}
 .form-group.has-error .form-error-msg{opacity:1}
 .form-input,.form-textarea{
   background:rgba(14,12,11,.6);border:1px solid rgba(200,146,58,.14);
@@ -667,7 +667,7 @@ nav.scrolled{
 .form-submit{
   width:100%;padding:.9rem;background:var(--gold);color:var(--void);
   border:none;border-radius:2px;cursor:pointer;
-  font-family:var(--f);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--f);font-size:.78rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
   transition:all .25s var(--ease-out);position:relative;overflow:hidden;
   display:flex;align-items:center;justify-content:center;gap:.6rem;
 }
@@ -686,7 +686,7 @@ nav.scrolled{
 .form-submit.loading .form-submit-spinner{display:block}
 .form-submit.loading .form-submit-text{opacity:.7}
 .form-status{
-  font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;
   text-align:center;margin-top:.85rem;min-height:1.2rem;transition:opacity .3s;
   display:flex;align-items:center;justify-content:center;gap:.5rem;
 }
@@ -701,19 +701,19 @@ nav.scrolled{
 .contact-form.sent .contact-form-sent{opacity:1;pointer-events:all}
 .cf-sent-icon{font-size:2.2rem;line-height:1}
 .cf-sent-title{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--cream)}
-.cf-sent-sub{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--cream3);text-transform:uppercase}
+.cf-sent-sub{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;color:var(--cream3);text-transform:uppercase}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .contact-divider{
   display:flex;align-items:center;gap:1rem;margin:2rem 0;
-  font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream3);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3);
 }
 .contact-divider::before,.contact-divider::after{content:'';flex:1;height:1px;background:var(--line)}
 
 .contact-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
 .contact-links{margin-top:2.5rem;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
 .contact-link{
-  font-family:var(--mono);font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;
   color:var(--cream3);text-decoration:none;transition:color .2s;
   display:flex;align-items:center;gap:.4rem;
 }
@@ -726,7 +726,7 @@ footer{
   padding:2rem 4rem;background:var(--void);border-top:1px solid var(--line2);
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;
 }
-footer span,footer a{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);text-decoration:none}
+footer span,footer a{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3);text-decoration:none}
 footer a:hover{color:var(--gold)}
 .footer-links{display:flex;gap:2rem;align-items:center}
 
@@ -755,7 +755,7 @@ footer a:hover{color:var(--gold)}
   padding:1.35rem 2.75rem;border-bottom:1px solid var(--line);
   display:flex;justify-content:space-between;align-items:center;z-index:10;
 }
-.meye{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.meye{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--gold)}
 .mtitle{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--cream);font-style:italic}
 .mcl{
   width:38px;height:38px;border:1px solid var(--line);border-radius:2px;
@@ -771,16 +771,16 @@ footer a:hover{color:var(--gold)}
 .mhero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),rgba(200,146,58,.12))}
 .mhero h2{font-family:var(--serif);font-size:clamp(1.5rem,3.5vw,2rem);font-weight:900;letter-spacing:-.03em;color:var(--cream);margin-bottom:.8rem;line-height:1.1}
 .mhero p{font-size:.98rem;color:var(--cream2);line-height:1.76}
-.anon{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.57rem;letter-spacing:.1em;background:rgba(196,60,60,.08);color:#d06060;border:1px solid rgba(196,60,60,.22);padding:.3rem .75rem;border-radius:2px;margin-bottom:.9rem;text-transform:uppercase}
+.anon{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;background:rgba(196,60,60,.08);color:#d06060;border:1px solid rgba(196,60,60,.22);padding:.3rem .75rem;border-radius:2px;margin-bottom:.9rem;text-transform:uppercase}
 .mlks{display:flex;gap:.85rem;flex-wrap:wrap;margin-bottom:2.5rem}
 .ms{margin-bottom:2.5rem}
-.mst{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem;padding-bottom:.7rem;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:.5rem}
+.mst{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem;padding-bottom:.7rem;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:.5rem}
 .mst::before{content:"//";opacity:.32}
 .ms p{font-size:.98rem;color:var(--cream2);line-height:1.82;margin-bottom:1rem}
 .ms ul{padding-left:1.4rem;margin-bottom:1rem}
 .ms li{font-size:.96rem;color:var(--cream2);line-height:1.78;margin-bottom:.5rem}
 .cw{background:#090807;border:1px solid rgba(200,146,58,.13);border-radius:4px;overflow:hidden;margin:1.3rem 0}
-.cl2{background:rgba(200,146,58,.07);border-bottom:1px solid rgba(200,146,58,.1);padding:.48rem 1.1rem;font-family:var(--mono);font-size:.57rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
+.cl2{background:rgba(200,146,58,.07);border-bottom:1px solid rgba(200,146,58,.1);padding:.48rem 1.1rem;font-family:var(--mono);font-size:.75rem;color:var(--gold);letter-spacing:.07em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
 .cl2::before{content:">";opacity:.45}
 .cb{padding:1.15rem 1.35rem;font-family:var(--mono);font-size:clamp(.61rem,.9vw,.72rem);line-height:1.92;overflow-x:auto;color:#d4c9bb;white-space:pre;tab-size:2;-webkit-overflow-scrolling:touch}
 .kw{color:#e0826a}.fn{color:#c8a870}.cm{color:#5a5248;font-style:italic}.str{color:#a8c880}.num{color:#7ab8d8}
@@ -789,14 +789,14 @@ footer a:hover{color:var(--gold)}
   border-left:2px solid var(--gold);padding:1.35rem 1.6rem;margin:1.4rem 0;
   border-radius:0 4px 4px 0;
 }
-.finding::before{content:"KEY FINDING";display:block;font-family:var(--mono);font-size:.54rem;letter-spacing:.2em;color:var(--gold);margin-bottom:.65rem}
+.finding::before{content:"KEY FINDING";display:block;font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;color:var(--gold);margin-bottom:.65rem}
 .finding p{font-size:.95rem;color:var(--cream);line-height:1.78;margin:0;font-style:italic}
 .chbox{
   background:var(--void3);border:1px solid var(--line);border-radius:4px;
   padding:1.6rem;margin:1.4rem 0;position:relative;overflow:hidden;
 }
 .chbox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--gold),rgba(200,146,58,.1))}
-.chbox h4{font-family:var(--mono);font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;color:var(--cream3);margin-bottom:1.3rem}
+.chbox h4{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--cream3);margin-bottom:1.3rem}
 .chbox canvas{max-height:260px;min-height:200px;height:220px;display:block;width:100%!important;}
 .stags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.85rem}
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin:1.4rem 0}
@@ -807,11 +807,11 @@ footer a:hover{color:var(--gold)}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);opacity:.4}
 .stat-card:hover{border-color:rgba(200,146,58,.3)}
 .stat-card .sv{font-size:1.95rem;font-weight:800;font-family:var(--mono);line-height:1}
-.stat-card .sl{font-size:.57rem;color:var(--cream3);margin-top:.4rem;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.stat-card .sl{font-size:.75rem;color:var(--cream3);margin-top:.4rem;font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase}
 .stat-card.blue .sv{color:#7ab8d8}.stat-card.green .sv{color:#5aaa7a}
 .stat-card.red .sv{color:var(--red)}.stat-card.amber .sv{color:var(--gold)}
 .annot{background:rgba(200,146,58,.06);border-left:2px solid var(--gold);padding:1.1rem 1.4rem;margin:1.1rem 0;font-size:.92rem;color:var(--cream2);border-radius:0 4px 4px 0}
-.annot strong{color:var(--gold);display:block;font-family:var(--mono);font-size:.57rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.4rem}
+.annot strong{color:var(--gold);display:block;font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.4rem}
 
 /* =================================================================
    KEYFRAMES
@@ -852,7 +852,7 @@ footer a:hover{color:var(--gold)}
     z-index:799;opacity:0;pointer-events:none;transition:opacity .3s;
   }
   .nls.open{display:flex;opacity:1;pointer-events:all}
-  .nls a{font-size:1rem;letter-spacing:.1em}
+  .nls a{font-size:1rem;letter-spacing:.07em}
   .nav-toggle{display:flex;position:relative;z-index:801}
   #hero{padding:6.5rem 1.5rem 4.5rem;justify-content:flex-start}
   #about,#sk,#process,#contact{padding:6rem 1.5rem}
@@ -905,7 +905,7 @@ footer a:hover{color:var(--gold)}
   display:flex;align-items:center;gap:.55rem;
   padding:.65rem 1.25rem;background:var(--void3);
   border:1px solid rgba(200,146,58,.3);border-radius:2px;
-  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;
   color:var(--gold);text-decoration:none;
   transition:all .28s var(--ease-out);
   box-shadow:0 8px 32px rgba(0,0,0,.4);
@@ -932,7 +932,7 @@ footer a:hover{color:var(--gold)}
 /* sparkline overlay label */
 .cprev-kpi{
   position:absolute;top:.7rem;right:.9rem;z-index:2;
-  font-family:var(--mono);font-size:.58rem;letter-spacing:.07em;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;
   color:var(--gold);opacity:.8;
 }
 
@@ -949,13 +949,13 @@ footer a:hover{color:var(--gold)}
    NAV — Resume link in nav  
 ================================================================= */
 .nav-resume{
-  font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;
   padding:.4rem .9rem;border:1px solid rgba(200,146,58,.3);border-radius:2px;
   color:var(--gold);text-decoration:none;
   transition:all .22s var(--ease-out);
 }
 .nav-resume:hover{background:var(--gold);color:var(--void);border-color:var(--gold)}
-@media(max-width:768px){.nav-resume{font-size:.7rem;padding:.5rem 1rem}}
+@media(max-width:768px){.nav-resume{font-size:.8rem;padding:.5rem 1rem}}
 
 /* =================================================================
    PROJECT GRID — responsive
@@ -1005,7 +1005,7 @@ footer a:hover{color:var(--gold)}
   content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;
   transform:translateX(-50%) translateY(4px);
   background:var(--void3);border:1px solid var(--line);border-radius:2px;
-  font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;color:var(--cream2);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;color:var(--cream2);
   padding:.3rem .65rem;white-space:nowrap;
   opacity:0;pointer-events:none;transition:opacity .18s,transform .18s var(--ease-out);
 }
@@ -1089,8 +1089,8 @@ footer a:hover{color:var(--gold)}
       <p>I studied chemistry at Lagos State University. My final-year project, on groundwater quality across 25 wells, became a paper in <em>Hydrology</em> in 2023. Lab work taught me not to trust a result until I know how it was produced, which is most of data cleaning too.</p>
       <p>Before analytics I worked in quality assurance at Flour Mills of Nigeria, where I noticed that shifts staffed only by new hires had the biggest weight deviations. The supervisor changed the roster so every shift had someone experienced on it. Outside work, I play a lot of video games.</p>
       <div style="margin-top:2rem;display:flex;gap:.75rem;flex-wrap:wrap">
-        <a class="btn btn-ghost" href="Tiamiyu_Yusuf_Ademola_Resume.pdf" download style="font-size:.65rem;padding:.6rem 1.25rem">Download resume ↓</a>
-        <a class="btn btn-ghost" href="https://doi.org/10.11648/j.hyd.20231101.11" target="_blank" rel="noopener noreferrer" style="font-size:.65rem;padding:.6rem 1.25rem">Read the paper ↗</a>
+        <a class="btn btn-ghost" href="Tiamiyu_Yusuf_Ademola_Resume.pdf" download style="font-size:.78rem;padding:.65rem 1.25rem">Download resume ↓</a>
+        <a class="btn btn-ghost" href="https://doi.org/10.11648/j.hyd.20231101.11" target="_blank" rel="noopener noreferrer" style="font-size:.78rem;padding:.65rem 1.25rem">Read the paper ↗</a>
       </div>
     </div>
   </div>
@@ -1181,7 +1181,7 @@ footer a:hover{color:var(--gold)}
 
       <article class="pc ft rise" data-cats="healthcare sql">
         <div class="pc-top"><div class="pc-num">01</div><div class="pc-badge">In daily use</div></div>
-        <a class="cprev cprev-img" href="https://yusuf-tiamiyu.github.io/lab-tat-platform-demo/" target="_blank" rel="noopener">
+        <a class="cprev cprev-img" href="projects/tat-platform.html">
           <img src="img/tat-dashboard.png" alt="Overview tab of the TAT dashboard showing weekly compliance, failures and average turnaround time" loading="lazy" width="1440" height="1000">
         </a>
         <div class="pc-body">
@@ -1190,14 +1190,14 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag tp">React</span><span class="tag tp">Supabase / Postgres</span><span class="tag td">Row-level security</span><span class="tag th">Healthcare</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link primary" href="https://yusuf-tiamiyu.github.io/lab-tat-platform-demo/" target="_blank" rel="noopener">Live demo ↗</a>
-          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/lab-tat-platform-demo" target="_blank" rel="noopener">Write-up and code ↗</a>
+          <a class="pc-link primary" href="projects/tat-platform.html">Read the case study</a>
+          <a class="pc-link" href="https://yusuf-tiamiyu.github.io/lab-tat-platform-demo/" target="_blank" rel="noopener">Live demo ↗</a>
         </div>
       </article>
 
       <article class="pc ft rise" data-cats="healthcare python">
         <div class="pc-top"><div class="pc-num">02</div><div class="pc-badge">Statistics</div></div>
-        <a class="cprev cprev-img" href="https://github.com/Yusuf-Tiamiyu/lab-tat-breach-analysis" target="_blank" rel="noopener">
+        <a class="cprev cprev-img" href="projects/tat-breach-analysis.html">
           <img src="img/tat-weekly-compliance.png" alt="Line chart of weekly TAT compliance rising from 53% to 72% after a process change in week 9" loading="lazy" width="1350" height="540">
         </a>
         <div class="pc-body">
@@ -1206,14 +1206,14 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag ts">Python</span><span class="tag ts">statsmodels</span><span class="tag ts">pandas</span><span class="tag th">Healthcare</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link primary" href="https://github.com/Yusuf-Tiamiyu/lab-tat-breach-analysis/blob/main/analysis.ipynb" target="_blank" rel="noopener">Notebook ↗</a>
-          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/lab-tat-breach-analysis" target="_blank" rel="noopener">Write-up ↗</a>
+          <a class="pc-link primary" href="projects/tat-breach-analysis.html">Read the case study</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/lab-tat-breach-analysis" target="_blank" rel="noopener">Code ↗</a>
         </div>
       </article>
 
       <article class="pc rise" data-cats="sql">
         <div class="pc-top"><div class="pc-num">03</div></div>
-        <a class="cprev cprev-img" href="https://github.com/Yusuf-Tiamiyu/covid-reporting-gaps-sql" target="_blank" rel="noopener">
+        <a class="cprev cprev-img" href="projects/covid-data-quality.html">
           <img src="img/covid-batches.png" alt="Cameroon's daily COVID cases: large single-day reports versus the same reports spread over the days they covered" loading="lazy" width="1350" height="570">
         </a>
         <div class="pc-body">
@@ -1222,13 +1222,14 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag te">MySQL</span><span class="tag te">Recursive CTEs</span><span class="tag te">Gaps and islands</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link primary" href="https://github.com/Yusuf-Tiamiyu/covid-reporting-gaps-sql" target="_blank" rel="noopener">Write-up and SQL ↗</a>
+          <a class="pc-link primary" href="projects/covid-data-quality.html">Read the case study</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/covid-reporting-gaps-sql" target="_blank" rel="noopener">SQL ↗</a>
         </div>
       </article>
 
       <article class="pc rise" data-cats="sql">
         <div class="pc-top"><div class="pc-num">04</div></div>
-        <a class="cprev cprev-img" href="https://github.com/Yusuf-Tiamiyu/world-layoffs-sql" target="_blank" rel="noopener">
+        <a class="cprev cprev-img" href="projects/tech-layoffs.html">
           <img src="img/layoffs-shutdowns.png" alt="Bar chart: 14.8% of early-stage startup layoffs were full shutdowns, against 1 to 2% at later stages" loading="lazy" width="1125" height="420">
         </a>
         <div class="pc-body">
@@ -1237,7 +1238,8 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag te">MySQL</span><span class="tag te">Window functions</span><span class="tag te">Data cleaning</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link primary" href="https://github.com/Yusuf-Tiamiyu/world-layoffs-sql" target="_blank" rel="noopener">Write-up and SQL ↗</a>
+          <a class="pc-link primary" href="projects/tech-layoffs.html">Read the case study</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/world-layoffs-sql" target="_blank" rel="noopener">SQL ↗</a>
         </div>
       </article>
 
@@ -1249,7 +1251,8 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag tg">Excel</span><span class="tag tg">SUMIFS</span><span class="tag th">Healthcare</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link primary" href="https://github.com/Yusuf-Tiamiyu/excel-lab-operations-dashboard" target="_blank" rel="noopener">Workbook and notes ↗</a>
+          <a class="pc-link primary" href="projects/lab-operations-dashboard.html">Read the case study</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/excel-lab-operations-dashboard" target="_blank" rel="noopener">Workbook ↗</a>
         </div>
       </article>
 
@@ -1261,7 +1264,8 @@ footer a:hover{color:var(--gold)}
           <div class="pc-tags"><span class="tag tg">Excel</span><span class="tag tg">INDEX/MATCH</span><span class="tag th">Supply chain</span></div>
         </div>
         <div class="pc-foot">
-          <a class="pc-link primary" href="https://github.com/Yusuf-Tiamiyu/excel-inventory-reorder-tracker" target="_blank" rel="noopener">Workbook and notes ↗</a>
+          <a class="pc-link primary" href="projects/inventory-reorder-tracker.html">Read the case study</a>
+          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/excel-inventory-reorder-tracker" target="_blank" rel="noopener">Workbook ↗</a>
         </div>
       </article>
 

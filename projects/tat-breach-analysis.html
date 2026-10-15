@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What makes lab results late? · Yusuf Tiamiyu</title>
+<meta name="description" content="I worked out what makes test results late, whether a process change actually helped, and what fixing staffing would be worth.">
+<meta property="og:title" content="What makes lab results late? · Yusuf Tiamiyu">
+<meta property="og:description" content="I worked out what makes test results late, whether a process change actually helped, and what fixing staffing would be worth.">
+<meta property="og:image" content="https://yusuf-tiamiyu.github.io/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yusuf-tiamiyu.github.io/projects/tat-breach-analysis.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../">Yusuf Tiamiyu</a>
+  <a href="../#projects">← All projects</a>
+</header>
+<main>
+  <div class="eyebrow">Statistics · Healthcare</div>
+  <h1>What makes lab results late?</h1>
+  <p class="summary">I worked out what makes test results late, whether a process change actually helped, and what fixing staffing would be worth.</p>
+  <p class="note">The data is simulated. Real lab data can’t be published, so I built a simulation of a nine-site lab network based on how real labs work. No real patients or sites are involved.</p>
+  <div class="stats"><div class="stat"><b>53% → 72%</b><span>of results on time, before and after the change</span></div><div class="stat"><b>10×</b><span>the chance of a late result at two short-staffed sites</span></div><div class="stat"><b>139 a week</b><span>late results that better staffing would prevent</span></div></div>
+
+  <h2>The problem</h2>
+  <p>A late result can delay a diagnosis. Raw numbers show which sites are late, but not why. A site can look bad because it handles harder tests, more samples from other sites, or more weekend work.</p>
+  <p>And when things get better, it’s hard to tell whether a change actually worked or things were improving anyway.</p>
+
+  <h2>What I did</h2>
+  <ul><li>Compared on-time rates before and after a process change in week 9, using a method that separates a real change from a trend that was already under way.</li><li>Measured how much each factor raises or lowers the chance of a late result (site, department, time of day, weekends, workload, samples sent between sites) with all the others held equal.</li><li>Estimated how many late results a week would disappear if the two worst sites were staffed like a normal site.</li></ul>
+  
+    <h2>What I found</h2>
+    
+    <h3>The change worked</h3>
+    <figure><img src="../img/tat-weekly-compliance.png" alt="Weekly on-time rate, flat around 53% until week 8, then rising to about 72%" loading="lazy"></figure>
+    <p>On-time results were flat at about 53% for the eight weeks before the change and climbed to about 72% after it. The trend before the change was flat, so the improvement came from the change itself.</p>
+    <h3>What makes a result late</h3>
+    <figure><img src="../img/tat-breach-drivers.png" alt="Chart of factors that raise (red) or lower (blue) the chance of a late result" loading="lazy"></figure>
+    <p>Each dot shows how much one factor raises (red) or lowers (blue) the chance of a late result. Two short-staffed sites, Riverside and Lakeside, stand far out: a test there is about ten times as likely to be late as the same test at the main hub. Samples sent to another site (2.7 times), weekends (twice) and busy days also raise the risk.</p>
+
+  <h2>What it means</h2>
+  <p class="outcome">My recommendation: fix staffing at Riverside and Lakeside first. They handle 14% of tests but produce 25% of all late results. Staffing them like a normal site would prevent about 139 late results a week, 9% of the network total.</p>
+
+  <section class="tech">
+    <h2>For technical readers</h2>
+    <p>Python, pandas, statsmodels (logistic regression, segmented regression), SciPy, matplotlib</p>
+    <div class="links"><a class="btn primary" href="https://github.com/Yusuf-Tiamiyu/lab-tat-breach-analysis/blob/main/analysis.ipynb" target="_blank" rel="noopener">Read the notebook ↗</a><a class="btn" href="https://github.com/Yusuf-Tiamiyu/lab-tat-breach-analysis" target="_blank" rel="noopener">Technical write-up and code ↗</a></div>
+  </section>
+
+  <nav class="next" aria-label="More projects">
+    <a href="../#projects">← All projects</a>
+    <a href="covid-data-quality.html">Next: How far can daily COVID numbers be trusted? →</a>
+  </nav>
+</main>
+<footer>Yusuf Tiamiyu · Data analyst, Lagos · <a href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a></footer>
+</body>
+</html>

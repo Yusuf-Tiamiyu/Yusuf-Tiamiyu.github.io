@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab operations dashboard · Yusuf Tiamiyu</title>
+<meta name="description" content="One Excel dashboard where lab managers see how every site performed this week.">
+<meta property="og:title" content="Lab operations dashboard · Yusuf Tiamiyu">
+<meta property="og:description" content="One Excel dashboard where lab managers see how every site performed this week.">
+<meta property="og:image" content="https://yusuf-tiamiyu.github.io/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yusuf-tiamiyu.github.io/projects/lab-operations-dashboard.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../">Yusuf Tiamiyu</a>
+  <a href="../#projects">← All projects</a>
+</header>
+<main>
+  <div class="eyebrow">At work · Excel</div>
+  <h1>Lab operations dashboard</h1>
+  <p class="summary">One Excel dashboard where lab managers see how every site performed this week.</p>
+  
+  <div class="stats"><div class="stat"><b>9 sites</b><span>on one page</span></div><div class="stat"><b>4 measures</b><span>tests, patients, on-time results, staffing</span></div><div class="stat"><b>1 sheet</b><span>to filter the whole dashboard</span></div></div>
+
+  <h2>The problem</h2>
+  <p>Getting a picture across all the sites meant opening several spreadsheets, comparing numbers by hand and hoping no formula had broken along the way. Managers spent their time gathering data instead of acting on it.</p>
+
+  <h2>What I did</h2>
+  <ul><li>Built a dashboard tracking tests run, patients, results on time against the 90% target, and staffing, plus whether each analyser was working.</li><li>Put every filter (year, month, week, site, department) on one sheet, so changing it updates the whole dashboard.</li><li>Made each figure compare itself with the previous week automatically, so changes stand out.</li></ul>
+  
+    <h2>What I found</h2>
+    
+    <h3>What it revealed</h3>
+    
+    <p>Staff shortages were not random. They kept happening at the same sites in the same weeks, which only became visible once every site’s weekly data was in one place. That changed how rosters were planned.</p>
+
+  <h2>What it means</h2>
+  <p class="outcome">This dashboard was the starting point for the turnaround-time platform, which later automated the on-time part of it completely.</p>
+
+  <section class="tech">
+    <h2>For technical readers</h2>
+    <p>Excel: SUMIFS, AVERAGEIFS, COUNTIFS, conditional formatting. No macros.</p>
+    <div class="links"><a class="btn primary" href="https://github.com/Yusuf-Tiamiyu/excel-lab-operations-dashboard" target="_blank" rel="noopener">Download the workbook and notes ↗</a></div>
+  </section>
+
+  <nav class="next" aria-label="More projects">
+    <a href="../#projects">← All projects</a>
+    <a href="inventory-reorder-tracker.html">Next: Inventory reorder tracker →</a>
+  </nav>
+</main>
+<footer>Yusuf Tiamiyu · Data analyst, Lagos · <a href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a></footer>
+</body>
+</html>

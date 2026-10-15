@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab turnaround-time platform · Yusuf Tiamiyu</title>
+<meta name="description" content="A dashboard that shows nine labs, every day, which test results are running late and why.">
+<meta property="og:title" content="Lab turnaround-time platform · Yusuf Tiamiyu">
+<meta property="og:description" content="A dashboard that shows nine labs, every day, which test results are running late and why.">
+<meta property="og:image" content="https://yusuf-tiamiyu.github.io/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yusuf-tiamiyu.github.io/projects/tat-platform.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../">Yusuf Tiamiyu</a>
+  <a href="../#projects">← All projects</a>
+</header>
+<main>
+  <div class="eyebrow">At work · Healthcare operations</div>
+  <h1>Lab turnaround-time platform</h1>
+  <p class="summary">A dashboard that shows nine labs, every day, which test results are running late and why.</p>
+  
+  <div class="stats"><div class="stat"><b>50% → 70%+</b><span>of results on time, before and after</span></div><div class="stat"><b>1 day → 2 min</b><span>to produce the weekly report</span></div><div class="stat"><b>9 labs</b><span>use it on their daily calls</span></div></div>
+
+  <h2>The problem</h2>
+  <p>Turnaround time (TAT) is how long it takes from a sample being booked in to its result being ready for the doctor. Every test has a target time.</p>
+  <p>Before this, someone downloaded the data from the lab system at the end of each week, cleaned it by hand in Excel and emailed it round. It took a full working day, and by the time anyone read it the problems were a week old. Nobody could see which department or shift the delays were coming from.</p>
+
+  <h2>What I did</h2>
+  <ul><li>Built a reference list of every test with its target time and department, so a delay could be traced to Chemistry or Haematology rather than just &quot;Site X had a bad week&quot;.</li><li>Automated the weekly cleaning, which cut the job from a day to about two minutes.</li><li>Built a web dashboard that keeps every week’s results, so supervisors can compare weeks and months and drill into any site, department, test or shift.</li><li>Made the numbers trustworthy: tests that can’t be measured are left out instead of being counted as failures, and each person only sees the data they should.</li></ul>
+  
+    <h2>What I found</h2>
+    
+    <h3>What supervisors see</h3>
+    <figure><img src="../img/tat-dashboard.png" alt="Overview page of the dashboard with on-time rate, failures and average time taken" loading="lazy"></figure>
+    <p>The overview page, shown here in the public demo running on made-up data. It shows how many tests were run, how many were on time, how late the late ones were, and which site and department combinations got worse this week.</p>
+
+  <h2>What it means</h2>
+  <p class="outcome">Supervisors now open the dashboard on their daily operational calls. The question changed from “how did last week go?” to “what is happening right now, and where?” Across the network, the share of results delivered on time went from about 50% to over 70%.</p>
+
+  <section class="tech">
+    <h2>For technical readers</h2>
+    <p>React, Supabase (Postgres) with row-level security, Python and pandas for the first version, Excel</p>
+    <div class="links"><a class="btn primary" href="https://yusuf-tiamiyu.github.io/lab-tat-platform-demo/" target="_blank" rel="noopener">Try the live demo ↗</a><a class="btn" href="https://github.com/Yusuf-Tiamiyu/lab-tat-platform-demo" target="_blank" rel="noopener">Technical write-up and code ↗</a></div>
+  </section>
+
+  <nav class="next" aria-label="More projects">
+    <a href="../#projects">← All projects</a>
+    <a href="tat-breach-analysis.html">Next: What makes lab results late? →</a>
+  </nav>
+</main>
+<footer>Yusuf Tiamiyu · Data analyst, Lagos · <a href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a></footer>
+</body>
+</html>
