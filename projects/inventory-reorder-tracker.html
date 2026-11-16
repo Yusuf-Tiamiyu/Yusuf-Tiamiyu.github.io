@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Inventory reorder tracker · Yusuf Tiamiyu</title>
-<meta name="description" content="A tracker that warns the lab before supplies run out, not after.">
-<meta property="og:title" content="Inventory reorder tracker · Yusuf Tiamiyu">
-<meta property="og:description" content="A tracker that warns the lab before supplies run out, not after.">
+<title>When to reorder lab supplies, item by item · Yusuf Tiamiyu</title>
+<meta name="description" content="An Excel workbook that gives every supply in a lab’s central store its own reorder level, from its real usage and real delivery times, and tells store staff whether to order now and how much.">
+<meta property="og:title" content="When to reorder lab supplies, item by item · Yusuf Tiamiyu">
+<meta property="og:description" content="An Excel workbook that gives every supply in a lab’s central store its own reorder level, from its real usage and real delivery times, and tells store staff whether to order now and how much.">
 <meta property="og:image" content="https://yusuf-tiamiyu.github.io/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://yusuf-tiamiyu.github.io/projects/inventory-reorder-tracker.html">
@@ -21,31 +21,46 @@
   <a href="../#projects">← All projects</a>
 </header>
 <main>
-  <div class="eyebrow">At work · Excel</div>
-  <h1>Inventory reorder tracker</h1>
-  <p class="summary">A tracker that warns the lab before supplies run out, not after.</p>
-  
-  <div class="stats"><div class="stat"><b>1,578</b><span>consumables and reagents tracked</span></div><div class="stat"><b>2 months</b><span>of stock kept as a buffer</span></div><div class="stat"><b>Automatic</b><span>reorder flag on every item</span></div></div>
+  <div class="eyebrow">At work · Supply chain · Excel</div>
+  <h1>When to reorder lab supplies, item by item</h1>
+  <p class="summary">An Excel workbook that gives every supply in a lab’s central store its own reorder level, from its real usage and real delivery times, and tells store staff whether to order now and how much.</p>
+  <p class="note">This page uses synthetic data: 150 invented supplies and 24,548 stock movements for a fictional lab network. The real version was built on five quarters of a real central store’s records, which can’t be published.</p>
+  <div class="stats"><div class="stat"><b>83% lower</b><span>reorder levels for supplies that arrive within a week</span></div><div class="stat"><b>94%</b><span>of slow-to-arrive items ran out under the old rule</span></div><div class="stat"><b>1 column</b><span>tells staff whether to order, and how much</span></div></div>
 
   <h2>The problem</h2>
-  <p>Orders used to go out after an item had already run out. Checking stock was slow and nobody’s main job, so shortages were noticed too late.</p>
+  <p>The central store reordered everything the same way: when two months of stock were left, order two more months. My first tracker, in 2025, applied that rule to every item, and it got orders going out before items ran out instead of after.</p>
+  <p>But the rule treated gloves that arrive in five days the same as imported reagents that take two months. The store held far too much of some items and kept running out of others, and nobody could see which was which, because the rule gave every item the same answer.</p>
 
   <h2>What I did</h2>
-  <ul><li>Listed every consumable and reagent with its current stock and how quickly it gets used.</li><li>Set each item’s reorder point at two months of use, the management policy, so there is time to order and receive a delivery before stock runs out.</li><li>Added a log of every item issued to each department, which keeps an audit trail and shows real usage.</li></ul>
+  <ul><li>Pulled five quarters of stock movements and purchase orders, and checked them first: every quarter’s opening stock plus its movements had to equal its closing stock.</li><li>Measured each item’s real usage, how much that usage swings from month to month, and how long its deliveries actually take, from its own purchase orders.</li><li>Worked out a reorder level for each item: the stock it uses while waiting for a delivery, plus a safety cushion sized to how unpredictable its use is.</li><li>Built it as a plain Excel workbook with a START HERE sheet. Staff type a stock count, and one column says order now, OK, overstocked or do not reorder, with the quantity to order.</li><li>Added a note wherever a number needs judgement, such as items used only once or twice a year, new items, and items that were out of stock for long periods.</li></ul>
   
+    <h2>What I found</h2>
+    
+    <h3>One rule didn’t fit any item</h3>
+    <figure><img src="../img/reorder-days-of-cover.png" alt="Each item’s reorder point in days of stock, grouped by delivery time, against the old rule’s fixed two months" loading="lazy"></figure>
+    <p>The old rule reorders when about 61 days of stock are left, for everything. Worked out item by item, the right point runs from about 6 days for supplies delivered within the week to more than 100 days for imported reagents.</p>
+    <h3>Quick-to-arrive supplies were overstocked</h3>
+    
+    <p>For the 35 items that arrive within a week, the new reorder levels are about 83% lower. Medium nitrile gloves are used at about 464 boxes a month and arrive in 5 days: the old rule placed an order at 928 boxes, the new level is 137. At the last stock count, 61 of the 150 items were above their new maximum.</p>
+    <h3>Slow-to-arrive supplies ran out</h3>
+    <figure><img src="../img/stockouts-by-delivery-time.png" alt="Average days out of stock by delivery time: under a day for quick deliveries, 42 days for deliveries over six weeks" loading="lazy"></figure>
+    <p>94% of the items that take more than six weeks to arrive ran out at least once in the year, for 42 days on average. For all 38 of them, the new reorder level is higher, about 1.8 times the old one.</p>
+    <h3>The data was checked before it was trusted</h3>
+    
+    <p>Seven items didn’t link up between September and October 2025, because one report was run before the day’s last movements were posted. That is 0.5% of the quarter’s issues. The workbook lists the seven items and explains why the reorder levels aren’t affected.</p>
 
-  <h2>What changed</h2>
-  <p class="outcome">Procurement now orders before items run out instead of after.</p>
+  <h2>What it means</h2>
+  <p class="outcome">The store keeps the same simple habit, count the stock and read one column, but each item now has a level that fits it: less stock sitting on the shelves for fast supplies, and earlier orders for the imported reagents that kept running out. The next improvement is to allow for suppliers who are sometimes late, not just usage that swings.</p>
 
   <section class="tech">
     <h2>For technical readers</h2>
-    <p>Excel: IF, SUMIFS, INDEX/MATCH, MAXIFS, data validation. No macros.</p>
-    <div class="links"><a class="btn primary" href="https://github.com/Yusuf-Tiamiyu/excel-inventory-reorder-tracker" target="_blank" rel="noopener">Download the workbook and notes ↗</a></div>
+    <p>Excel: INDEX/MATCH, SUMIFS, STDEV, NORMSINV and MEDIAN(IF) array formulas, conditional formatting, data validation. Python (pandas, SciPy) for the synthetic data and an independent check of every figure.</p>
+    <div class="links"><a class="btn primary" href="https://yusuf-tiamiyu.github.io/excel-inventory-reorder-tracker/" target="_blank" rel="noopener">Try it in the browser ↗</a><a class="btn" href="https://github.com/Yusuf-Tiamiyu/excel-inventory-reorder-tracker/raw/main/Lab_Stores_Reorder_Levels_2027.xlsx" target="_blank" rel="noopener">Download the workbook ↗</a><a class="btn" href="https://github.com/Yusuf-Tiamiyu/excel-inventory-reorder-tracker" target="_blank" rel="noopener">Technical write-up ↗</a></div>
   </section>
 
   <nav class="next" aria-label="More projects">
     <a href="../#projects">← All projects</a>
-    <a href="tat-platform.html">Next: Lab turnaround-time platform →</a>
+    <a href="covid-data-quality.html">Next: How far can daily COVID numbers be trusted? →</a>
   </nav>
 </main>
 <footer>Yusuf Tiamiyu · Data analyst, Lagos · <a href="mailto:tiamiyuyusufademola@gmail.com">tiamiyuyusufademola@gmail.com</a></footer>

@@ -1089,7 +1089,7 @@ footer a:hover{color:var(--gold)}
     </div>
     <div class="about-right rise">
       <p>I joined Cerba Lancet Nigeria as a data analyst in December 2024. Since July 2025 I&rsquo;ve also been its Data Protection Officer, so part of my week is analysis and part is data protection: compliance audits across our sites, breach procedures, and training staff. The two jobs overlap, because most privacy questions are questions about where data goes and who can see it.</p>
-      <p>Most of my analysis is about turnaround time, the gap between a sample being booked in and its result being verified. When I started, the weekly TAT report took someone a full day in Excel and arrived a week late. I replaced it with a pipeline and a dashboard that supervisors now use on their daily calls. I also built the inventory tracker the labs use to reorder supplies, and the weekly operations dashboard managers use to compare sites.</p>
+      <p>Most of my analysis is about turnaround time, the gap between a sample being booked in and its result being verified. When I started, the weekly TAT report took someone a full day in Excel and arrived a week late. I replaced it with a pipeline and a dashboard that supervisors now use on their daily calls. I also built the workbook that tells our central store when to reorder each supply, and the weekly operations dashboard managers use to compare sites.</p>
       <p>I studied chemistry at Lagos State University. My final-year project, on groundwater quality across 25 wells, became a paper in <em>Hydrology</em> in 2023. Lab work taught me not to trust a result until I know how it was produced, which is most of data cleaning too.</p>
       <p>Before analytics I worked in quality assurance at Flour Mills of Nigeria, where I noticed that shifts staffed only by new hires had the biggest weight deviations. The supervisor changed the roster so every shift had someone experienced on it. Outside work, I play a lot of video games.</p>
       <div style="margin-top:2rem;display:flex;gap:.75rem;flex-wrap:wrap">
@@ -1231,8 +1231,24 @@ footer a:hover{color:var(--gold)}
         </div>
       </article>
 
+      <article class="pc rise" data-cats="healthcare excel">
+        <div class="pc-top"><div class="pc-num">04</div><div class="pc-badge">At work</div></div>
+        <a class="cprev cprev-img" href="projects/inventory-reorder-tracker.html">
+          <img src="img/reorder-dashboard.png" alt="Reorder demo: an item marked ORDER NOW with its reorder level, safety stock and monthly usage" loading="lazy" width="1040" height="752">
+        </a>
+        <div class="pc-body">
+          <h3 class="pc-title">When to reorder lab supplies, item by item</h3>
+          <p class="pc-desc">An Excel workbook that gives each supply in a lab's central store its own reorder level from its real usage and real delivery times, replacing a two-months-for-everything rule. On demo data, reorder levels for quick-to-arrive supplies drop by 83%, while the imported reagents that kept running out get ordered earlier.</p>
+          <div class="pc-tags"><span class="tag tg">Excel</span><span class="tag tg">Safety stock</span><span class="tag th">Supply chain</span></div>
+        </div>
+        <div class="pc-foot">
+          <a class="pc-link primary" href="projects/inventory-reorder-tracker.html">Read the case study</a>
+          <a class="pc-link" href="https://yusuf-tiamiyu.github.io/excel-inventory-reorder-tracker/" target="_blank" rel="noopener">Try the demo ↗</a>
+        </div>
+      </article>
+
       <article class="pc rise" data-cats="sql">
-        <div class="pc-top"><div class="pc-num">04</div></div>
+        <div class="pc-top"><div class="pc-num">05</div></div>
         <a class="cprev cprev-img" href="projects/covid-data-quality.html">
           <img src="img/covid-batches.png" alt="Cameroon's daily COVID cases: large single-day reports versus the same reports spread over the days they covered" loading="lazy" width="1350" height="570">
         </a>
@@ -1248,7 +1264,7 @@ footer a:hover{color:var(--gold)}
       </article>
 
       <article class="pc rise" data-cats="sql">
-        <div class="pc-top"><div class="pc-num">05</div></div>
+        <div class="pc-top"><div class="pc-num">06</div></div>
         <a class="cprev cprev-img" href="projects/tech-layoffs.html">
           <img src="img/layoffs-shutdowns.png" alt="Bar chart: 14.8% of early-stage startup layoffs were full shutdowns, against 1 to 2% at later stages" loading="lazy" width="1125" height="420">
         </a>
@@ -1264,7 +1280,7 @@ footer a:hover{color:var(--gold)}
       </article>
 
       <article class="pc rise" data-cats="healthcare excel">
-        <div class="pc-top"><div class="pc-num">06</div><div class="pc-badge">At work</div></div>
+        <div class="pc-top"><div class="pc-num">07</div><div class="pc-badge">At work</div></div>
         <div class="pc-body">
           <h3 class="pc-title">Lab operations dashboard</h3>
           <p class="pc-desc">An Excel dashboard for lab managers covering tests, requisitions, TAT against target, staffing and analyser uptime across nine sites. One selections sheet drives every figure, and each KPI compares itself with the previous week. It showed that staffing gaps clustered at particular sites in particular weeks.</p>
@@ -1273,19 +1289,6 @@ footer a:hover{color:var(--gold)}
         <div class="pc-foot">
           <a class="pc-link primary" href="projects/lab-operations-dashboard.html">Read the case study</a>
           <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/excel-lab-operations-dashboard" target="_blank" rel="noopener">Workbook ↗</a>
-        </div>
-      </article>
-
-      <article class="pc rise" data-cats="healthcare excel">
-        <div class="pc-top"><div class="pc-num">07</div><div class="pc-badge">At work</div></div>
-        <div class="pc-body">
-          <h3 class="pc-title">Inventory reorder tracker</h3>
-          <p class="pc-desc">A tracker for 1,578 lab consumables and reagents that flags each item for reorder when two months of stock are left, using a separate issuance log as the audit trail. Procurement moved from ordering after stock ran out to ordering before.</p>
-          <div class="pc-tags"><span class="tag tg">Excel</span><span class="tag tg">INDEX/MATCH</span><span class="tag th">Supply chain</span></div>
-        </div>
-        <div class="pc-foot">
-          <a class="pc-link primary" href="projects/inventory-reorder-tracker.html">Read the case study</a>
-          <a class="pc-link" href="https://github.com/Yusuf-Tiamiyu/excel-inventory-reorder-tracker" target="_blank" rel="noopener">Workbook ↗</a>
         </div>
       </article>
 
